@@ -1,0 +1,12 @@
+﻿cl : Command line warning D9002: ignoring unknown option '/export:mexFunction'
+  stdafx.cpp
+cl : Command line warning D9002: ignoring unknown option '/export:mexFunction'
+  TStaticGraph.cpp
+  TBasicGraph.cpp
+  mexGraphBetweennessCentrality.cpp
+  GraphUtilities.cpp
+  EvaluateGraphBetweennessCentrality.cpp
+  Generating Code...
+     Creating library Debug\mexBetweenesCentrality.lib and object Debug\mexBetweenesCentrality.exp
+     Creating library Debug\mexBetweenesCentrality.lib and object Debug\mexBetweenesCentrality.exp
+  mexBetweenesCentrality.vcxproj -> c:\Users\Lev\Projects\MFiles\MEXSOURCE\mexGraphBetweennessCentrality\Debug\mexGraphBetweennessCentrality.mexw32

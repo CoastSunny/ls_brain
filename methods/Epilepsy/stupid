@@ -1,0 +1,30 @@
+for i=2*l+1:1:size(X,2)-l
+    %tic
+    sY=X(sEEG_idx,i:i+l-1);
+    iY=X(iEEG_idx,i:i+l-1);
+    
+%     sY=repop(X(sEEG_idx,i:i+l-1),...
+%         '-',mean(X(sEEG_idx,i-2*l:i-1),2));
+%     iY=repop(X(iEEG_idx,i:i+l-1),...
+%         '-',mean(X(iEEG_idx,i-2*l:i-1),2));
+ 
+    sY=detrend(sY,2);
+    iY=detrend(iY,2);
+    
+    w=inv(sY*sY'+2*norm(sY,'fro')*eye(size(sY,1)))*sY*mean(I(:,:,1:50),3)';
+    
+%     fsY=squeeze(mean(spectrogram(sY,2,'fs',200,'nwindows',nwindows),2));
+%     fiY=squeeze(mean(spectrogram(iY,2,'fs',200,'nwindows',nwindows),2));
+    
+    fsY=squeeze(mean(spectrogram(sY,2,'fs',200,'nwindows',nwindows),2));
+    fiY=squeeze(mean(spectrogram(iY,2,'fs',200,'nwindows',nwindows),2));
+%         
+%     fsY=spectrogram(sY,2,'fs',200,'nwindows',nwindows);
+%     fiY=spectrogram(iY,2,'fs',200,'nwindows',nwindows);
+    
+    sRw(i)=applyLinearClassifier(w'*sY,ssclsfr);
+    iRw(i)=applyLinearClassifier(iY,iclsfr);
+    fsRw(i)=applyLinearClassifier(fsY,fsclsfr);
+    fiRw(i)=applyLinearClassifier(fiY,ficlsfr);
+    %toc
+end

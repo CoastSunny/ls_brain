@@ -1,0 +1,13 @@
+addpath ~/BCI_code/toolboxes/ls_bci/methods/Volos/IVA
+addpath ~/BCI_code/toolboxes/ls_bci
+addpath ~/BCI_code/toolboxes/ls_bci/global
+addpath ~/BCI_code/toolboxes/jf_bci
+addpath ~/BCI_code/toolboxes/jf_bci/biosemi
+addpath ~/BCI_code/toolboxes/jf_bci/readraw
+addpath(genpath('~/BCI_code/toolboxes/classification'))
+addpath ~/BCI_code/toolboxes/eeg_analysis
+addpath(genpath('~/BCI_code/toolboxes/numerical_tools'))
+addpath ~/BCI_code/toolboxes/signal_processing
+addpath(genpath('~/BCI_code/toolboxes/utilities'))
+addpath ~/BCI_code/toolboxes/brainstream/core
+addpathBS

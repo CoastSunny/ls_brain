@@ -1,0 +1,42 @@
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mexGraphKCore", "mexGraphKCore.vcproj", "{33D352F8-B23E-46BA-B9CA-E48FFE772D37}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2E235743-E4C0-41B2-B3B6-0B3EE6188A30}"
+	ProjectSection(SolutionItems) = preProject
+		mexGraphKCore.vsd = mexGraphKCore.vsd
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug 64|Win32 = Debug 64|Win32
+		Debug 64|x64 = Debug 64|x64
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Release 64|Win32 = Release 64|Win32
+		Release 64|x64 = Release 64|x64
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{33D352F8-B23E-46BA-B9CA-E48FFE772D37}.Debug 64|Win32.ActiveCfg = Debug 64|Win32
+		{33D352F8-B23E-46BA-B9CA-E48FFE772D37}.Debug 64|Win32.Build.0 = Debug 64|Win32
+		{33D352F8-B23E-46BA-B9CA-E48FFE772D37}.Debug 64|x64.ActiveCfg = Debug 64|x64
+		{33D352F8-B23E-46BA-B9CA-E48FFE772D37}.Debug 64|x64.Build.0 = Debug 64|x64
+		{33D352F8-B23E-46BA-B9CA-E48FFE772D37}.Debug|Win32.ActiveCfg = Debug|Win32
+		{33D352F8-B23E-46BA-B9CA-E48FFE772D37}.Debug|Win32.Build.0 = Debug|Win32
+		{33D352F8-B23E-46BA-B9CA-E48FFE772D37}.Debug|x64.ActiveCfg = Debug|x64
+		{33D352F8-B23E-46BA-B9CA-E48FFE772D37}.Debug|x64.Build.0 = Debug|x64
+		{33D352F8-B23E-46BA-B9CA-E48FFE772D37}.Release 64|Win32.ActiveCfg = Release 64|Win32
+		{33D352F8-B23E-46BA-B9CA-E48FFE772D37}.Release 64|Win32.Build.0 = Release 64|Win32
+		{33D352F8-B23E-46BA-B9CA-E48FFE772D37}.Release 64|x64.ActiveCfg = Release 64|x64
+		{33D352F8-B23E-46BA-B9CA-E48FFE772D37}.Release 64|x64.Build.0 = Release 64|x64
+		{33D352F8-B23E-46BA-B9CA-E48FFE772D37}.Release|Win32.ActiveCfg = Release|Win32
+		{33D352F8-B23E-46BA-B9CA-E48FFE772D37}.Release|Win32.Build.0 = Release|Win32
+		{33D352F8-B23E-46BA-B9CA-E48FFE772D37}.Release|x64.ActiveCfg = Release|x64
+		{33D352F8-B23E-46BA-B9CA-E48FFE772D37}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

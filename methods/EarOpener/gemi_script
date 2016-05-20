@@ -1,0 +1,17 @@
+
+members=properties(NLv);
+classes1={{12};{20}};
+classes2={{12};{21}};
+classes3={{12};{22}};
+for i=1:numel(members)
+
+    NLv.(members{i}).train_classifier('name','c1220','classes',classes1,'blocks_in',1:10,'channels',1:64,'time',1:64);
+    NLv.(members{i}).train_classifier('name','c1221','classes',classes1,'blocks_in',1:10,'channels',1:64,'time',1:64);
+    NLv.(members{i}).train_classifier('name','c1222','classes',classes1,'blocks_in',1:10,'channels',1:64,'time',1:64);
+    clsfr(i).W=NLv.(members{i}).c1220.W;
+    [U S V]=svd(clsfr(i).W);
+    clsfr(i).V=V(:,1);
+    clsfr(i).s=S(1,1)/sum(diag(S).^2);
+    
+    
+end

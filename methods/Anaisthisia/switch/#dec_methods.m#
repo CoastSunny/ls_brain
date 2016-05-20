@@ -1,0 +1,173 @@
+function [dm] = dec_methods ( z ,n_con_ex, positive_class, outerfold, method, fullclsfr)
+
+res = z.prep(end).info.res;
+Yall=z.Y;
+outfIdxs=z.outfIdxs;
+pc=positive_class;
+
+if (outerfold==1)
+    foldtype='out';
+else
+    foldtype='val';
+end
+
+for sp=1:size(Yall,2)
+    
+    Y=Yall(:,sp);
+    Ci=res.opt.Ci;
+    if (fullclsfr==1)
+        dv_all  =  res.opt.f( : , sp ) ; %-res.roc.bias_change;
+    else
+        dv_all  =  res.tstf( : , sp , Ci ) ; %-res.roc.bias_change;
+    end
+    
+    
+    dv = dv_all( outfIdxs == 1 * outerfold & Y ~= 0 ) ;
+    dv=dv*pc;
+    Y = Y( outfIdxs ==  1 * outerfold & Y ~= 0 ) ;
+    
+    i_nclass    =  Y ==  -1*pc ;
+    i_pclass    =  Y == pc ;
+    
+    Y_nclass     =  Y( i_nclass ) ;
+    Y_pclass     =  Y( i_pclass ) ;
+    
+    dv_positive  =  dv( i_pclass ); %%%% add pc and for later for >0 <0!!!!!
+    dv_negative  =  dv( i_nclass );
+    fpr.vanilla = sum( dv_negative( : ) > 0 ) / numel( dv_negative( : ) ) ;
+    tpr.vanilla = sum( dv_positive( : ) > 0 ) / numel( dv_positive( : ) ) ;
+    
+    
+    % bias_mod=[0 -1 -2 -5];
+    bias_mod=[-5*pc:0.1*pc:5*pc];
+    
+    if (strcmp(method,'sav'))
+        if (strcmp(n_con_ex,'all'))
+            
+            n_con_ex=numel(dv);
+            columns_positive=1;
+            columns_negative=1;
+            
+        else
+            
+            columns_positive = numel( dv_positive ) / n_con_ex ;
+            dv_positive = reshape( dv_positive , n_con_ex , columns_positive ) ;
+            columns_negative = numel( dv_negative ) / n_con_ex ;
+            dv_negative = reshape( dv_negative , n_con_ex , columns_negative ) ;
+            
+        end
+        for tr_per_seq=1:n_con_ex
+            
+            clear sav_dv_positive sav_dv_negative
+            
+            for j=1:numel(bias_mod)
+                
+                for i=1:columns_positive
+                    
+                    sav_dv_positive( : , i ) = filter( 1 / tr_per_seq*ones( 1 , tr_per_seq ) , 1 , dv_positive( : , i ) + bias_mod(j) ) ;
+                    
+                end
+                for i=1:columns_negative
+                    
+                    sav_dv_negative( : , i ) = filter( 1 / tr_per_seq*ones( 1 , tr_per_seq ) , 1 , dv_negative( : , i ) + bias_mod(j) ) ;
+                    
+                end
+                
+                
+                
+                temp1 = sav_dv_negative( tr_per_seq : end , : ) ;
+                temp2 = sav_dv_positive( tr_per_seq : end , : ) ;
+                fpr.sav( tr_per_seq , j) = sum( temp1( : ) > 0 ) / numel( temp1( : ) ) ;
+                tpr.sav( tr_per_seq , j) = sum( temp2( : ) > 0 ) / numel( temp2( : ) ) ;
+                
+            end
+            
+        end
+        
+    elseif (strcmp(method,'withinclass_sav'))
+        
+        if (strcmp(n_con_ex,'all'))
+            
+            n_con_ex=numel(dv);
+            columns=1;
+            
+        else
+            
+            columns = numel( dv ) / n_con_ex ;
+            dv = reshape( dv , n_con_ex , columns) ;
+            i_nclass = reshape( i_nclass, n_con_ex, columns );
+            i_pclass = reshape( i_pclass, n_con_ex, columns );
+            
+        end
+        
+        for tr_per_seq=1:6
+            
+            clear move_dv_pclass move_dv_nclass
+            
+            for j=1:numel(bias_mod)
+                
+                for i=1:columns
+                    
+                    temp_pclass = dv(i_pclass(:,i),i) + bias_mod(j) ;
+                    temp_nclass = dv(i_nclass(:,i),i) + bias_mod(j) ;
+                    move_dv_pclass{i} = filter( ones(1,tr_per_seq),1,temp_pclass ) ;
+                    move_dv_nclass{i} = filter( ones(1,tr_per_seq),1,temp_nclass ) ;
+                    
+                end
+                
+                temp_pos=[move_dv_pclass{1};move_dv_pclass{2};move_dv_pclass{3};move_dv_pclass{4};move_dv_pclass{5};];
+                temp_neg=[move_dv_nclass{1};move_dv_nclass{2};move_dv_nclass{3};move_dv_nclass{4};move_dv_nclass{5};];
+                fpr.dec( tr_per_seq , j) = sum( temp_neg > 0 ) / numel( temp_neg ) ;
+                tpr.dec( tr_per_seq , j) = sum( temp_pos > 0 ) / numel( temp_pos ) ;
+                
+            end                   
+
+    elseif (strcmp(method,'withinclass_sav'))
+        
+        if (strcmp(n_con_ex,'all'))
+            
+            n_con_ex=numel(dv);
+            columns=1;
+            
+        else
+            
+            columns = numel( dv ) / n_con_ex ;
+            dv = reshape( dv , n_con_ex , columns) ;
+            i_nclass = reshape( i_nclass, n_con_ex, columns );
+            i_pclass = reshape( i_pclass, n_con_ex, columns );
+            
+        end
+        
+        for tr_per_seq=1:6
+            
+            clear move_dv_pclass move_dv_nclass
+            
+            for j=1:numel(bias_mod)
+                
+                for i=1:columns
+                    
+                    temp_pclass = dv(i_pclass(:,i),i) + bias_mod(j) ;
+                    temp_nclass = dv(i_nclass(:,i),i) + bias_mod(j) ;
+                    move_dv_pclass{i} = filter( ones(1,tr_per_seq),1,temp_pclass ) ;
+                    move_dv_nclass{i} = filter( ones(1,tr_per_seq),1,temp_nclass ) ;
+                    
+                end
+                
+                temp_pos=[move_dv_pclass{1};move_dv_pclass{2};move_dv_pclass{3};move_dv_pclass{4};move_dv_pclass{5};];
+                temp_neg=[move_dv_nclass{1};move_dv_nclass{2};move_dv_nclass{3};move_dv_nclass{4};move_dv_nclass{5};];
+                fpr.dec( tr_per_seq , j) = sum( temp_neg > 0 ) / numel( temp_neg ) ;
+                tpr.dec( tr_per_seq , j) = sum( temp_pos > 0 ) / numel( temp_pos ) ;
+                
+            end
+            
+        end 
+  
+    end
+    
+    dm(sp).(foldtype).fpr = fpr ;
+    dm(sp).(foldtype).tpr = tpr ;
+    dm(sp).(foldtype).bias=bias_mod;
+    
+end
+
+end

@@ -1,0 +1,37 @@
+<<<<<<< .mine
+function indices = getIndices(obj,classes,blocks_out)
+
+for i = 1 : size( classes , 1 )
+    
+    for j = 1 : numel( classes{ i } )
+        
+        indices{ i , j } = find( obj.markers == classes{ i }{ j } ) ;
+        
+       % classlength( i ) = classlength( i ) + numel( indices{ i , j } ) ;
+        
+    end
+    
+    %labels = [labels (-1)^i*ones( 1 , classlength(i) ) ];%change for >2 classes?????
+    
+end
+
+end=======
+function indices = getIndices(obj,classes,blocks_out)
+
+for i = 1 : size( classes , 1 )
+    
+    for j = 1 : numel( classes{ i } )
+        
+        indices{ i , j } = find( obj.markers == classes{ i }{ j } ) ;
+        
+    end
+    
+    for k=1:numel(blocks_out)
+        
+        indices{i,j}=setdiff(indices{i,j},obj.block_idx{blocks_out(k)});
+        
+    end
+    
+end
+
+end>>>>>>> .r5160

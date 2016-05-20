@@ -1,0 +1,241 @@
+function train_classifier( obj , varargin )
+
+opts = struct( ...
+    'name'    , 'test' , ...
+    'classes' , [] , ...
+    'classes_outer', [] , ...
+    'target_labels', [-1 +1] , ...
+    'blocks_in'  , 'all' , ...
+    'blocks_outer', 'none' , ...
+    'channels' , 'all' , ...
+    'time' , 'all' , ...
+    'detrenddat' , 'yes' , ...
+    'filterdat', 'yes' , ...
+    'freqband' , [0.1 20] , ...
+    'frequency_transform' , 'none' , ...
+    'times_in', [] , ...
+    'freqs_in' , [] , ...
+    'nfolds' , 10 , ...
+    'fIdxs' , [] , ...
+    'Cs', [] , ...
+    'vis' , 'off' , ...
+    'cleverstuff' , 'stupid' , ...
+    'method' , 'all', ...
+    'dim' , 3 , ...
+    'trials' , 'all') ;
+[ opts ] = parseOpts( opts , varargin ) ;
+if (nargin==1)
+    
+    opts
+    fprintf('\n Required inputs: classes\n');
+    
+elseif ( nargin > 1 )
+    
+    opts2var
+    try obj.addprop(name);
+    catch err
+        % delete(obj.(name));
+    end
+    
+    [time channels]=convertall2var(obj,time,channels);
+    [blocks_in blocks_excluded]=getBlocks(obj,blocks_in);
+    [indices classlength labels]=getIndices(obj,classes,blocks_excluded,trials);
+    
+    fprintf('\nClass 1\t markers:\t%s \n\t examples:\t%d \n\t labels:\t -1 \nClass 2\t markers:\t%s \n\t examples:\t%d \n\t labels:\t +1 \n\n ', num2str(cell2mat(classes{1})),classlength(1),num2str(cell2mat(classes{2})),classlength(2))
+    if (classlength(1)/classlength(2)<0.8 | classlength(2)/classlength(1)<0.8)
+        fprintf('\n Have you used a classifier that balances the classes? \n');
+    end
+    
+    %check validity by randomizing indices
+    %indices=indices(randperm(numel(indices)));
+   % temp=randperm(numel(indices));
+   % indices=temp(1:numel(indices));
+    X=cat(3,obj.data.trial{indices});
+    X=X(channels,time,:);
+    fprintf('classification starting...\n');
+    
+    if (strcmp(filterdat,'yes'))
+        fs=obj.data.fsample;
+        len=size(X,2);
+        filt=mkFilter(freqband,floor(len/2),fs/len);
+        X=fftfilter(X,filt,[0 len],2,0);
+    end
+    if (strcmp('detrenddat','yes'))
+        X=detrend(X,2); % detrend over time
+    end
+    
+    %             [badtr,vars]=idOutliers(X,3,3);
+    %             X=X(:,:,~badtr);
+    %             labels=labels(:,~badtr);%%%%changed cardinality oeo
+    %             [isbad]=idOutliers(X,1,3);
+    %             X=X(~isbad,:,:);
+    
+    if (strcmp(frequency_transform,'spectrogram'))
+        [X ss f o]=spectrogram(X,2,'fs',fs,'width_ms',250,'overlap',0);
+%         
+%                 t=find(ss/fs>=times_in(1) & ss/fs<=times_in(2));
+%                 fr=find(f>=freqs_in(1) & f<=freqs_in(2));
+%                 X=X(:,fr,t,:);
+%                 X=mean(X,3);
+%                 X=squeeze(X(:,:,1,:));
+        
+    end
+  
+    dim=ndims(X);
+    if (strcmp(cleverstuff,'stupid'))
+<<<<<<< .mine
+        
+%         X=mean(X,2);
+        
+=======
+        X=mean(X,2);
+        size(X)
+>>>>>>> .r5452
+        [clsfr, res]=cvtrainLinearClassifier(X,labels,Cs,nfolds,'dim',dim,'zeroLab',1,'balYs',1,'objFn','klr_cg');
+        
+    elseif (strcmp(cleverstuff,'rfe'))
+        size(X)
+        out=rfe(X,labels,method,channels,nfolds);
+        clsfr=out.opt.clsfr;
+        res=out.opt.res;
+        
+    elseif (strcmp(cleverstuff,'nirs'))
+        
+        count=1;
+        for i=1:size(X,3)
+        
+            for j=1:5
+                y(:,:,count) = mean(X(:,1+750*(j-1):750*(j-1)+750,i),2);%3 sec windows
+                count = count+1;
+            end
+        
+        end
+        
+        X=y;
+        size(X)
+        temp=size(y,3);
+        labels(1:temp/2)=-1; labels((temp/2)+1:temp)=1;
+        test=cell2mat(classes{2});
+       
+        fIdxs=obj.eeg.fI;
+        if test==5
+            fIdxs(61:120,:)=[];
+        else
+            fIdxs(121:180,:)=[];
+        end
+       
+        [clsfr, res]=cvtrainLinearClassifier(X,labels,[],nfolds,'fIdxs',fIdxs,'dim',dim,'zeroLab',1,'balYs',1,'objFn','klr_cg');
+        
+    end
+    
+    obj.(name)=clsfr;
+    obj.(name).res=res;
+    obj.(name).f=res.ltstf(:,:,res.opt.Ci);
+    %obj.(name).isbad=isbad;
+    %obj.(name).badtr=badtr;
+    obj.(name).labels=labels;
+    obj.(name).perf=max(obj.(name).res.tstbin);
+    if (exist('out','var'))
+        obj.(name).rfe=out;
+    end
+    
+    %%%Results%%%%
+    fprintf('\nTraining set performance: %0.3f\n',max(obj.(name).res.trnbin));
+    fprintf('Validation set performance: %0.3f\n',max(obj.(name).res.tstbin));
+    f=obj.(name).res.tstf(:,:,obj.(name).res.opt.Ci);
+    fp=f(labels==+1);rp=sum(fp>0)/numel(fp);fn=f(labels==-1);rn=sum(fn<0)/numel(fn);
+    ft=[-1*fn' fp'];rt=sum(ft>0)/numel(ft);
+    fprintf('Negative class rate: %0.3f \nPositive class rate: %0.3f \n',rn,rp);
+    
+    
+    if ( ~strcmp(blocks_outer,'none') )
+        
+        if (~isempty(classes_outer))
+            tmp=strmatch('classes',varargin(1:2:end),'exact');
+            varargin{tmp*2}=classes_outer;
+        end
+        tmp=strmatch('blocks_in',varargin(1:2:end));
+        varargin{tmp*2}=blocks_outer;
+        
+        out = obj.apply_classifier( obj , varargin);
+        if (numel(target_labels)==1)
+            fprintf('Outer fold class rate: %0.3f \n',out.rate);
+        else
+            fprintf('Outer fold performance: \n class1: %0.3f \n class2: %0.3f \n performance: %0.3f\n ', ...
+                out.rate(1),out.rate(2),out.rate(3));
+        end
+        
+    end
+    %%%Results%%%%
+    
+    if (strcmp(vis,'on'))
+        
+        W=clsfr.W;
+        [U S V]=svd(W);
+        s=diag(S);
+        s=s.^2;
+        t=time/fs;
+        figure,hold on,plot(t,V(:,1),'r'),plot(t,V(:,2),'g'),plot(t,V(:,3),'b')
+        legend({num2str(s(1)/sum(s)) num2str(s(2)/sum(s)) num2str(s(3)/sum(s))})
+        title('First 3 principal components'),xlabel('time')
+        dw=obj.diff_wave('classes',classes,'blocks_in',blocks_in,'time',time,'vis','off');
+        figure,hold on, plot(t,V(:,1),'r'),plot(t,dw/norm(dw),'g')
+        title('PC1 and difference wave,normalised'),xlabel('time')
+        figure,hold on, plot(t,V(:,1),'r'),plot(t,-dw/norm(dw),'g')
+        title('PC1 and difference wave,normalised'),xlabel('time')
+        dw=obj.diff_wave('classes',classes,'blocks_in',blocks_in,'vis','off',...
+            'difftype','spacewave','channels',channels);
+        figure,hold on, plot(U(:,1),'r'),plot(dw/norm(dw),'g')
+        title('space PC1 and space difference wave,normalised'),xlabel('electrode number')
+        [fpr,tpr,bias,AUC,OPTROCPTSUBY,SUBYNAMES] = perfcurve(labels,f,1);
+        figure,plot(fpr,tpr,'.');xlabel('FPR'),ylabel('TPR');title('ROC curve by varying classifier bias, validation set');
+        figure,hold on,plot(bias+obj.(name).b,1-fpr,'r'),plot(bias+obj.(name).b,tpr,'g'),plot(obj.(name).b,rt,'o')
+        title('class rates with varying bias')
+        xlabel('absolute bias');ylabel('class rate');
+        
+    end
+end
+
+end
+% for i=1:size(X,3);
+%     z=X(:,:,i);
+%     z=z(:);
+%     for j=2:14
+%         
+%         z(excluded{j})=[];
+%         
+%     end
+%     Z(:,1,i)=z;
+% end
+% clear X
+% X=Z;
+   %X=cumsum(X);
+%    for i=1:size(X,3)/2
+%        a(i)=X(1,1,i);
+%        b(i)=X(1,2,i);
+%        c(i)=X(1,3,i);
+%    end
+%    figure
+%    scatter3(a,b,c);
+%    %scatter3(b,c,b.*c);
+%    hold on
+%    for i=1:size(X,3)/2
+%        a(i)=X(1,1,i+size(X,3)/2);
+%        b(i)=X(1,2,i+size(X,3)/2);
+%        c(i)=X(1,3,i+size(X,3)/2);
+%    end
+%    scatter3(a,b,c,'+')
+%    %scatter3(b,c,b.*c,'+')
+% 
+%  x=mean(X(:,1:1250,:),2);
+%         y=mean(X(:,1251:2500,:),2);
+%         z=mean(X(:,2501:3750,:),2);
+%         w=mean(X(:,3751:5000,:),2);
+%         for i=1:size(X,3)
+%             e1(:,:,i)=var(X(:,1:1250,i)')';
+%             e2(:,:,i)=var(X(:,1251:2500,i)')';
+%             e3(:,:,i)=var(X(:,2501:3750,i)')';
+%             e4(:,:,i)=var(X(:,3751:5000,i)')';
+%         end
+%         
+%         X=[x y z w];

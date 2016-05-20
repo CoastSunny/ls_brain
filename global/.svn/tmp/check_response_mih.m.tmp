@@ -1,0 +1,37 @@
+<<<<<<< .mine
+clear files
+clear correct
+=======
+clear files1
+clear files2
+clear correct
+files1 = rdir('**/buttonpress.mat');
+files2 = rdir('**/sequence.mat');
+
+>>>>>>> .r5459
+files1.name
+files2.name
+
+for i = 1 : numel( files1 )
+    
+<<<<<<< .mine
+    buttons=load([pwd '/' files(i).name]);
+    target=[ones(1,10) 2*ones(1,10)];
+    
+try
+    
+    correct(i)=sum(buttons.v==target);
+=======
+    buttons=load([pwd '/' files1(i).name]);
+    sequence=load([pwd '/' files2(i).name]);
+    [s idx]=sort(sequence.v.questiontrials);
+    target=(idx<11)+1;
+    correct(i)=20-sum(buttons.v==target);
+>>>>>>> .r5459
+    
+catch err
+    correct(i)=666;
+end
+    
+end
+correct

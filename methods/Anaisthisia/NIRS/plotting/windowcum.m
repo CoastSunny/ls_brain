@@ -1,0 +1,1 @@
+plot(mean(Cgaverage_nirsAMf),'r')

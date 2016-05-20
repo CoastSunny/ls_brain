@@ -1,0 +1,6 @@
+for si=1:10
+    
+tmp=checkmethod(-mean(FpA2{si}),std(FpA2{si}),-mean(FnA2{si}),std(FnA2{si}),12,0.001,2);
+TPR(si)=tmp.tpr_sav;
+
+end

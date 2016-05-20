@@ -1,0 +1,13 @@
+restoredefaultpath
+cd ~/BCI_code/toolboxes/ls_bci/global 
+startup
+addpath ~/BCI_code/toolboxes/ls_bci/classes/common
+addpath ~/BCI_code/toolboxes/ls_bci/global
+addpath ~/BCI_code/toolboxes/ls_bci/classes
+addpath ~/BCI_code/toolboxes/ls_bci/methods/Anaisthisia
+addpath ~/BCI_code/own_experiments/motor_imagery/NIRS/Physiology/Oxy3_functions/
+addpath ~/BCI_code/toolboxes/ls_bci/methods/Anaisthisia/NIRS
+addpath ~/BCI_code/toolboxes/ls_bci/methods/Anaisthisia/NIRS/plotting
+addpath ~/BCI_code/toolboxes/ls_bci/methods/Misc/
+
+

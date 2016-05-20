@@ -1,0 +1,138 @@
+clear embc_res mtpr_sav mtpr_nrow mfpr_sav mfpr_nrow
+%method=4;
+%N=6;
+m2=N;
+% tp=0.1;
+correc=1;
+stdcorr=1;
+dB=.0;
+dN=0;
+mcorrec=0;-0.7;
+sel=12;
+sel1=27;%sel;
+%sel2=27;%sel;
+tau=1:173;
+sel2start=1;
+sel2=18;
+%bias_target=-.5;
+%for jj=1:10;A(jj,:)=[-mean(Fp{jj}) -mean(Fn{jj}) std(Fp{jj}) std(Fn{jj})];end
+for jj=1:10;
+    if jj==1;
+        sel1=48;%48
+    elseif jj==4
+        sel1=56;%56
+    else
+        sel1=60;%60
+    end
+    A(jj,:)=[-mean(FpL{jj}(1:sel1)) -mean(FnL{jj}(1:sel1)) std(FpL{jj}(1:sel1)) std(FnL{jj}(1:sel1))];
+    
+
+    [dummy1 dummy2 mpCI2(jj,:) spCI2(jj,:)] = normfit(-FpL{jj}(1:sel1),.22);
+    [dummy3 dummy4 mnCI2(jj,:) snCI2(jj,:)] = normfit(-FnL{jj}(1:sel1),.22);
+
+end
+% for jj=1:10;B(jj,:)=[-mean(Fp{jj}(sel2start:sel2))-median(Fp{jj}(sel2start:sel2))...
+%         -mean(Fn{jj}(sel2start:sel2))-median(Fn{jj}(sel2start:sel2)) ...
+%         std(Fp{jj}(sel2start:sel2)) std(Fn{jj}(sel2start:sel2))];end;
+
+for jj=1:10;B(jj,:)=[-mean(Fp{jj}(sel2start:sel2))...
+        -mean(Fn{jj}(sel2start:sel2))...
+        std(Fp{jj}(sel2start:sel2)) std(Fn{jj}(sel2start:sel2))];end;
+for jj=1:10
+
+    [dummy1 dummy2 mpCI(jj,:) spCI(jj,:)] = normfit(-Fp{jj}(1:sel2),.05);
+    [dummy3 dummy4 mnCI(jj,:) snCI(jj,:)] = normfit(-Fn{jj}(1:sel2),.05);
+
+end
+% for jj=1:10;A(jj,:)=[-mean(FpL{jj}) -mean(FnL{jj}(1:sel1)) std(FpL{jj}) std(FnL{jj}(1:sel1))];end;
+% for jj=1:10;B(jj,:)=[-mean(Fp{jj}) -mean(Fn{jj}(1:sel2)) std(Fp{jj}) std(Fn{jj}(1:sel2))];end;
+%for jj=1:5;B(jj,:)=[-mean(Fp2{jj}) -mean(Fn2{jj}) std(Fp2{jj}) std(Fn2{jj})];end
+A=A;
+%A(4,4)=std(a);
+%B(:,1)=B(:,1)/2;
+%B(:,2)=B(:,2)/2;
+%B=B1+B2+B;B=B/3;
+for i=1:size(A,1)
+    
+    scorrec=1;snCI2(i,2)/A(i,4);
+    mcorrec=0;mnCI2(i,2)-A(i,2);
+    embc_res(i)=checkmethod(A(i,1),stdcorr*A(i,3),A(i,2),stdcorr*A(i,4),N,tp,method,scorrec,mcorrec);
+    mtpr_sav(i)=embc_res(i).tpr_sav;
+    mtpr_nrow(i)=embc_res(i).tpr_nrow;
+    mfpr_sav(i)=embc_res(i).fpr_sav;
+    mfpr_nrow(i)=embc_res(i).fpr_nrow;
+    bias_sav(i)=embc_res(i).bias_sav;
+    bias_nrow(i)=embc_res(i).bias_nrow;
+    
+end
+
+for i=1:size(B,1)
+    
+    scorrec2=1;snCI(i,2)/B(i,4);
+    mcorrec2=0;mnCI(i,2)-B(i,2);
+    scorrec1=1;spCI(i,1)/B(i,3);
+    mcorrec1=0;mpCI(i,1)-B(i,1);
+    embc_res(i)=checkmethod(mcorrec1+B(i,1),scorrec1*stdcorr*B(i,3),B(i,2),stdcorr*B(i,4),N,tp,method,scorrec2,mcorrec2);
+    mtpr_savC(i)=embc_res(i).tpr_sav;
+    mtpr_nrowC(i)=embc_res(i).tpr_nrow;
+    mfpr_savC(i)=embc_res(i).fpr_sav;
+    mfpr_nrowC(i)=embc_res(i).fpr_nrow;
+    bias_savC(i)=embc_res(i).bias_sav;
+    bias_nrowC(i)=embc_res(i).bias_nrow;
+    tpr_ksav=embc_res(i).tpr_ksav;
+    tpr=[tpr_ksav repmat(mtpr_savC(i),1,173-numel(tpr_ksav))];
+    P=[tpr(1) tpr(2:end).*cumprod(1-tpr(1:end-1))];
+    if sum(P)>0.99
+        mTTD(i)=sum(P.*tau);
+    else
+        mTTD(i)=nan;
+    end
+    msTTD(i)=sqrt(sum( (tau-mTTD(i)).^2.*P ));
+    tpr_knrow=embc_res(i).tpr_knrow;
+    tpr=[tpr_knrow repmat(mtpr_nrowC(i),1,173-numel(tpr_knrow))];
+    P=[tpr(1) tpr(2:end).*cumprod(1-tpr(1:end-1))];
+    if sum(P)>0.99
+        mnTTD(i)=sum(P.*tau);
+    else
+        mnTTD(i)=nan;
+    end
+    mnsTTD(i)=sqrt(sum( (tau-mnTTD(i)).^2.*P ));
+    
+end
+fpr_target=embc_res(1).fpr_sav_cal;
+%fpr_target=0.15;
+synchperf_d1
+amtpr_sav=amtpr2;
+amfpr_sav=amfpr2;
+synchperf_cross
+amtpr_savC=amtpr;
+amfpr_savC=amfpr;
+
+
+fpr_target=embc_res(1).fpr_nrow_cal;
+%fpr_target=0.01;
+synchperf_d1_nrow
+amtpr_nrow=amtpr2;
+amfpr_nrow=amfpr2;
+synchperf_cross_nrow
+amtpr_nrowC=amtpr;
+amfpr_nrowC=amfpr;
+
+Gsav=[amtpr_sav;mtpr_sav;amfpr_sav;mfpr_sav;];
+Gsav(:,end+1)=mean(Gsav,2);
+Gnrow=[amtpr_nrow;mtpr_nrow;amfpr_nrow;mfpr_nrow;];
+Gnrow(:,end+1)=mean(Gnrow,2);
+GsavC=[amtpr_savC;mtpr_savC;amfpr_savC;mfpr_savC;];
+GsavC(:,end+1)=mean(GsavC,2);
+GnrowC=[amtpr_nrowC;mtpr_nrowC;amfpr_nrowC;mfpr_nrowC;];
+GnrowC(:,end+1)=mean(GnrowC,2);
+
+fres=[TTD*6;mTTD*6;nTTD*6;mnTTD*6;GsavC(3,1:end-1);GnrowC(3,1:end-1);...
+    GsavC(4,1:end-1);GnrowC(4,1:end-1);amfpr222;amfpr2222];
+fres(:,end+1)=mean(fres,2);
+% fres2=[TTD2*6;Gsav(3,:);Gnrow(3,:)];
+% fres2(:,end+1)=mean(fres2,2)
+gres=[mean(Gsav');
+mean(Gnrow');
+mean(GsavC');
+mean(GnrowC')];

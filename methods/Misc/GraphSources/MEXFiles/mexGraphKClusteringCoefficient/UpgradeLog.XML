@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="mexGraphKClusteringCoefficient">
+</Property><Property Name="Solution File" Value="C:\Users\LevMuchnik\Documents\MFiles\MEXSOURCE\mexGraphKClusteringCoefficient\mexGraphKClusteringCoefficient.sln">
+</Property><Property Name="Date" Value="Sunday, July 06, 2008">
+</Property><Property Name="Time" Value="16:22 PM">
+</Property></Properties><Event ErrorLevel="0" Project="" Source="mexGraphKClusteringCoefficient.sln" Description="File successfully backed up as C:\Users\LevMuchnik\Documents\MFiles\MEXSOURCE\mexGraphKClusteringCoefficient\mexGraphKClusteringCoefficient.sln.old">
+</Event><Event ErrorLevel="0" Project="mexGraphKClusteringCoefficient" Source="mexGraphKClusteringCoefficient.vcproj" Description="Project upgraded successfully.">
+</Event><Event ErrorLevel="3" Project="mexGraphKClusteringCoefficient" Source="mexGraphKClusteringCoefficient.vcproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="mexGraphKClusteringCoefficient.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="mexGraphKClusteringCoefficient.sln" Description="Converted">
+</Event></UpgradeLog>

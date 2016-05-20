@@ -1,0 +1,52 @@
+function [metric] = ls_network_metric(W,metric_type,varargin)
+
+n=size(W,1);
+O=ones(n);
+H=O-eye(n);
+
+if any(strcmp(metric_type,{'trans' 'transitivity'}))
+    
+    alfa=trace(W^3);
+    beta=trace(W*H*W);
+    metric=alfa/beta;
+    
+elseif any(strcmp(metric_type,{'clust' 'clustering'}))
+    
+    S=zeros(n,n,n);
+    for i=1:n
+        
+        S(i,i,i)=1;
+        Si=S(:,:,i);
+        gamma(i)=trace(Si*W^3);
+        zeta(i)=trace(Si*W*H*W);
+        
+    end
+    metric=mean(gamma./zeta);
+    
+elseif any(strcmp(metric_type,{'modul' 'modularity'}))
+    
+    opts = struct ( 'modules', [] ) ;
+    [ opts  ] = parseOpts( opts , varargin );
+    opts2var
+    D=modules;
+    l=trace(W*O);
+    M1=trace(W*D.')/l;
+    ch=1:n;
+    for i=1:n; p(i,:)=circshift(ch',i-1)';end;
+    P=permMatrices(n,p);
+   
+    for i=1:n
+        
+        Pn=P(:,:,i);
+        Q=zeros(n);Q(i,:);        
+        m2( i ) = trace( W.' * Pn * W * D.' ) ;
+%         m2(i)=trace(W*(Pn*W).'*(Pn*D.'));
+
+                
+    end
+    M2=sum(m2)/(l^2);
+    metric=(M1-M2);
+    
+end
+
+end
