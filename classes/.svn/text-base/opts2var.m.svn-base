@@ -1,8 +1,0 @@
-
-opts_fields = fields( opts );
-
-for i = 1 : numel( opts_fields )
-
-    eval( [ opts_fields{ i } , ' = opts.' , opts_fields{ i } , ';' ] ) ;
-
-end
