@@ -32,9 +32,9 @@ while ( (dR1+dR2)>.001 && iter<max_iter)
 R1old=R1;
 R2old=R2;
 tmp=Wm-R2;tmp(tmp<0)=0;tmp(tmp>1)=1;
-R1 = optimise_network_multi(Wm,mtype,M1','net',tmp);
+R1 = optimise_network_multi(Wm-R2,mtype,M1');%,'net',tmp);
 tmp=Wm-R1;tmp(tmp<0)=0;tmp(tmp>1)=1;
-R2 = optimise_network_multi(Wm,mtype,M2','net',tmp);
+R2 = optimise_network_multi(Wm-R1,mtype,M2');%,'net',tmp);
 dR1=norm(R1-R1old,'fro');
 dR2=norm(R2-R2old,'fro');
 tmp=[norm(R1-W1,'fro') norm(R2-W2,'fro')];
@@ -48,6 +48,7 @@ end
 SIMCOOL{simcool}={{Eorig} {E} {RE} {dR}};
 
 end
+
 
 
 

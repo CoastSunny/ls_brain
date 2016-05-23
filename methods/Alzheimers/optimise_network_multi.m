@@ -20,10 +20,10 @@ l=1;
 penalty=inf;
 iter=1;
 dW=Inf;
-max_iter=15000;
+max_iter=30000;
 %while penalty>0.001 | iter>10000
-mdiff=inf;
-while norm(dW)>10^-6 && iter<max_iter
+metric={inf};
+while norm([metric{:,end}]-[target_value{:}])>10^-6 && iter<max_iter
    
     %     [penalty,tmp]=network_penalty_wu(W,metric_type,target_value,'modules',modules);
     %     metric(iter)=tmp;
@@ -55,7 +55,7 @@ while norm(dW)>10^-6 && iter<max_iter
 %     dW=( dw{1} * (metric(1,iter) + metric(2,iter) - target_value(1) - target_value(2) )...
 %        + dw{2} * (metric(1,iter) + metric(2,iter) - target_value(1) - target_value(2) ) );
    if ~isempty(net)
-       dc = 0.1*(W-Y)*norm(W-Y,'fro') / n^2;
+       dc = .05*(W-Y)*norm(W-Y,'fro') / n^2;
    else 
        dc=0;
    end
