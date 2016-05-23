@@ -21,11 +21,14 @@ elseif any(strcmp(metric_type,{'clust' 'clustering'}))
         zeta(i)=trace(Si*W*H*W);
         
     end
+    idx_to_remove=find(zeta==0);
+    zeta(idx_to_remove)=[];
+    gamma(idx_to_remove)=[];
     metric=mean(gamma./zeta);
     
 elseif any(strcmp(metric_type,{'modul' 'modularity'}))
     
-    opts = struct ( 'modules', [] ) ;
+    opts = struct ( 'modules', [] ,'structure',[] ) ;
     [ opts  ] = parseOpts( opts , varargin );
     opts2var
     D=modules;
