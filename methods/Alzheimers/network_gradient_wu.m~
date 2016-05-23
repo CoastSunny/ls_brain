@@ -9,7 +9,7 @@ if any(strcmp(metric_type,{'trans' 'transitivity'}))
     alfa=trace(W^3);
     beta=trace(W*H*W');
     grad=((3*beta*W^2-alfa*(W*H+H*W))/beta^2 ).*H;
-    grad = grad + grad.' - diag(diag(grad));
+    grad = grad + grad.' -diag(diag(grad));
     
 elseif any(strcmp(metric_type,{'clust' 'clustering'}))
     
@@ -26,7 +26,7 @@ elseif any(strcmp(metric_type,{'clust' 'clustering'}))
     end
     
     grad=mean(igrad,3);
-    grad = grad + grad.' - diag(diag(grad));
+    grad = grad + grad.' -diag(diag(grad));
     
 elseif any(strcmp(metric_type,{'modul' 'modularity'}))
     
@@ -56,34 +56,9 @@ elseif any(strcmp(metric_type,{'modul' 'modularity'}))
      
      dM2 = sum( dm2 , 3 );
      grad = ( dM1 - dM2 ) .* S ;
-     grad = grad + grad.' - diag(diag(grad));
-     
-        
-elseif any(strcmp(metric_type,{'deg' 'degree'}))
+     grad = grad + grad.' -diag(diag(grad));
     
-    R = zeros( n );
-    
-    for i=1:n
-        
-        R_i = R;
-        R_i( : , i ) = ones( n , 1 ) / n;
-        igrad( : , : , i ) = R_i.' ;
-        igrad( : , : , i ) = igrad( : , : , i ) + igrad( : , : , i ).' - diag(diag(igrad(:,:,i))); 
-    end
-    
-%     grad = sum( igrad , 3 );
-%     grad = grad + grad.' - diag(diag(grad));
 
-    grad = igrad;
-    
-elseif any(strcmp(metric_type,{'network'}))  
-    
-    opts = struct ( 'modules',[],'structure', [] ,'net',[]) ;
-    [ opts  ] = parseOpts( opts , varargin );
-    opts2var
-    Y=network;
-    grad =  2 * ( W - Y ) ;
-    grad = grad + grad.' - diag(diag(grad));
 end
 
 

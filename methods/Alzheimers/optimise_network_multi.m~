@@ -35,31 +35,22 @@ while norm(dW)>10^-6 && iter<max_iter
         metric{ i , iter } = ls_network_metric( W , metric_type{ i } , opts );
         dw{ i } = network_gradient_wu( W , metric_type{ i } , opts );  
         
-        if numel(metric{ i , iter }) > 1 
-            
-            for j=1:numel(metric{i,iter})
-                
-                igrad( : , : , j ) = dw{ i }( : , : , j )...
-                    * ( metric{ i , iter }( j ) - target_value{ i }( j ) ); 
-                
-            end
-            
-            grad( : , : , i ) = sum( igrad , 3 );
-        
+        if any(strcmp(metric_type{i},{'deg' 'degree'}))
+            tmp=ones(n,1)*(metric{i,iter}-target_value{i});
+            tmp=tmp+tmp.';
+            grad( : , : , i ) = dw{ i } .* tmp;
         else
-        
             grad( : , : , i ) = dw{ i } * ( metric{ i , iter } - target_value{ i } );
-            
         end
     end
 %     dW=( dw{1} * (metric(1,iter) + metric(2,iter) - target_value(1) - target_value(2) )...
 %        + dw{2} * (metric(1,iter) + metric(2,iter) - target_value(1) - target_value(2) ) );
-   if ~isempty(net)
-       dc = 0.1*(W-Y)*norm(W-Y,'fro') / n^2;
+   if ~isempty(network)
+       dc = W-Y;
    else 
        dc=0;
    end
-    dW = ( sum( grad , 3 ) + dc ) .* S;
+    dW = sum( grad , 3 ) .* S + dc .* S;
    
     W = W - l * dW;
     W( W < 0 ) = 0;

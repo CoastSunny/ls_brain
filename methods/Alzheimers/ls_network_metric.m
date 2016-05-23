@@ -50,6 +50,20 @@ elseif any(strcmp(metric_type,{'modul' 'modularity'}))
     M2=sum(m2)/(l^2);
     metric=(M1-M2);
     
+elseif any(strcmp(metric_type,{'deg' 'degree'}))
+    
+    R = zeros( n );
+    
+    for i=1:n
+        
+        R_i = R;
+        R_i( : , i ) = ones( n , 1 ) / n;
+        dg( i ) = trace( W * R_i );
+        
+    end
+    
+    metric = dg;
+    
 end
 
 end
