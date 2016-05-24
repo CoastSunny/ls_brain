@@ -52,7 +52,7 @@ E3=zeros(2,iters,numel(noise_values));
 
 
 
-[bm , mods] = random_modular_graph(32,4,1,.90);
+[bm , mods] = random_modular_graph(16,4,1,.90);
 mod_matrix = ind2mod(mods,bm);
 for j=1:numel(noise_values)
     for i=1:iters
@@ -73,11 +73,12 @@ for j=1:numel(noise_values)
         mtype{3}='modul';
         mtype{4}='deg';
         
-        for k=1:numel(mtype)
-            M{k}=ls_network_metric(W,mtype{k},'modules',mod_matrix,'structure',bm);          
+        for i=1:numel(mtype)
+            M{i}=ls_network_metric(W,mtype{i});          
         end
         [a , m , it]=optimise_network_multi(We,mtype,...
-            M','modules',mod_matrix,'structure',bm);
+            M',...
+            'modules',mod_matrix,'structure',bm);
         
         tmp=[norm(vec(W)-vec(a)) norm(vec(W)-vec(We))];
         

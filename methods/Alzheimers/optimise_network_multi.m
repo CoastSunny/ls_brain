@@ -55,7 +55,7 @@ while norm([metric{:,end}]-[target_value{:}])>10^-6 && iter<max_iter
 %     dW=( dw{1} * (metric(1,iter) + metric(2,iter) - target_value(1) - target_value(2) )...
 %        + dw{2} * (metric(1,iter) + metric(2,iter) - target_value(1) - target_value(2) ) );
    if ~isempty(net)
-       dc = .05*(W-Y)*norm(W-Y,'fro') / n^2;
+       dc = .03*(W-Y)*norm(W-Y,'fro') / n^2;
    else 
        dc=0;
    end
