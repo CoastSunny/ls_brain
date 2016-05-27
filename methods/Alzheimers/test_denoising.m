@@ -58,10 +58,11 @@ for j=1:numel(noise_values)
     for i=1:iters
         
         [W, We]=ls_bin2wei(bm,noise_values(j),1);
-        mtype='modul';
+        mtype=[];
+        mtype{1}='modul';
         
-        [a , m , it]=optimise_network(We,mtype,ls_network_metric(W,mtype,...
-            'modules',mod_matrix),'modules',mod_matrix,'structure',bm);
+        [a , m , it]=optimise_network_multi(We,mtype,{ls_network_metric(W,mtype,...
+            'modules',mod_matrix)},'modules',mod_matrix,'structure',bm);
         tmp1=[norm(W-a,'fro') norm(W-We,'fro')];
         M1(:,i,j)=[m(end) ls_network_metric(W,mtype,'modules',mod_matrix)...
             ls_network_metric(We,mtype,'modules',mod_matrix)];

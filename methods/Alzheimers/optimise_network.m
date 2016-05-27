@@ -26,7 +26,7 @@ while check>10^-6 && iter<max_iter
     dW = ( metric( iter ) - target_value ) * network_gradient_wu(W,metric_type,opts);
     W = W - l *  dW;
     W(W<0)=0;
-%     W(W>1)=1;
+    W(W>1)=1;
     %     W=W/max(max(W));
     iter=iter+1;
     check=norm(l*dW,'fro');

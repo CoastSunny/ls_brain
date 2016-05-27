@@ -1,14 +1,15 @@
 function [ W , metric , iter] = optimise_network_multi(W,metric_type,target_value,varargin)
 
-opts = struct ( 'modules',[],'structure', [] ,'constraint',[]) ;
+opts = struct ( 'modules',[],'structure', [] ,'constraint', [] , 'learn' , []) ;
 [ opts  ] = parseOpts( opts , varargin );
 opts2var
 
 n=size(W,1);
 O=ones(n);
 H=O-eye(n);
-
 M=modules;
+Winit=W;
+
 if ~isempty(structure)
     S=structure;
 else
@@ -18,15 +19,19 @@ if ~isempty(constraint)
     Y=constraint{1};
     pen=constraint{2};
 else
-    Y=H;
+    Y=0;
     pen=0;
 end
-Winit=W;
-l=.1;
+if isempty(learn)
+    l=1;
+else
+    l=learn;
+end
+
 penalty=inf;
 iter=1;
 dW=Inf;
-max_iter=30000;
+max_iter=10000;
 %while penalty>0.001 | iter>10000
 metric={inf};
 check=inf;

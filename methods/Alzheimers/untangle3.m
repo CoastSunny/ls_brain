@@ -1,9 +1,9 @@
 for simcool=1:50
 clear M1 M2 E dR RE
-max_iter=5;
+max_iter=20;
 noise_values=0+(0.05:0.05:1.5);
 j=10;
-nodes=5;
+nodes=10;
 [W1,We1]=wHub(nodes,nodes,noise_values(j));
 [W2,We2]=wHub(nodes,nodes,noise_values(j));
 
@@ -36,7 +36,8 @@ R222=R2;
 R1111=R1;
 R2222=R2;
 check=Inf;
-pen=1;
+pen=.1;
+l=0.1;
 while ( check>.01 && iter<max_iter) 
 R1old=R1;
 R2old=R2;
@@ -46,10 +47,10 @@ tmp1=Wm-R22;tmp1(tmp1<0)=0;tmp1(tmp1>1)=1;
 tmp11=Wm-R222;tmp11(tmp11<0)=0;tmp11(tmp11>1)=1;
 tmp111=Wm-R2222;tmp111(tmp111<0)=0;tmp111(tmp111>1)=1;
 
-R1 = optimise_network_multi(R1,mtype,M1','constraint',{tmp pen});
-R11 = optimise_network_multi(Wm,mtype,M1','constraint',{tmp1 pen});
-R111 = optimise_network_multi(tmp11,mtype,M1');
-R1111 = optimise_network_multi(tmp111,mtype,M1','constraint',{tmp111 pen});
+R1 = optimise_network_multi(R1,mtype,M1','constraint',{tmp pen},'learn',l);
+R11 = optimise_network_multi(Wm,mtype,M1','constraint',{tmp1 pen},'learn',l);
+R111 = optimise_network_multi(tmp11,mtype,M1','learn',l);
+R1111 = optimise_network_multi(tmp111,mtype,M1','constraint',{tmp111 pen},'learn',l);
 
 
 tmp=Wm-R1;tmp(tmp<0)=0;tmp(tmp>1)=1;
@@ -57,10 +58,10 @@ tmp2=Wm-R11;tmp2(tmp2<0)=0;tmp2(tmp2>1)=1;
 tmp22=Wm-R111;tmp22(tmp22<0)=0;tmp22(tmp22>1)=1;
 tmp222=Wm-R1111;tmp222(tmp222<0)=0;tmp222(tmp222>1)=1;
 
-R2 = optimise_network_multi(R2,mtype,M2','constraint',{tmp pen});
-R22 = optimise_network_multi(Wm,mtype,M2','constraint',{tmp2 pen});
-R222 = optimise_network_multi(tmp22,mtype,M2');
-R2222 = optimise_network_multi(tmp222,mtype,M2','constraint',{tmp222 pen});
+R2 = optimise_network_multi(R2,mtype,M2','constraint',{tmp pen},'learn',l);
+R22 = optimise_network_multi(Wm,mtype,M2','constraint',{tmp2 pen},'learn',l);
+R222 = optimise_network_multi(tmp22,mtype,M2','learn',l);
+R2222 = optimise_network_multi(tmp222,mtype,M2','constraint',{tmp222 pen},'learn',l);
 
 dR1=norm(R1-R1old,'fro');
 dR2=norm(R2-R2old,'fro');
