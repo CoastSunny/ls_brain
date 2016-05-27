@@ -30,7 +30,7 @@ elseif any(strcmp(metric_type,{'clust' 'clustering'}))
     
 elseif any(strcmp(metric_type,{'modul' 'modularity'}))
     
-     opts = struct ( 'modules',[],'structure', [] , 'net' , [] ) ;
+     opts = struct ( 'modules',[],'structure', [] , 'net' , [] , 'constraint' , [] ) ;
      [ opts  ] = parseOpts( opts , varargin );
      opts2var
      D = modules ;
@@ -75,15 +75,7 @@ elseif any(strcmp(metric_type,{'deg' 'degree'}))
 %     grad = grad + grad.' - diag(diag(grad));
 
     grad = igrad;
-    
-elseif any(strcmp(metric_type,{'network'}))  
-    
-    opts = struct ( 'modules',[],'structure', [] ,'net',[]) ;
-    [ opts  ] = parseOpts( opts , varargin );
-    opts2var
-    Y=network;
-    grad =  2 * ( W - Y ) ;
-    grad = grad + grad.' - diag(diag(grad));
+ 
 end
 
 

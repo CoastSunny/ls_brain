@@ -32,7 +32,7 @@ classdef Dataset < dynamicprops
                 counter=1;
                 
                 cfg.trialdef.eventvalue=marker;
-                
+                cfg.trialdef.eventtype='trial';
                 for i=1:length(paths)
                     
                     flag='good';

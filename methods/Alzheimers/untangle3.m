@@ -3,10 +3,10 @@ clear M1 M2 E dR RE
 max_iter=5;
 noise_values=0+(0.05:0.05:1.5);
 j=10;
-nodes=16;
+nodes=5;
 [W1,We1]=wHub(nodes,nodes,noise_values(j));
 [W2,We2]=wHub(nodes,nodes,noise_values(j));
-W2=We2;
+
 mtype=[];
 mtype{1}='trans';
 mtype{2}='clust';
@@ -36,7 +36,7 @@ R222=R2;
 R1111=R1;
 R2222=R2;
 check=Inf;
-pen=.01;
+pen=1;
 while ( check>.01 && iter<max_iter) 
 R1old=R1;
 R2old=R2;

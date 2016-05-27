@@ -28,7 +28,7 @@ elseif any(strcmp(metric_type,{'clust' 'clustering'}))
     
 elseif any(strcmp(metric_type,{'modul' 'modularity'}))
     
-    opts = struct ( 'modules', [] ,'structure', [] , 'net' , []) ;
+    opts = struct ( 'modules', [] ,'structure', [] , 'net' , [] , 'constraint' , [] ) ;
     [ opts  ] = parseOpts( opts , varargin );
     opts2var
     D=modules;

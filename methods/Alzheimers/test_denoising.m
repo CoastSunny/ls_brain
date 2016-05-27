@@ -1,7 +1,7 @@
 mtype=[];
 noise_values=0+(0.05:0.05:1.5);
 clear E1 E2 E3  M1 M2 M3
-iters=20;
+iters=10;
 E1=zeros(2,iters,numel(noise_values));
 E2=zeros(2,iters,numel(noise_values));
 E3=zeros(2,iters,numel(noise_values));
@@ -62,10 +62,10 @@ for j=1:numel(noise_values)
         
         [a , m , it]=optimise_network(We,mtype,ls_network_metric(W,mtype,...
             'modules',mod_matrix),'modules',mod_matrix,'structure',bm);
-        tmp=[norm(vec(W)-vec(a)) norm(vec(W)-vec(We))];
+        tmp1=[norm(W-a,'fro') norm(W-We,'fro')];
         M1(:,i,j)=[m(end) ls_network_metric(W,mtype,'modules',mod_matrix)...
             ls_network_metric(We,mtype,'modules',mod_matrix)];
-        E1(:,i,j)=tmp;
+        E1(:,i,j)=tmp1;
         
         mtype=[];
         mtype{1}='trans';
@@ -76,17 +76,18 @@ for j=1:numel(noise_values)
         for k=1:numel(mtype)
             M{k}=ls_network_metric(W,mtype{k},'modules',mod_matrix,'structure',bm);          
         end
-        [a , m , it]=optimise_network_multi(We,mtype,...
+        [b , m , it]=optimise_network_multi(We,mtype,...
             M','modules',mod_matrix,'structure',bm);
         
-        tmp=[norm(vec(W)-vec(a)) norm(vec(W)-vec(We))];
+        tmp2=[norm(W-b,'fro') norm(W-We,'fro')];
         
         M2(:,:,i,j)=[m(1,end) ls_network_metric(W,mtype{1}) ls_network_metric(We,mtype{1});...
             m(2,end) ls_network_metric(W,mtype{2}) ls_network_metric(We,mtype{2});...
             m(3,end) ls_network_metric(W,mtype{3}, 'modules',mod_matrix,'structure',bm)...
             ls_network_metric(We,mtype{3}, 'modules',mod_matrix,'structure',bm)];
-        E2(:,i,j)=tmp;
-        
+        E2(:,i,j)=tmp2;
+        RES{i,j}={{W} {We} {a} {b}};
+        i
     end
 end
 

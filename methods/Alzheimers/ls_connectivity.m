@@ -52,11 +52,8 @@ for q = 1:length(DirCon)
     % Applies connectivity measure
     cfg             = [];
     cfg.method      = 'wpli_debiased';
-<<<<<<< HEAD
-%     cfg.complex     = 'imag';
-=======
-    cfg.complex     = 'complex';
->>>>>>> 	modified:   methods/Alzheimers/ls_connectivity.m
+%    cfg.complex     = 'complex';
+
     %          cfg.bandwidth   = 1;
     for idx_trials=1:ntrials-ntrials_window
         cfg.trials      = idx_trials:idx_trials+ntrials_window-1;

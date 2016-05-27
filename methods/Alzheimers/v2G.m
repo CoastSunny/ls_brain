@@ -6,9 +6,9 @@ root=roots([1 -1 -2*dims]);
 
 ch_dim=root(1);
 
-tmpG=ones(ch_dim,ch_dim);
+tmpG=zeros(ch_dim,ch_dim);
 
-idx_upper=find(triu((tmpG)));
+idx_upper=find(triu((tmpG)==0));
 idx_diag=find(diag(1:(ch_dim)));
 idx=setdiff(idx_upper,idx_diag);
 tmpG(idx)=v;
