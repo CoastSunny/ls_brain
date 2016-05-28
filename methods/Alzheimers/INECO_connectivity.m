@@ -47,7 +47,7 @@ for q = 1:length(names)
     cfg.output      = 'pow';
     %cfg.pad         = 5;                                                % Pads for 0.5Hz resolution
     freq{count}         = ft_freqanalysis(cfg, data);
-    Freq{count}         = (freq{q}.powspctrm);
+    Freq{count}         = (freq{count}.powspctrm);
     
     cfg.output      = 'fourier';
     freqc{count}        = ft_freqanalysis(cfg, data);
