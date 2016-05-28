@@ -26,15 +26,16 @@ for i = 1:length(subjects)
         data            = ft_preprocessing(cfg);
         old_data=data;        
         
-        for j=1:numel(old_data.trial)
+        data=rmfield(data,'trial');
+        for j=1:numel(data.old_trial)
             for k=1:5
                 data.trial{ 5 * ( j - 1 ) + k  } = ...
-                    old_data.trial{j}( : , ( ( k - 1 ) * 57 + 1 ) : ( k - 1 ) * 57 + 128 );
+                    data.old_trial{j}( : , ( ( k - 1 ) * 57 + 1 ) : ( k - 1 ) * 57 + 128 );
                 data.time{ 5 * ( j - 1 ) + k } = (0:127)/data.fsample;
             end
         end
         cd(save_folder)
-        save([save_folder 'subject' num2str(i)], 'data','old_data')
+        save([save_folder 'subject' num2str(i)], 'data')
     catch err
     end
 end

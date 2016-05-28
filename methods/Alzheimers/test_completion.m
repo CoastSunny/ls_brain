@@ -1,7 +1,7 @@
 mtype=[];
 
 clear Ec RESc
-iters=5;
+iters=1;
 E1=zeros(2,iters,numel(noise_values));
 E2=zeros(2,iters,numel(noise_values));
 E3=zeros(2,iters,numel(noise_values));
@@ -11,12 +11,12 @@ modules=4;
 [bm , mods] = random_modular_graph(nodes,modules,1,.90);
 mod_matrix = ind2mod(mods,bm);
 struc=zeros(nodes);
-for j=1:5
-    idx(1,:)=[1 2];
-    idx(2,:)=[1 3];
-    idx(3,:)=[1 4];
-    idx(4,:)=[1 10];
-    idx(5,:)=[1 11];
+idx(1,:)=[1 2];
+idx(2,:)=[1 3];
+idx(3,:)=[1 4];
+idx(4,:)=[9 10];
+idx(5,:)=[9 11];
+for j=1:5    
     
     for i=1:iters
         
@@ -40,8 +40,12 @@ for j=1:5
         [c , m , it]=optimise_network_multi(W,mtype,...
             M','modules',mod_matrix,'structure',struc);
         
-        
+        for jj=1:j
+            e(jj)=c(idx(jj,1),idx(jj,2))-Worig(idx(jj,1),idx(jj,2));
+        end
         Ec(:,i,j)=[norm(Worig-c,'fro') ];
+        Ecc(:,i,j)=[norm( (Worig-c).*struc ,'fro')]/j;
+        Ecc(:,i,j)=2*mean(e);
         RESc{i,j}={{Worig} {c}};
         i
     end
