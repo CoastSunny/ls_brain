@@ -6,7 +6,7 @@ else
     save_folder='/home/lspyrou/Documents/results/INECO/conn';
 end
 %% Connectivity Analysiss
-PSI=[];PSI_full=[];
+PSI=[];PSI_full=[];conn_full=[];Conn_full=[];
 DirCon = dir([ data_folder '*.mat']);
 cd(save_folder)
 tmp=struct2cell(DirCon);
@@ -14,6 +14,7 @@ tmp=tmp(1,1:end);
 names=sort_nat(tmp);
 idx=strcmp('subjects.mat',names);
 names(idx)=[];
+load g_idx
 % Sets frequency bands (steps must match frequency resolution, see cfg.pad)
 %freqBands = [[0.5 3]; [3.5 8]; [8.5 12]; [12.5 32]; [32.5 40]];
 %numberOfBands = size(freqBands,1);
@@ -26,14 +27,13 @@ g2={'SHAPE' 'BINDING'};
 g3={'ENCOD' 'TEST'};
 count=1;
 for q = 1:length(names)
-    clear data
-    load( fullfile(data_folder,names{q}) )
-    g_idx(q,:)=group_idx(data,g1,g2,g3);
+    clear data   
+%     g_idx(q,:)=group_idx(data,g1,g2,g3);
     if g_idx(q,3)==0 || g_idx(q,2)==1 % group exclusion criteria
         continue;
     end
     gc_idx(count,:)=g_idx(q,:);
-    
+    load( fullfile(data_folder,names{q}) )
     ntrials=numel(data.trial);
     
     cfg             = [];

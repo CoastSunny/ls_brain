@@ -31,7 +31,7 @@ end
 penalty=inf;
 iter=1;
 dW=Inf;
-max_iter=10000;
+max_iter=5000;
 %while penalty>0.001 | iter>10000
 metric={inf};
 check=inf;

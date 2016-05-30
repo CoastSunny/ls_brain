@@ -91,7 +91,7 @@ for j=1:numel(noise_values)
         i
     end
 end
-
+%i=1;j=5;figure,subplot(2,2,1),imagesc(RES{i,j}{1}{1}),title('original'),subplot(2,2,2),imagesc(RES{i,j}{2}{1}),title('noisy'),subplot(2,2,3),imagesc(RES{i,j}{3}{1}),title('one measure'),subplot(2,2,4),imagesc(RES{i,j}{4}{1}),title('four measures')
 
 
 
