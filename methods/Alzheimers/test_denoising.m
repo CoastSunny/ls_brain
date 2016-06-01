@@ -1,7 +1,7 @@
 mtype=[];
-noise_values=0+(0.05:0.05:1.5);
+noise_values=0+(0.05:0.15:1.5);
 clear E1 E2 E3  M1 M2 M3
-iters=10;
+iters=5;
 E1=zeros(2,iters,numel(noise_values));
 E2=zeros(2,iters,numel(noise_values));
 E3=zeros(2,iters,numel(noise_values));
@@ -52,7 +52,8 @@ E3=zeros(2,iters,numel(noise_values));
 
 
 
-[bm , mods] = random_modular_graph(32,4,1,.90);
+[bm , mods] = random_modular_graph(64,4,1,.90);
+nel=numel(bm);
 mod_matrix = ind2mod(mods,bm);
 for j=1:numel(noise_values)
     for i=1:iters
@@ -63,8 +64,8 @@ for j=1:numel(noise_values)
         
         [a , m , it]=optimise_network_multi(We,mtype,{ls_network_metric(W,mtype,...
             'modules',mod_matrix)},'modules',mod_matrix,'structure',bm);
-        tmp1=[norm(W-a,'fro') norm(W-We,'fro')];
-        M1(:,i,j)=[m(end) ls_network_metric(W,mtype,'modules',mod_matrix)...
+        tmp1=1/nel*[norm(W-a,'fro') norm(W-We,'fro')];
+        M1(:,i,j)=[m{end} ls_network_metric(W,mtype,'modules',mod_matrix)...
             ls_network_metric(We,mtype,'modules',mod_matrix)];
         E1(:,i,j)=tmp1;
         
@@ -76,16 +77,14 @@ for j=1:numel(noise_values)
         
         for k=1:numel(mtype)
             M{k}=ls_network_metric(W,mtype{k},'modules',mod_matrix,'structure',bm);          
+            Me{k}=ls_network_metric(We,mtype{k},'modules',mod_matrix,'structure',bm);          
         end
         [b , m , it]=optimise_network_multi(We,mtype,...
             M','modules',mod_matrix,'structure',bm);
         
-        tmp2=[norm(W-b,'fro') norm(W-We,'fro')];
+        tmp2=1/nel*[norm(W-b,'fro') norm(W-We,'fro')];
         
-        M2(:,:,i,j)=[m(1,end) ls_network_metric(W,mtype{1}) ls_network_metric(We,mtype{1});...
-            m(2,end) ls_network_metric(W,mtype{2}) ls_network_metric(We,mtype{2});...
-            m(3,end) ls_network_metric(W,mtype{3}, 'modules',mod_matrix,'structure',bm)...
-            ls_network_metric(We,mtype{3}, 'modules',mod_matrix,'structure',bm)];
+        M2(:,:,i,j)=[m{:,end} M Me];
         E2(:,i,j)=tmp2;
         RES{i,j}={{W} {We} {a} {b}};
         i

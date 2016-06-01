@@ -30,35 +30,35 @@ elseif any(strcmp(metric_type,{'clust' 'clustering'}))
     
 elseif any(strcmp(metric_type,{'modul' 'modularity'}))
     
-     opts = struct ( 'modules',[],'structure', [] , 'net' , [] , 'constraint' , [] , 'learn' , [] ) ;
-     [ opts  ] = parseOpts( opts , varargin );
-     opts2var
-     D = modules ;
-     S = structure;
-     
-     theta = trace( W * O ) ;
-     iota = trace( W * D.' ) ;
-     dM1 = ( D * theta - O.' * iota) / theta^2 ;
+    opts = struct ( 'modules',[],'structure', [] , 'net' , [] , 'constraint' , [] , 'learn' , [] ) ;
+    [ opts  ] = parseOpts( opts , varargin );
+    opts2var
+    D = modules ;
+    S = structure;
     
-     ch =1:n ;
-     for i = 1:n ; p( i , : ) = circshift( ch' , i-1 )' ; end ;
-     P = permMatrices( n , p ) ;
-     
-     for i=1:n
-         
-         Pn = P( : , : , i ) ;
-         kappa( i ) = trace( W.' * Pn * W * D.' ) ;
-         dm2( : , : , i ) = ( theta ...
-             *( ( Pn * W * D.' + Pn.' * W * D ))...
-             - 2 * kappa(i) * O.' ) / theta^3 ;
-         
-     end
-     
-     dM2 = sum( dm2 , 3 );
-     grad = ( dM1 - dM2 ) .* S ;
-     grad = grad + grad.' - diag(diag(grad));
-     
+    theta = trace( W * O ) ;
+    iota = trace( W * D.' ) ;
+    dM1 = ( D * theta - O.' * iota) / theta^2 ;
+    
+    ch =1:n ;
+    for i = 1:n ; p( i , : ) = circshift( ch' , i-1 )' ; end ;
+    P = permMatrices( n , p ) ;
+    
+    for i=1:n
         
+        Pn = P( : , : , i ) ;
+        kappa( i ) = trace( W.' * Pn * W * D.' ) ;
+        dm2( : , : , i ) = ( theta ...
+            *( ( Pn * W * D.' + Pn.' * W * D ))...
+            - 2 * kappa(i) * O.' ) / theta^3 ;
+        
+    end
+    
+    dM2 = sum( dm2 , 3 );
+    grad = ( dM1 - dM2 ) .* S ;
+    grad = grad + grad.' - diag(diag(grad));
+    
+    
 elseif any(strcmp(metric_type,{'deg' 'degree'}))
     
     R = zeros( n );
@@ -68,14 +68,36 @@ elseif any(strcmp(metric_type,{'deg' 'degree'}))
         R_i = R;
         R_i( : , i ) = ones( n , 1 ) / n;
         igrad( : , : , i ) = R_i.' ;
-        igrad( : , : , i ) = igrad( : , : , i ) + igrad( : , : , i ).' - diag(diag(igrad(:,:,i))); 
+        igrad( : , : , i ) = igrad( : , : , i ) + igrad( : , : , i ).' - diag(diag(igrad(:,:,i)));
+        
     end
     
-%     grad = sum( igrad , 3 );
-%     grad = grad + grad.' - diag(diag(grad));
-
+    %     grad = sum( igrad , 3 );
+    %     grad = grad + grad.' - diag(diag(grad));
+    
     grad = igrad;
- 
+    
+elseif any(strcmp(metric_type,{'avndeg' 'average_neighbour_degree'}))
+    
+    R = zeros( n );
+    
+    for i=1:n
+        
+        R_i = R;
+        R_i( : , i ) = ones( n , 1 ) / n;
+        rho=trace(W^2*R_i);
+        tau=trace(W*R_i);
+        igrad( : , : , i ) = (tau * ( W * R_i + R_i * W ) .' - rho * R_i.')/tau^2 ;
+        igrad( : , : , i ) = igrad( : , : , i ) + igrad( : , : , i ).' - diag(diag(igrad(:,:,i)));
+        
+    end
+    
+    
+    %     grad = sum( igrad , 3 );
+    %     grad = grad + grad.' - diag(diag(grad));
+    
+    grad = igrad;
+    
 end
 
 

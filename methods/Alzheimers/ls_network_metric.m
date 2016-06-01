@@ -37,15 +37,15 @@ elseif any(strcmp(metric_type,{'modul' 'modularity'}))
     ch=1:n;
     for i=1:n; p(i,:)=circshift(ch',i-1)';end;
     P=permMatrices(n,p);
-   
+    
     for i=1:n
         
         Pn=P(:,:,i);
-        Q=zeros(n);Q(i,:);        
+        Q=zeros(n);Q(i,:);
         m2( i ) = trace( W.' * Pn * W * D.' ) ;
-%         m2(i)=trace(W*(Pn*W).'*(Pn*D.'));
-
-                
+        %         m2(i)=trace(W*(Pn*W).'*(Pn*D.'));
+        
+        
     end
     M2=sum(m2)/(l^2);
     metric=(M1-M2);
@@ -63,6 +63,23 @@ elseif any(strcmp(metric_type,{'deg' 'degree'}))
     end
     
     metric = dg;
+    
+elseif any(strcmp(metric_type,{'avndeg' 'average_neighbour_degree'}))
+    
+    R = zeros( n );
+    
+    for i=1:n
+        
+        R_i = R;
+        R_i( : , i ) = ones( n , 1 ) / n;
+        rho=trace(W^2*R_i/n);
+        tau=trace(W*R_i);
+        nd(i)=rho/tau;
+        
+    end
+    
+    metric = nd;
+    
     
 end
 

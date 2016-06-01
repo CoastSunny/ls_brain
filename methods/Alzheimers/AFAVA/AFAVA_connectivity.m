@@ -69,7 +69,7 @@ for q = 1:length(DirCon)
     end
     
 %     
-    cfg.trials      = 1:50;
+    cfg.trials      = 1:min(50,ntrials);
     conn_full{q}            = ft_connectivityanalysis(cfg, freqc{q});
     PSI_full{q}(:,:,:) = abs(conn_full{q}.(parameter));
     for idx_freq = 1:numel(freqs)

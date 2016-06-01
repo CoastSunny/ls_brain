@@ -1,9 +1,10 @@
 for simcool=1:50
 clear M1 M2 E dR RE
-max_iter=20;
+max_iter=10;
 noise_values=0+(0.05:0.05:1.5);
 j=10;
-nodes=10;
+nodes=32;
+nel=nodes^2;
 [W1,We1]=wHub(nodes,nodes,noise_values(j));
 [W2,We2]=wHub(nodes,nodes,noise_values(j));
 
@@ -37,8 +38,8 @@ R1111=R1;
 R2222=R2;
 check=Inf;
 pen=.1;
-l=0.1;
-while ( check>.01 && iter<max_iter) 
+l=0.5;
+while ( check>.001 && iter<max_iter) 
 R1old=R1;
 R2old=R2;
 
@@ -68,8 +69,8 @@ dR2=norm(R2-R2old,'fro');
 tmp=[norm(R1-W1,'fro') norm(R11-W1,'fro') norm(R111-W1,'fro') norm(R1111-W1,'fro')...
     norm(R2-W2,'fro') norm(R22-W2,'fro') norm(R222-W2,'fro') norm(R2222-W2,'fro')];
 dR(iter,:)=[dR1 dR2];
-E(iter,:)=tmp;
-RE(iter,:)=[norm(R1+R2-Wm,'fro') norm(R11+R22-Wm,'fro')...
+E(iter,:)=1/nel*tmp;
+RE(iter,:)=1/nel*[norm(R1+R2-Wm,'fro') norm(R11+R22-Wm,'fro')...
     norm(R111+R222-Wm,'fro') norm(R1111+R2222-Wm,'fro')];
 check=RE(iter,1);
 iter=iter+1;
