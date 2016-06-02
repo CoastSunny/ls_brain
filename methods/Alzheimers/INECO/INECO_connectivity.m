@@ -2,8 +2,8 @@ if isunix==0
     data_folder='D:\Raw\AlzheimerEEG\Multivariate AFAVA artefact free';
     save_folder='D:\Extracted\Alzheimer\Multivariate AFAVA artefact free\AFAVA_1sectrials\';
 else
-    data_folder='/home/lspyrou/Documents/results/INECO/';
-    save_folder='/home/lspyrou/Documents/results/INECO/conn';
+    data_folder='/home/engbiome/INECO/INECO_fieldtrip/';
+    save_folder='/home/lspyrou/Documents/results/INECO/';
 end
 %% Connectivity Analysiss
 PSI=[];PSI_full=[];conn_full=[];Conn_full=[];

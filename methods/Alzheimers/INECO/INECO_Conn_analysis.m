@@ -1,5 +1,5 @@
 cd([home '/Dropbox/Alzheimer/results/Descriptive/INECO'])
-save=1;
+save=0;
 delta=[1];
 theta=[2 3];
 alpha=[4 5 6];

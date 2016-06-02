@@ -74,7 +74,11 @@ elseif any(strcmp(metric_type,{'avndeg' 'average_neighbour_degree'}))
         R_i( : , i ) = ones( n , 1 ) / n;
         rho=trace(W^2*R_i/n);
         tau=trace(W*R_i);
-        nd(i)=rho/tau;
+        if tau~=0
+            nd(i)=rho/tau;
+        else
+            nd(i)=0;
+        end
         
     end
     

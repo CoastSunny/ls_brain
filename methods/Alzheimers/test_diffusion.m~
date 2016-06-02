@@ -1,0 +1,46 @@
+mtype=[];
+noise_values=0+(0.05:0.15:1.5);
+clear E1 E2 E3  M1 M2 M3
+iters=1;
+E1=zeros(2,iters,numel(noise_values));
+E2=zeros(2,iters,numel(noise_values));
+E3=zeros(2,iters,numel(noise_values));
+
+
+nodes=6;
+modules=2;
+[bm , mods] = random_modular_graph(nodes,modules,1,.90);
+nel=numel(bm);
+mod_matrix = ind2mod(mods,bm);
+[W, We]=ls_bin2wei(bm,noise_values(1),1);
+
+mtype=[];
+mtype{1}='modul';
+
+
+for k=1:numel(mtype)
+    
+    K{k}=ls_network_metric(W,mtype{k});    
+    
+end
+
+sig=0.1;
+
+for dt=1:10
+    
+    E = sig * eye( nodes ) .* randn( nodes );
+    W( : , : , dt ) = W + E ;
+    f(dt)=ls_network_metric(W(:,:,dt),mtype);
+    
+end
+
+
+
+
+
+
+
+
+
+
+

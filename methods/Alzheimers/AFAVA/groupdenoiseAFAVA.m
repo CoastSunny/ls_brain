@@ -1,11 +1,11 @@
 clear E RES W We Mpat Mcon Mself
 
 mtype=[];
-mtype{1}='avndeg';
-
-mtype{2}='deg';
-mtype{3}='clust';
-mtype{4}='trans';
+mtype{1}='deg';
+% 
+ mtype{2}='avndeg';
+% mtype{3}='clust';
+% mtype{4}='trans';
 
 delta=1+(2:4);
 theta=1+(5:7);
