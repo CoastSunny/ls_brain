@@ -1,4 +1,4 @@
-function [ W , metric , iter] = optimise_network_multi(W,metric_type,target_value,varargin)
+function [ W , metric , iter] = optimise_corrnetworklti(W,metric_type,target_value,varargin)
 
 opts = struct ( 'modules',[],'structure', [] ,'constraint', [] , 'learn' , []) ;
 [ opts  ] = parseOpts( opts , varargin );

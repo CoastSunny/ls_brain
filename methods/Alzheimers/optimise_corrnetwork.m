@@ -1,13 +1,15 @@
-function [ W , metric , iter] = optimise_network_multi(W,metric_type,target_value,varargin)
+function [ X , metric , iter] = optimise_corrnetwork(X,idx,tidx,metric_type,target_value,varargin)
 
 opts = struct ( 'modules',[],'structure', [] ,'constraint', [] , 'learn' , []) ;
 [ opts  ] = parseOpts( opts , varargin );
 opts2var
 
+W=WfromX(X);
 n=size(W,1);
 O=ones(n);
 H=O-eye(n);
 M=modules;
+
 Winit=W;
 
 if ~isempty(structure)
@@ -30,7 +32,7 @@ end
 
 penalty=inf;
 iter=1;
-dW=Inf;
+dX=Inf;
 max_iter=10000;
 %while penalty>0.001 | iter>10000
 metric={inf};
@@ -44,23 +46,23 @@ while check>10^-6 && iter<max_iter
     
     for i=1:numel(target_value)
         
-        metric{ i , iter } = ls_network_metric( W , metric_type{ i } , opts );
-        dw{ i } = network_gradient_wu( W , metric_type{ i } , opts );
+        metric{ i , iter } = ls_corrnetwork_metric( X , metric_type{ i } , opts );
+        dx{ i } = net_corr_grad( X , idx , tidx , metric_type{ i } , opts );
         
         if numel(metric{ i , iter }) > 1
             
             for j=1:numel(metric{i,iter})
                 
-                igrad( : , : , j ) = dw{ i }( : , : , j )...
+                igrad( j , : ) = dw{ i }( j , : )...
                     * ( metric{ i , iter }( j ) - target_value{ i }( j ) );
                 
             end
             
-            grad( : , : , i ) = sum( igrad , 3 );
+            grad( i , : ) = sum( igrad , 2 );
             
         else
             
-            grad( : , : , i ) = dw{ i } * ( metric{ i , iter } - target_value{ i } );
+            grad( i , : ) = dx{ i } * ( metric{ i , iter } - target_value{ i } );
             
         end
     end
@@ -71,14 +73,12 @@ while check>10^-6 && iter<max_iter
     else
         dc=0;
     end
-    dW = ( sum( grad , 3 ) + dc ) .* S;
+    dX = ( sum( grad , 1 ) );
     
-    W = W - l * dW;
-    W( W < 0 ) = 0;
-    W( W > 1 ) = 1;
-    %     W=W/max(max(W));
+    X(idx,tidx) = X(idx,tidx) - l * dX;
+    
     iter = iter + 1;
-    check=norm(l*dW,'fro');
+    check=norm(l*dX,'fro');
 end
 
 % W=W/max(max(W));

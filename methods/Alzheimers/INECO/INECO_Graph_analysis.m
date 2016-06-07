@@ -1,4 +1,4 @@
-cd([home '/Dropbox/Alzheimer/results/Descriptive/INECO'])
+cd([home '/Dropbox/Alzheimer/results/Descriptive/INECO/SHAPE'])
 save=1;
 delta=[1];
 theta=[2 3];
@@ -88,17 +88,18 @@ bands(1).y='delta';bands(2).y='theta';bands(3).y='alpha';bands(4).y='beta1';band
 %     
 % end
 % end
-th=0.2;
+th=0.5;
 for period=1:periods
 for ii=1:size(ccpat,5)
     for jj=1:numel(bands)
         tmp_pat=mean(ccpat(:,:,bands(jj).x,period,ii),3);
         tmp_pat=weight_conversion(tmp_pat,'normalize');   
-        tmp_pat=tmp_pat>th;
-%         [tmp_pat thth(jj)]=CST(tmp_pat);
+
+        [tmp_pat thth(jj)]=CST(tmp_pat);
 %         tmp_pat=tmp_pat>th;
-        Pmetrics(ii,jj,period,:)=[transitivity_bd(tmp_pat) ...
-            mean(clustering_coef_bd(tmp_pat)) ...
+
+        Pmetrics(ii,jj,period,:)=[transitivity_bu(tmp_pat) ...
+            mean(clustering_coef_bu(tmp_pat)) ...
             mean(degrees_und(tmp_pat)) ...
             density_und(tmp_pat) ...
             efficiency_bin(tmp_pat) ];
@@ -111,12 +112,13 @@ for ii=1:size(cccon,5)
     for jj=1:numel(bands)
         tmp_con=mean(cccon(:,:,bands(jj).x,period,ii),3);
         tmp_con=weight_conversion(tmp_con,'normalize');        
-%         tmp_con=CST(tmp_con);
-        tmp_con=tmp_con>th;
-        Cmetrics(ii,jj,period,:)=[transitivity_bd(tmp_con)...
-            mean(clustering_coef_bd(tmp_con))...
+        tmp_con=CST(tmp_con);
+%         tmp_con=tmp_con>th;
+
+        Cmetrics(ii,jj,period,:)=[transitivity_bu(tmp_con)...
+            mean(clustering_coef_bu(tmp_con))...
             mean(degrees_und(tmp_con))...
-            density_und(tmp_con)...
+            density_und(tmp_con)...c
             efficiency_bin(tmp_con)];
     end
     

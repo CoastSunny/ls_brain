@@ -1,16 +1,24 @@
 mtype=[];
-
-clear E1 E2 E3  M1 M2 M3
-iters=10;
+noise_values=0+(0.05:0.15:1.5);
+clear Ec RESc Ecc E
+iters=1; 
 E1=zeros(2,iters,numel(noise_values));
 E2=zeros(2,iters,numel(noise_values));
 E3=zeros(2,iters,numel(noise_values));
 
-[bm , mods] = random_modular_graph(32,4,1,.90);
+
+nodes=128;
+modules=4;
+[bm , mods] = random_modular_graph(nodes,modules,1,.90);
 mod_matrix = ind2mod(mods,bm);
-for j=1:numel(noise_values)
+
+permi=[0.05 0.1 0.15 0.2 0.25];
+for j=1:5
+    
     for i=1:iters
-               
+        
+        [W]=ls_bin2wei(bm,0,1);
+        Worig=W;
         mtype=[];
         mtype{1}='trans';
         mtype{2}='clust';
@@ -18,22 +26,45 @@ for j=1:numel(noise_values)
         mtype{4}='deg';
         
         for k=1:numel(mtype)
-            M{k}=ls_network_metric(W,mtype{k},'modules',mod_matrix,'structure',bm);          
+            M{k}=ls_network_metric(W,mtype{k},'modules',mod_matrix,'structure',bm);
         end
-        [b , m , it]=optimise_network_multi(We,mtype,...
-            M','modules',mod_matrix,'structure',bm);
         
-        tmp2=[norm(W-b,'fro') norm(W-We,'fro')];
+        struc=zeros(nodes);
+        idx=find(bm>0);
+        tmp=randperm(numel(idx));
+        no_el=round(permi(j)*numel(idx));
+        mis_idx=idx(tmp(1:no_el));
+        [row col]=ind2sub([nodes,nodes],mis_idx);
+        for jj=1:numel(row)
+            struc(row(jj),col(jj))=1;
+            W(row(jj),col(jj))=0.5;
+        end
+        Winit=W;
+        %             struc(idx(jj,1),idx(jj,2))=1;
+        %             struc(idx(jj,2),idx(jj,1))=1;
+        %             W(idx(jj,1),idx(jj,2))=0.5;
+        %             W(idx(jj,2),idx(jj,1))=0.5;
         
-        M2(:,:,i,j)=[m(1,end) ls_network_metric(W,mtype{1}) ls_network_metric(We,mtype{1});...
-            m(2,end) ls_network_metric(W,mtype{2}) ls_network_metric(We,mtype{2});...
-            m(3,end) ls_network_metric(W,mtype{3}, 'modules',mod_matrix,'structure',bm)...
-            ls_network_metric(We,mtype{3}, 'modules',mod_matrix,'structure',bm)];
-        E2(:,i,j)=tmp2;
-        RES{i,j}={{W} {We} {a} {b}};
+        [c , m , it]=optimise_network_multi(Winit,mtype,...
+            M','modules',mod_matrix,'structure',struc);
+        %
+        %     for jj=1:j
+        %         e(jj)=abs(c(idx(jj,1),idx(jj,2))-Worig(idx(jj,1),idx(jj,2)));
+        %     end
+%         Ec(:,i,j)=[norm(Worig-c,'fro') ];
+%         Ecc(:,i,j)=[norm( (Worig-c).*struc ,'fro')];
+%         Eccc(:,i,j)= mean(abs(vec( (Worig-c).*struc)));
+        tmp=Worig-c;
+        idx_struc=find(struc);
+        e=mean(abs(tmp(idx_struc)));
+        E(:,i,j)=e;
+        %     Eccc(:,i,j)=mean(e);
+        RESc{i,j}={{Worig} {Winit} {c} {struc} {M} {m(:,end)}};
         i
     end
+    
 end
+
 
 
 

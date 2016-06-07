@@ -1,5 +1,5 @@
-cd([home '/Dropbox/Alzheimer/results/Descriptive/INECO'])
-save=0;
+cd([home '/Dropbox/Alzheimer/results/Descriptive/INECO/SHAPE'])
+save=1;
 delta=[1];
 theta=[2 3];
 alpha=[4 5 6];
@@ -62,63 +62,63 @@ cfg.vlim=[-.2 0.2];
 % cfg.refchannel='O2';
 % figure,subplot(1,2,1),ft_multiplotER(cfg,Ptemp)
 % subplot(1,2,2),ft_multiplotER(cfg,Ctemp)
-for period=1:periods
-    figure('units','normalized','outerposition',[0.25 0.25 .52 .52]),
-    subplot(1,2,1),imagesc(mean(Ccpat(:,:,delta,period),3)),title('Patients')
-    set(gca,'Ytick',1:numel(ch)),set(gca,'YtickLabels',temp.label)
-    set(gca,'Xtick',1:numel(ch)),set(gca,'XtickLabels',temp.label)
-    caxis([0 0.1])
-    subplot(1,2,2), imagesc(mean(Cccon(:,:,delta,period),3)),title('Controls')
-    text(-45,-5,['Delta CONN' ' at period ' num2str(period)]),
-    set(gca,'Ytick',1:numel(ch)),set(gca,'YtickLabels',temp.label)
-    set(gca,'Xtick',1:numel(ch)),set(gca,'XtickLabels',temp.label)
-    caxis([0 0.1])
-    if save==1;saveaspdf(gcf,'Delta_conn_wplid');end;
-    figure('units','normalized','outerposition',[0.25 0.25 .52 .52]),
-    subplot(1,2,1),imagesc(mean(Ccpat(:,:,theta,period),3)),title('Patients')
-    set(gca,'Ytick',1:numel(ch)),set(gca,'YtickLabels',temp.label)
-    set(gca,'Xtick',1:numel(ch)),set(gca,'XtickLabels',temp.label)
-    caxis([0 0.1])
-    subplot(1,2,2), imagesc(mean(Cccon(:,:,theta,period),3)),title('Controls')
-    text(-45,-5,['Theta CONN' ' at period ' num2str(period)]),
-    set(gca,'Ytick',1:numel(ch)),set(gca,'YtickLabels',temp.label)
-    set(gca,'Xtick',1:numel(ch)),set(gca,'XtickLabels',temp.label)
-    caxis([0 0.1])
-    if save==1;saveaspdf(gcf,'Theta_conn_wplid');end;
-    figure('units','normalized','outerposition',[0.25 0.25 .52 .52]),
-    subplot(1,2,1),imagesc(mean(Ccpat(:,:,alpha,period),3)),title('Patients')
-    set(gca,'Ytick',1:numel(ch)),set(gca,'YtickLabels',temp.label)
-    set(gca,'Xtick',1:numel(ch)),set(gca,'XtickLabels',temp.label)
-    caxis([0 0.1])
-    subplot(1,2,2), imagesc(mean(Cccon(:,:,alpha,period),3)),title('Controls')
-    text(-45,-5,['Alpha CONN' ' at period ' num2str(period)]),
-    set(gca,'Ytick',1:numel(ch)),set(gca,'YtickLabels',temp.label)
-    set(gca,'Xtick',1:numel(ch)),set(gca,'XtickLabels',temp.label)
-    caxis([0 0.1])
-    if save==1;saveaspdf(gcf,'Alpha_conn_wplid');end;
-    figure('units','normalized','outerposition',[0.25 0.25 .52 .52]),
-    subplot(1,2,1),imagesc(mean(Ccpat(:,:,beta1,period),3)),title('Patients')
-    set(gca,'Ytick',1:numel(ch)),set(gca,'YtickLabels',temp.label)
-    set(gca,'Xtick',1:numel(ch)),set(gca,'XtickLabels',temp.label)
-    caxis([0 0.1])
-    subplot(1,2,2), imagesc(mean(Cccon(:,:,beta1,period),3)),title('Controls')
-    text(-45,-5,['Beta1 CONN' ' at period ' num2str(period)]),
-    set(gca,'Ytick',1:numel(ch)),set(gca,'YtickLabels',temp.label)
-    set(gca,'Xtick',1:numel(ch)),set(gca,'XtickLabels',temp.label)
-    caxis([0 0.1])
-    if save==1;saveaspdf(gcf,'Beta1_conn_wplid');end;
-    figure('units','normalized','outerposition',[0.25 0.25 .52 .52]),
-    subplot(1,2,1),imagesc(mean(Ccpat(:,:,beta2,period),3)),title('Patients')
-    set(gca,'Ytick',1:numel(ch)),set(gca,'YtickLabels',temp.label)
-    set(gca,'Xtick',1:numel(ch)),set(gca,'XtickLabels',temp.label)
-    caxis([0 0.1])
-    subplot(1,2,2), imagesc(mean(Cccon(:,:,beta2,period),3)),title('Controls')
-    text(-45,-5,['Beta2 CONN' ' at period ' num2str(period)]),
-    set(gca,'Ytick',1:numel(ch)),set(gca,'YtickLabels',temp.label)
-    set(gca,'Xtick',1:numel(ch)),set(gca,'XtickLabels',temp.label)
-    caxis([0 0.1])
-    if save==1;saveaspdf(gcf,'Beta2_conn_wplid');end;
-end
+% for period=1:periods
+%     figure('units','normalized','outerposition',[0.25 0.25 .52 .52]),
+%     subplot(1,2,1),imagesc(mean(Ccpat(:,:,delta,period),3)),title('Patients')
+%     set(gca,'Ytick',1:numel(ch)),set(gca,'YtickLabels',temp.label)
+%     set(gca,'Xtick',1:numel(ch)),set(gca,'XtickLabels',temp.label)
+%     caxis([0 0.1])
+%     subplot(1,2,2), imagesc(mean(Cccon(:,:,delta,period),3)),title('Controls')
+%     text(-45,-5,['Delta CONN' ' at period ' num2str(period)]),
+%     set(gca,'Ytick',1:numel(ch)),set(gca,'YtickLabels',temp.label)
+%     set(gca,'Xtick',1:numel(ch)),set(gca,'XtickLabels',temp.label)
+%     caxis([0 0.1])
+%     if save==1;saveaspdf(gcf,'Delta_conn_wplid');end;
+%     figure('units','normalized','outerposition',[0.25 0.25 .52 .52]),
+%     subplot(1,2,1),imagesc(mean(Ccpat(:,:,theta,period),3)),title('Patients')
+%     set(gca,'Ytick',1:numel(ch)),set(gca,'YtickLabels',temp.label)
+%     set(gca,'Xtick',1:numel(ch)),set(gca,'XtickLabels',temp.label)
+%     caxis([0 0.1])
+%     subplot(1,2,2), imagesc(mean(Cccon(:,:,theta,period),3)),title('Controls')
+%     text(-45,-5,['Theta CONN' ' at period ' num2str(period)]),
+%     set(gca,'Ytick',1:numel(ch)),set(gca,'YtickLabels',temp.label)
+%     set(gca,'Xtick',1:numel(ch)),set(gca,'XtickLabels',temp.label)
+%     caxis([0 0.1])
+%     if save==1;saveaspdf(gcf,'Theta_conn_wplid');end;
+%     figure('units','normalized','outerposition',[0.25 0.25 .52 .52]),
+%     subplot(1,2,1),imagesc(mean(Ccpat(:,:,alpha,period),3)),title('Patients')
+%     set(gca,'Ytick',1:numel(ch)),set(gca,'YtickLabels',temp.label)
+%     set(gca,'Xtick',1:numel(ch)),set(gca,'XtickLabels',temp.label)
+%     caxis([0 0.1])
+%     subplot(1,2,2), imagesc(mean(Cccon(:,:,alpha,period),3)),title('Controls')
+%     text(-45,-5,['Alpha CONN' ' at period ' num2str(period)]),
+%     set(gca,'Ytick',1:numel(ch)),set(gca,'YtickLabels',temp.label)
+%     set(gca,'Xtick',1:numel(ch)),set(gca,'XtickLabels',temp.label)
+%     caxis([0 0.1])
+%     if save==1;saveaspdf(gcf,'Alpha_conn_wplid');end;
+%     figure('units','normalized','outerposition',[0.25 0.25 .52 .52]),
+%     subplot(1,2,1),imagesc(mean(Ccpat(:,:,beta1,period),3)),title('Patients')
+%     set(gca,'Ytick',1:numel(ch)),set(gca,'YtickLabels',temp.label)
+%     set(gca,'Xtick',1:numel(ch)),set(gca,'XtickLabels',temp.label)
+%     caxis([0 0.1])
+%     subplot(1,2,2), imagesc(mean(Cccon(:,:,beta1,period),3)),title('Controls')
+%     text(-45,-5,['Beta1 CONN' ' at period ' num2str(period)]),
+%     set(gca,'Ytick',1:numel(ch)),set(gca,'YtickLabels',temp.label)
+%     set(gca,'Xtick',1:numel(ch)),set(gca,'XtickLabels',temp.label)
+%     caxis([0 0.1])
+%     if save==1;saveaspdf(gcf,'Beta1_conn_wplid');end;
+%     figure('units','normalized','outerposition',[0.25 0.25 .52 .52]),
+%     subplot(1,2,1),imagesc(mean(Ccpat(:,:,beta2,period),3)),title('Patients')
+%     set(gca,'Ytick',1:numel(ch)),set(gca,'YtickLabels',temp.label)
+%     set(gca,'Xtick',1:numel(ch)),set(gca,'XtickLabels',temp.label)
+%     caxis([0 0.1])
+%     subplot(1,2,2), imagesc(mean(Cccon(:,:,beta2,period),3)),title('Controls')
+%     text(-45,-5,['Beta2 CONN' ' at period ' num2str(period)]),
+%     set(gca,'Ytick',1:numel(ch)),set(gca,'YtickLabels',temp.label)
+%     set(gca,'Xtick',1:numel(ch)),set(gca,'XtickLabels',temp.label)
+%     caxis([0 0.1])
+%     if save==1;saveaspdf(gcf,'Beta2_conn_wplid');end;
+% end
 
 for period=1:periods
 al=0.01/128;

@@ -21,11 +21,14 @@ elseif any(strcmp(metric_type,{'clust' 'clustering'}))
         Si=S(:,:,i);
         gamma(i)=trace(Si*W^3);
         zeta(i)=trace(Si*W*H*W);
-        igrad(:,:,i)=H.*(zeta(i)*(Si*W^2+W*Si*W+W^2*Si).'-gamma(i)*(Si.'*W.'*H.'+H.'*W.'*Si.'))/zeta(i)^2;
+        
+            igrad(:,:,i)=H.*(zeta(i)*(Si*W^2+W*Si*W+W^2*Si).'-gamma(i)*(Si.'*W.'*H.'+H.'*W.'*Si.'))/zeta(i)^2;
+        else
+            
+        end
         
     end
-    idx_to_remove=find(zeta==0);
-    igrad(:,:,idx_to_remove)=[];
+    idx_to_remove
     grad=mean(igrad,3);
     grad = grad + grad.' - diag(diag(grad));
     
@@ -87,16 +90,15 @@ elseif any(strcmp(metric_type,{'avndeg' 'average_neighbour_degree'}))
         R_i = R;
         R_i( : , i ) = ones( n , 1 ) / n;
         rho=trace(W^2*R_i);
-        tau(i)=trace(W*R_i);
-        igrad( : , : , i ) = (tau(i) * ( W * R_i + R_i * W ) .' - rho * R_i.')/tau(i)^2 ;
+        tau=trace(W*R_i);
+        igrad( : , : , i ) = (tau * ( W * R_i + R_i * W ) .' - rho * R_i.')/tau^2 ;
         igrad( : , : , i ) = igrad( : , : , i ) + igrad( : , : , i ).' - diag(diag(igrad(:,:,i)));
         
     end
     
-    idx_to_remove=find(tau(i)==0);
-    igrad(:,:,idx_to_remove)=zeros(n);
-    grad = sum( igrad , 3 );
-    grad = grad + grad.' - diag(diag(grad));
+    
+    %     grad = sum( igrad , 3 );
+    %     grad = grad + grad.' - diag(diag(grad));
     
     grad = igrad;
     
