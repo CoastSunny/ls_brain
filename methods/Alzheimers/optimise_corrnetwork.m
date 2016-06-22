@@ -25,7 +25,7 @@ else
     pen=0;
 end
 if isempty(learn)
-    l=1;
+    l=1000;
 else
     l=learn;
 end
@@ -53,7 +53,7 @@ while check>10^-6 && iter<max_iter
             
             for j=1:numel(metric{i,iter})
                 
-                igrad( j , : ) = dw{ i }( j , : )...
+                igrad( j , : ) = dx{ i }( j , : )...
                     * ( metric{ i , iter }( j ) - target_value{ i }( j ) );
                 
             end

@@ -1,0 +1,98 @@
+
+W=read_gml_louk('~/Downloads/celegans/celegansneural.gml');
+clear RESc E Prec
+
+iters=15;
+
+
+nodes=297;
+%  modules=4;
+%
+% [bm , mods] = random_modular_graph(nodes,modules,1,.90);
+% mod_matrix = ind2mod(mods,bm);
+% opts={'modules',mod_matrix,'structure',bm};
+
+permi=[.2];
+l=1;
+for j=1:1
+    
+    for i=1:iters
+        
+        %         [W]=ls_bin2wei(bm,0,1);
+        W=wHub(nodes,nodes,0.1);
+        W(W<0.5)=0;
+        
+        Worig=W;
+        mtype=[];
+        mtype{1}='deg';
+%         mtype{2}='clust';
+%         mtype{3}='trans';
+%         mtype{4}='trans';
+        
+        for k=1:numel(mtype)
+            M{k}=ls_network_metric(W,mtype{k});
+        end
+        
+        struc=zeros(nodes);        
+        
+        idx_upper=find(triu(ones(nodes)));
+        idx_diag=find(eye(nodes));
+        idx=setdiff(idx_upper,idx_diag);
+        
+        tmp=randperm(numel(idx));
+        no_el=round(permi(j)*numel(idx));
+        mis_idx=idx(tmp(1:no_el));
+        [row col]=ind2sub([nodes,nodes],mis_idx);
+        
+        for jj=1:numel(row)
+            
+            struc(row(jj),col(jj))=1;
+            struc(col(jj),row(jj))=1;
+            
+            W(row(jj),col(jj))=0.5;
+            W(col(jj),row(jj))=0.5;
+            
+        end
+                
+        Winit=W;
+        [c , m , it]=optimise_network_multi(Winit,mtype,...
+            M','structure',struc,'learn',l);
+       
+        pred_links=c(struc>0);
+        [id inc]=sort(pred_links);
+        L=inc(end-99:end);
+        idx_probe=find(struc>0 & Worig>0);
+        Lr=intersect(idx_probe,L);
+        Prec(i,j)=numel(Lr)/numel(L);
+        
+        tmp=Worig-c;
+        idx_struc=find(struc);
+        e=mean(abs(tmp(idx_struc)));
+        E(i,j)=e;
+        
+        fprintf(num2str(Prec(i,j)))
+    end
+    
+end
+%         struc=zeros(nodes);
+%         idx=find(bm>0);
+%         tmp=randperm(numel(idx));
+%         no_el=round(permi(j)*numel(idx));
+%         mis_idx=idx(tmp(1:no_el));
+%         [row col]=ind2sub([nodes,nodes],mis_idx);
+%         for jj=1:numel(row)
+%             struc(row(jj),col(jj))=1;
+%             W(row(jj),col(jj))=0.5;
+%         end
+%         Winit=W;
+
+
+
+
+
+
+
+
+
+
+

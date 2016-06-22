@@ -53,23 +53,12 @@ if ~DoWeight
         
     elseif cons==3 % Unimodality & NNLS
         load=OldLoad;
-        F=size(OldLoad,2);
-        %         fr=0:40;
-        %         FF=@(x,fr)(x(1)*exp(-(fr-x(2)).^2/x(3)^2));
-        %         x1=[0.5 2];x2=[3 6 10 20];x3=[0.1 2];
-        %         options = optimoptions('lsqcurvefit');
-        %         options.Display='off';
+        F=size(OldLoad,2);        
         if F>1
             for i=1:F
                 ztz=ZtZ(i,i);
                 ztX=ZtX(i,:)-ZtZ(i,[1:i-1 i+1:F])*load(:,[1:i-1 i+1:F])';
-                beta=(pinv(ztz)*ztX)';
-                %                 tmp=lsqcurvefit(FF,[1 x2(i) 2]',fr,beta',[x1(1) x2(i)-3 x2(1)],[x1(2) x2(i)+3 x2(2)],options);
-                %                 if i<(F)
-                %                     load(:,i)=FF(tmp,fr)';
-                %                 else
-                %                     load(:,i)=ulsr(beta,1);
-                %                 end
+                beta=(pinv(ztz)*ztX)';           
                 load(:,i)=ulsr(beta,1);
             end
         else

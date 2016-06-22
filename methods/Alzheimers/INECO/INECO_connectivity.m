@@ -14,7 +14,7 @@ tmp=tmp(1,1:end);
 names=sort_nat(tmp);
 idx=strcmp('subjects.mat',names);
 names(idx)=[];
-
+gc_idx=[];
 % Sets frequency bands (steps must match frequency resolution, see cfg.pad)
 %freqBands = [[0.5 3]; [3.5 8]; [8.5 12]; [12.5 32]; [32.5 40]];
 %numberOfBands = size(freqBands,1);
@@ -29,7 +29,7 @@ count=1;
 for q = 1:length(names)
     clear data   
 %     g_idx(q,:)=group_idx(data,g1,g2,g3);
-    if g_idx(q,3)==0 || g_idx(q,2)==0 % group exclusion criteria
+    if g_idx(q,3)==0 || g_idx(q,2)==1 % group exclusion criteria
         continue;
     end
     gc_idx(count,:)=g_idx(q,:);
@@ -77,7 +77,7 @@ for q = 1:length(names)
             tmp               = (PSI_full{count,period}(:,:,idx_freq));
             idx_toremove      = find(tril(ones(size(tmp))));
             tmp(idx_toremove) = [];
-            Conn_full{count,period}(:,idx_freq)  = tmp;
+            Conn_full{count}(:,idx_freq,period)  = tmp;
         end
     end
     

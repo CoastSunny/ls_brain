@@ -1,4 +1,4 @@
-function [Factors,it,err,corcondia]=parafac(X,Fac,Options,const,OldLoad,FixMode,Weights);
+function [Factors,it,PercentExpl,err,corcondia]=parafac(X,Fac,Options,const,OldLoad,FixMode,Weights);
 
 % PARAFAC multiway parafac model
 %

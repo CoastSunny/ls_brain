@@ -1,6 +1,7 @@
-function [ W , metric , iter] = optimise_network_multi(W,metric_type,target_value,varargin)
+function [ W , metric , iter, d] = optimise_network_multi(W,metric_type,target_value,varargin)
 
-opts = struct ( 'modules',[],'structure', [] ,'constraint', [] , 'learn' , []) ;
+ opts = struct ( 'modules', [] ,'structure', [] , 'net' , [] ,...
+        'constraint' , [] , 'learn' , [] ,'true_net', [] ) ;
 [ opts  ] = parseOpts( opts , varargin );
 opts2var
 
@@ -35,7 +36,7 @@ max_iter=10000;
 %while penalty>0.001 | iter>10000
 metric={inf};
 check=inf;
-while check>10^-6 && iter<max_iter
+while check>10^-3 && iter<max_iter
     
     %     [penalty,tmp]=network_penalty_wu(W,metric_type,target_value,'modules',modules);
     %     metric(iter)=tmp;
@@ -51,7 +52,7 @@ while check>10^-6 && iter<max_iter
             
             for j=1:numel(metric{i,iter})
                 
-                igrad( : , : , j ) = dw{ i }( : , : , j )...
+                igrad( : , : , j ) = 1 / n *dw{ i }( : , : , j )...
                     * ( metric{ i , iter }( j ) - target_value{ i }( j ) );
                 
             end
@@ -72,13 +73,23 @@ while check>10^-6 && iter<max_iter
         dc=0;
     end
     dW = ( sum( grad , 3 ) + dc ) .* S;
-    
+    if (max(max(abs(l*dW))))>0.1
+        l=l/10;
+        continue;
+    end
     W = W - l * dW;
     W( W < 0 ) = 0;
     W( W > 1 ) = 1;
     %     W=W/max(max(W));
+    if (~isempty(true_net))
+        d(iter)=1/numel(W)*norm(W-true_net,'fro');
+    end
     iter = iter + 1;
-    check=norm(l*dW,'fro');
+%     check=norm(l*dW,'fro');
+    check=max(abs([metric{:,end}]-[target_value{:}]));
+    if mod(iter,500)==0
+      %  fprintf(num2str(check));        
+    end
 end
 
 % W=W/max(max(W));

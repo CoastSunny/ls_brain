@@ -9,15 +9,17 @@ end
 %%
 fidx_patients=find(gc_idx(:,1)==1);
 fidx_controls=find(gc_idx(:,1)==0);
+
 for q = 1:length(Conn_full)
       
     Y=Conn_full{q};
-    Options=1;
-    [Fp{q},Ip(q),Ep(q),Concp(q)]=parafac(Y,2,Options,[0 0 0]);
-    [Ft{q},Gt{q}]=tucker(Y,[2 2 -1],Options,[0 0 -1]);
+    Options=.01;
+    [Fp{q},Ip(q),Exp(q),e,Concp(q)]=parafac(Y,2,Options,[0 0 0]);
+    [Ft{q},Gt{q},Ext(q)]=tucker(Y,[2 2 -1],Options,[0 0 -1]);
     
     
 end
+
 
 
 

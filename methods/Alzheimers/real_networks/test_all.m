@@ -1,0 +1,12 @@
+read_celegans
+test_completion_link
+cRes=Res;
+read_baywet
+test_completion_link
+bwRes=Res;
+read_usair
+test_completion_link
+uRes=Res;
+read_bible
+test_completion_link
+bcRes=Res;

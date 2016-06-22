@@ -1,4 +1,4 @@
-function [grad]= network_gradient_wu(W,metric_type,varargin)
+function [grad]= vec_network_derivative(W,metric_type,varargin)
 
 n=size(W,1);
 O=ones(n);
@@ -8,8 +8,8 @@ if any(strcmp(metric_type,{'trans' 'transitivity'}))
     
     alfa=trace(W^3);
     beta=trace(W*H*W');
-    grad=((3*beta*W^2-alfa*(W*H+H*W))/beta^2 ).*H;
-    grad = grad + grad.' - diag(diag(grad));
+    grad=(3*vec( (W.')^2 ).' * beta - alfa * vec( (W*H+H*W).').' ) / beta^2;
+    
     
 elseif any(strcmp(metric_type,{'clust' 'clustering'}))
     
@@ -22,10 +22,11 @@ elseif any(strcmp(metric_type,{'clust' 'clustering'}))
         gamma(i)=trace(Si*W^3);
         zeta(i)=trace(Si*W*H*W);
         if zeta(i)~=0
-        igrad(:,:,i)=H.*(zeta(i)*(Si*W^2+W*Si*W+W^2*Si).'-gamma(i)*(Si.'*W.'*H.'+H.'*W.'*Si.'))/zeta(i)^2;
-        igrad( : , : , i ) = igrad( : , : , i ) + igrad( : , : , i ).' - diag(diag(igrad(:,:,i)));
+            dgamma = ( vec( (W^2*Si).' ) + vec( (W*Si*W).' ) + vec( (Si*W^2).' ) ).';
+            dzeta  = ( vec( (H*W*Si).' ) + vec( (Si*W*H).' ) ).';
+            igrad(:,i)=  ( dgamma * zeta(i) - dzeta * gamma(i) ) / zeta(i)^2;
         else
-        igrad( : , : , i )=zeros(n);
+            igrad( : , : , i )=vec(zeros(n));
         end
     end
 %     idx_to_remove=find(zeta==0);
@@ -40,7 +41,8 @@ elseif any(strcmp(metric_type,{'modul' 'modularity'}))
         'constraint' , [] , 'learn' , [] ,'true_net',[]) ;
     [ opts  ] = parseOpts( opts , varargin );
     opts2var
-    D = modules ;      
+    D = modules ;
+    S = structure;
     
     theta = trace( W * O ) ;
     iota = trace( W * D.' ) ;
@@ -61,7 +63,7 @@ elseif any(strcmp(metric_type,{'modul' 'modularity'}))
     end
     
     dM2 = sum( dm2 , 3 );
-    grad = ( dM1 - dM2 )  ;
+    grad = ( dM1 - dM2 ) .* S ;
     grad = grad + grad.' - diag(diag(grad));
     
     

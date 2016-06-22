@@ -22,13 +22,14 @@ elseif any(strcmp(metric_type,{'clust' 'clustering'}))
         
     end
     idx_to_remove=find(zeta==0);
-    zeta(idx_to_remove)=[];
-    gamma(idx_to_remove)=[];
-    metric=mean(gamma./zeta);
-    
+%     zeta(idx_to_remove)=[];
+%     gamma(idx_to_remove)=[];
+    metric=(gamma./zeta);
+    metric(idx_to_remove)=0;
 elseif any(strcmp(metric_type,{'modul' 'modularity'}))
     
-    opts = struct ( 'modules', [] ,'structure', [] , 'net' , [] , 'constraint' , [] , 'learn' , [] ) ;
+    opts = struct ( 'modules', [] ,'structure', [] , 'net' , [] ,...
+        'constraint' , [] , 'learn' , [] ,'true_net',[]) ;
     [ opts  ] = parseOpts( opts , varargin );
     opts2var
     D=modules;
@@ -57,7 +58,7 @@ elseif any(strcmp(metric_type,{'deg' 'degree'}))
     for i=1:n
         
         R_i = R;
-        R_i( : , i ) = ones( n , 1 ) / n;
+        R_i( : , i ) = ones( n , 1 ) ;
         dg( i ) = trace( W * R_i );
         
     end
@@ -71,8 +72,8 @@ elseif any(strcmp(metric_type,{'avndeg' 'average_neighbour_degree'}))
     for i=1:n
         
         R_i = R;
-        R_i( : , i ) = ones( n , 1 ) / n;
-        rho=trace(W^2*R_i/n);
+        R_i( : , i ) = ones( n , 1 );
+        rho=trace(W^2*R_i);
         tau=trace(W*R_i);
         if tau~=0
             nd(i)=rho/tau;
@@ -82,7 +83,7 @@ elseif any(strcmp(metric_type,{'avndeg' 'average_neighbour_degree'}))
         
     end
     
-    metric = nd;
+    metric = mean(nd);
     
     
 end

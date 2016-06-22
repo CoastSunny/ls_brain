@@ -7,10 +7,10 @@ mo=ls_network_metric(Wo,mtype);
 mo=ls_corrnetwork_metric(Xo,mtype);
 
 idx=1;
-tidx=1:10;
+tidx=1;
 
 X=Xo;
-X(idx,tidx)=X(idx,tidx)+1;
+X(idx,tidx)=X(idx,tidx)+10;
 W=WfromX(X);
 
 [Y my ity]=optimise_corrnetwork(X,idx,tidx,{mtype},{mo});

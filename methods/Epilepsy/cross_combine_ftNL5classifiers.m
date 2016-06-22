@@ -35,7 +35,7 @@ for si=itest
         b=tprod(U{2}(:,self),[2 -1], a , [1 -1 3 4]);
         c=tprod(U{3}(:,selt),[3 -1], b , [1 2 -1 4]);
         tdi(cc)=1/size(X,4)*sum(tprod(c-X,[-1 -2 -3 1],c-X,[-1 -2 -3 1]).^.5);
-        %                  tdi(cc)=norm(Us{sjj}{1}-Us{si}{1},'fro')+norm(Us{sjj}{2}-Us{si}{2},'fro')+norm(Us{sjj}{3}-Us{si}{3},'fro');
+        % tdi(cc)=norm(Us{sjj}{1}-Us{si}{1},'fro')+norm(Us{sjj}{2}-Us{si}{2},'fro')+norm(Us{sjj}{3}-Us{si}{3},'fro');
     end
     [m i]=sort(tdi);
     ssi=itrain(i);
