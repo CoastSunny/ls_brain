@@ -1,7 +1,7 @@
 function [ W , metric , iter, d] = optimise_network_multi(W,metric_type,target_value,varargin)
 
- opts = struct ( 'modules', [] ,'structure', [] , 'net' , [] ,...
-        'constraint' , [] , 'learn' , [] ,'true_net', [] ) ;
+opts = struct ( 'modules', [] ,'structure', [] , 'net' , [] ,...
+    'constraint' , [] , 'learn' , [] ,'true_net', [] ) ;
 [ opts  ] = parseOpts( opts , varargin );
 opts2var
 
@@ -32,7 +32,7 @@ end
 penalty=inf;
 iter=1;
 dW=Inf;
-max_iter=10000;
+max_iter=20000;
 %while penalty>0.001 | iter>10000
 metric={inf};
 check=inf;
@@ -45,24 +45,33 @@ while check>10^-3 && iter<max_iter
     
     for i=1:numel(target_value)
         
-        metric{ i , iter } = ls_network_metric( W , metric_type{ i } , opts );
-        dw{ i } = network_gradient_wu( W , metric_type{ i } , opts );
-        
-        if numel(metric{ i , iter }) > 1
+        [metric{ i , iter }]= ls_network_metric( W , metric_type{ i } , opts );
+                
+        if numel(metric{ i , iter }) > 1 & strcmp(metric_type{i},'deg')
             
+            dw = network_gradient_wu( W , metric_type{ i } , opts );
+            igrad = 1/n * dw * ones(n,1) * (metric{i,iter} - target_value{ i }).' ;
+            grad(:,:,i) = igrad + igrad.';
+            
+        elseif numel(metric{ i , iter }) > 1 & ~strcmp(metric_type{i},'deg')
+                    
+            [metric{ i , iter } numer denom]= ls_network_metric( W , metric_type{ i } , opts );
+            igrad=0;            
             for j=1:numel(metric{i,iter})
-                
-                igrad( : , : , j ) = 1 / n *dw{ i }( : , : , j )...
+               
+                dw = network_gradient_wu( W , metric_type{ i } , 'node' , j ,...
+                    'numer', numer , 'denom' ,denom ,'W2',W^2);
+                igrad = igrad + 1 / n *dw...
                     * ( metric{ i , iter }( j ) - target_value{ i }( j ) );
-                
+               
             end
             
-            grad( : , : , i ) = sum( igrad , 3 );
+            grad(:,:,i) = igrad + igrad.';
             
         else
-            
-            grad( : , : , i ) = dw{ i } * ( metric{ i , iter } - target_value{ i } );
-            
+            dw = network_gradient_wu( W , metric_type{ i } , opts );
+            grad( : , : , i ) = dw * ( metric{ i , iter } - target_value{ i } );
+            grad( : , : , i ) = grad( : , : , i ) + grad( : , : , i )';
         end
     end
     %     dW=( dw{1} * (metric(1,iter) + metric(2,iter) - target_value(1) - target_value(2) )...
@@ -85,10 +94,10 @@ while check>10^-3 && iter<max_iter
         d(iter)=1/numel(W)*norm(W-true_net,'fro');
     end
     iter = iter + 1;
-%     check=norm(l*dW,'fro');
-    check=max(abs([metric{:,end}]-[target_value{:}]));
+    %     check=norm(l*dW,'fro');
+    check=max(abs(cat(1,metric{:,end})-cat(1,target_value{:})));
     if mod(iter,500)==0
-      %  fprintf(num2str(check));        
+        %  fprintf(num2str(check));
     end
 end
 

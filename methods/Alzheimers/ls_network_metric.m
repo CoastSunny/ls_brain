@@ -1,4 +1,4 @@
-function [metric] = ls_network_metric(W,metric_type,varargin)
+function [metric,numer,denom] = ls_network_metric(W,metric_type,varargin)
 
 n=size(W,1);
 O=ones(n);
@@ -12,20 +12,14 @@ if any(strcmp(metric_type,{'trans' 'transitivity'}))
     
 elseif any(strcmp(metric_type,{'clust' 'clustering'}))
     
-    S=zeros(n,n,n);
-    for i=1:n
-        
-        S(i,i,i)=1;
-        Si=S(:,:,i);
-        gamma(i)=trace(Si*W^3);
-        zeta(i)=trace(Si*W*H*W);
-        
-    end
+    gamma=diag(W^3);
+    zeta=diag(W*H*W);
     idx_to_remove=find(zeta==0);
-%     zeta(idx_to_remove)=[];
-%     gamma(idx_to_remove)=[];
     metric=(gamma./zeta);
     metric(idx_to_remove)=0;
+    
+    numer=gamma;denom=zeta;
+    
 elseif any(strcmp(metric_type,{'modul' 'modularity'}))
     
     opts = struct ( 'modules', [] ,'structure', [] , 'net' , [] ,...
@@ -52,40 +46,18 @@ elseif any(strcmp(metric_type,{'modul' 'modularity'}))
     metric=(M1-M2);
     
 elseif any(strcmp(metric_type,{'deg' 'degree'}))
-    
-    R = zeros( n );
-    
-    for i=1:n
-        
-        R_i = R;
-        R_i( : , i ) = ones( n , 1 ) ;
-        dg( i ) = trace( W * R_i );
-        
-    end
-    
-    metric = dg;
+          
+    metric = sum(W)';
     
 elseif any(strcmp(metric_type,{'avndeg' 'average_neighbour_degree'}))
     
-    R = zeros( n );
-    
-    for i=1:n
-        
-        R_i = R;
-        R_i( : , i ) = ones( n , 1 );
-        rho=trace(W^2*R_i);
-        tau=trace(W*R_i);
-        if tau~=0
-            nd(i)=rho/tau;
-        else
-            nd(i)=0;
-        end
-        
-    end
-    
+    rho=sum(W^2);
+    tau=sum(W);
+    idx_to_remove=find(tau==0);
+    nd=rho./tau;
+    nd(idx_to_remove)=0;
     metric = mean(nd);
-    
-    
+        
 end
 
 end

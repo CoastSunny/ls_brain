@@ -3,10 +3,21 @@ clear M1 M2 E dR RE E2 RE2
 max_iter=10;
 noise_values=0+(0.05:0.05:1.5);
 j=10;
-nodes=16;
-nel=nodes^2;
-[W1,We1]=wHub(nodes,nodes,noise_values(j));
-[W2,We2]=wHub(nodes,nodes,noise_values(j));
+nodes=64;
+nel=nodes*(nodes-1)/2;
+
+degree_target=5;
+[bm1] = BAgraph_dir(nodes,degree_target,degree_target);
+bm1=bm1+bm1.';
+bm1=bm1>0;
+[W1, We1]=ls_bin2wei(bm1,noise_values(j),0);
+
+
+modules=4;
+[bm2 , mods] = random_modular_graph(nodes,modules,1,.90);
+mod_matrix = ind2mod(mods,bm2);
+[W2, We2]=ls_bin2wei(bm2,noise_values(j),1);
+
 
 mtype=[];
 mtype{1}='trans';
@@ -38,22 +49,22 @@ R23=R2;
 R14=R1;
 R24=R2;
 check=Inf;
-pen=2;
+pen=150;
 l=.1;
 while ( check>.001 && iter<max_iter) 
 R1old=R1;
 R2old=R2;
 
-tmp1=Wm-R2;tmp1(tmp<0)=0;tmp1(tmp1>1)=1;
+tmp1=Wm-R2;tmp1(tmp1<0)=0;tmp1(tmp1>1)=1;
 tmp12=Wm-R22;tmp12(tmp12<0)=0;tmp12(tmp12>1)=1;
 tmp13=Wm-R23;tmp13(tmp13<0)=0;tmp13(tmp13>1)=1;
 tmp14=Wm-R24;tmp14(tmp14<0)=0;tmp14(tmp14>1)=1;
 
 
 R1 = optimise_network_multi(R1,mtype,M1','constraint',{tmp1 pen},'learn',l);
-R12 = optimise_network_multi(Wm,mtype,M1','constraint',{tmp12 pen},'learn',l);
-R13 = optimise_network_multi(tmp13,mtype,M1','learn',l);
-R14 = optimise_network_multi(tmp14,mtype,M1','constraint',{tmp14 pen},'learn',l);
+% R12 = optimise_network_multi(Wm,mtype,M1','constraint',{tmp12 pen},'learn',l);
+% R13 = optimise_network_multi(tmp13,mtype,M1','learn',l);
+% R14 = optimise_network_multi(tmp14,mtype,M1','constraint',{tmp14 pen},'learn',l);
 
 
 tmp2=Wm-R1;tmp2(tmp2<0)=0;tmp2(tmp2>1)=1;
@@ -62,9 +73,9 @@ tmp23=Wm-R13;tmp23(tmp23<0)=0;tmp23(tmp23>1)=1;
 tmp24=Wm-R14;tmp24(tmp24<0)=0;tmp24(tmp24>1)=1;
 
 R2 = optimise_network_multi(R2,mtype,M2','constraint',{tmp2 pen},'learn',l);
-R22 = optimise_network_multi(Wm,mtype,M2','constraint',{tmp22 pen},'learn',l);
-R23 = optimise_network_multi(tmp22,mtype,M2','learn',l);
-R24 = optimise_network_multi(tmp24,mtype,M2','constraint',{tmp24 pen},'learn',l);
+% R22 = optimise_network_multi(Wm,mtype,M2','constraint',{tmp22 pen},'learn',l);
+% R23 = optimise_network_multi(tmp22,mtype,M2','learn',l);
+% R24 = optimise_network_multi(tmp24,mtype,M2','constraint',{tmp24 pen},'learn',l);
 
 dR1=norm(R1-R1old,'fro');
 dR2=norm(R2-R2old,'fro');

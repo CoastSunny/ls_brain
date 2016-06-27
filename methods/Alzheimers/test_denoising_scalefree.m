@@ -2,7 +2,7 @@
 clear all
 mtype=[];
 noise_values=0+(0.05:0.15:1.5);
-iters=10;
+iters=1;
 Emod=zeros(2,iters,numel(noise_values));
 
 
@@ -16,7 +16,7 @@ bm=bm+bm.';
 bm=bm>0;
 nel=nodes*(nodes-1)/2;
 l=10;
-for j=1:numel(noise_values)
+for j=1%:numel(noise_values)
     for i=1:iters
         
         [W, We]=ls_bin2wei(bm,noise_values(j),0);
@@ -106,7 +106,7 @@ for j=1:numel(noise_values)
     end
 end
 
-
+save RESscalefree
 
 
 

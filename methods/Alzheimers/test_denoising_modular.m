@@ -2,13 +2,13 @@
 clear all
 mtype=[];
 noise_values=0+(0.05:0.15:1.5);
-iters=10;
+iters=1;
 E=zeros(2,iters,numel(noise_values));
 
 
 
 
-nodes=64;
+nodes=8;
 % nel=nodes*(nodes-1)/2;
 modules=4;
 [bm , mods] = random_modular_graph(nodes,modules,1,.90);
@@ -16,7 +16,7 @@ mod_matrix = ind2mod(mods,bm);
 
 nel=nodes*(nodes-1)/2;
 l=10;
-for j=1:numel(noise_values)
+for j=1%:numel(noise_values)
     for i=1:iters
         
         [W, We]=ls_bin2wei(bm,noise_values(j),0);
@@ -121,7 +121,7 @@ for j=1:numel(noise_values)
 end
 
 
-
+save('~/Downloads/Sub_Condor_Example/results','RESmod')
 
 
 

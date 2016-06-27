@@ -9,30 +9,39 @@ if any(strcmp(metric_type,{'trans' 'transitivity'}))
     alfa=trace(W^3);
     beta=trace(W*H*W');
     grad=((3*beta*W^2-alfa*(W*H+H*W))/beta^2 ).*H;
-    grad = grad + grad.' - diag(diag(grad));
+   
     
 elseif any(strcmp(metric_type,{'clust' 'clustering'}))
     
-    S=zeros(n,n,n);
-    
-    for i=1:n
-        
-        S(i,i,i)=1;
-        Si=S(:,:,i);
-        gamma(i)=trace(Si*W^3);
-        zeta(i)=trace(Si*W*H*W);
-        if zeta(i)~=0
-        igrad(:,:,i)=H.*(zeta(i)*(Si*W^2+W*Si*W+W^2*Si).'-gamma(i)*(Si.'*W.'*H.'+H.'*W.'*Si.'))/zeta(i)^2;
-        igrad( : , : , i ) = igrad( : , : , i ) + igrad( : , : , i ).' - diag(diag(igrad(:,:,i)));
-        else
-        igrad( : , : , i )=zeros(n);
-        end
+    opts = struct ( 'node' , [] , 'numer' , [] , 'denom', [] ,'W2',[]) ;
+    [ opts  ] = parseOpts( opts , varargin );
+    opts2var
+    i=node;
+    Si=zeros(n,n);
+    Si(i,i)=1;
+    if isempty(numer)
+        gamma=diag(W^3);
+    else
+        gamma=numer;
     end
-%     idx_to_remove=find(zeta==0);
-%     igrad(:,:,idx_to_remove)=[];
-%     grad=mean(igrad,3);
-%     grad = grad + grad.' - diag(diag(grad));
-        grad=igrad;
+    if isempty(denom)
+        zeta=diag(W*H*W);
+    else
+        zeta=denom;
+    end;
+   
+    swh=Si.'*W.'*H.';
+    if isempty(W2);W2=W^2;end;
+    siw2=W2;
+    siw2(setdiff(1:n,i),:)=0;
+
+    if zeta(i)~=0
+        igrad = (zeta(i)*(siw2+W*Si*W+siw2.').'-gamma(i)*(swh+(swh).'))/zeta(i)^2;        
+    else
+        igrad=zeros(n);
+    end
+
+    grad=igrad;
     
 elseif any(strcmp(metric_type,{'modul' 'modularity'}))
     
@@ -40,7 +49,7 @@ elseif any(strcmp(metric_type,{'modul' 'modularity'}))
         'constraint' , [] , 'learn' , [] ,'true_net',[]) ;
     [ opts  ] = parseOpts( opts , varargin );
     opts2var
-    D = modules ;      
+    D = modules ;
     
     theta = trace( W * O ) ;
     iota = trace( W * D.' ) ;
@@ -62,40 +71,26 @@ elseif any(strcmp(metric_type,{'modul' 'modularity'}))
     
     dM2 = sum( dm2 , 3 );
     grad = ( dM1 - dM2 )  ;
-    grad = grad + grad.' - diag(diag(grad));
+   
     
     
-elseif any(strcmp(metric_type,{'deg' 'degree'}))
+elseif any(strcmp(metric_type,{'deg' 'degree'}))       
     
-    R = zeros( n );
-    
-    for i=1:n
-        
-        R_i = R;
-        R_i( : , i ) = ones( n , 1 ) / n;
-        igrad( : , : , i ) = R_i.' ;
-        igrad( : , : , i ) = igrad( : , : , i ) + igrad( : , : , i ).' - diag(diag(igrad(:,:,i)));
-        
-    end
-    
-    %     grad = sum( igrad , 3 );
-    %     grad = grad + grad.' - diag(diag(grad));
-    
-    grad = igrad;
+    grad = 1/n * (ones(n)-diag(diag(ones(n))));
     
 elseif any(strcmp(metric_type,{'avndeg' 'average_neighbour_degree'}))
     
     R = zeros( n );
-    
+    rho=sum(W^2);
+    tau=sum(W);
+       
     for i=1:n
-        
+       
         R_i = R;
-        R_i( : , i ) = ones( n , 1 ) / n;
-        rho=trace(W^2*R_i);
-        tau(i)=trace(W*R_i);
-        igrad( : , : , i ) = (tau(i) * ( W * R_i + R_i * W ) .' - rho * R_i.')/tau(i)^2 ;
-        igrad( : , : , i ) = igrad( : , : , i ) + igrad( : , : , i ).' - diag(diag(igrad(:,:,i)));
-        
+        R_i( : , i ) = ones( n , 1 ) / n;   
+        wr=W * R_i;
+        igrad( : , : , i ) = (tau(i) * ( wr + wr' ) - rho(i) * R_i.')/tau(i)^2 ;       
+       
     end
     
     idx_to_remove=find(tau(i)==0);
@@ -103,13 +98,8 @@ elseif any(strcmp(metric_type,{'avndeg' 'average_neighbour_degree'}))
         igrad(:,:,idx_to_remove)=zeros(n);
     end
     grad = mean( igrad , 3 );
-    grad = grad + grad.' - diag(diag(grad));
-    
-    grad = grad;
-    
+      
 end
-
-
 
 
 end % function end

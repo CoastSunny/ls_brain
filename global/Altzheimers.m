@@ -1,4 +1,4 @@
-%restoredefaultpath
+% restoredefaultpath
 
 startup
 addpath([home '/Documents/ls_brain/classes/common'])

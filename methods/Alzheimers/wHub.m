@@ -17,7 +17,12 @@ for i = 1:(n-1)
 %     tmp(tmp>1)=1;
     We=tmp;
 end
-
+% B=triu(rand(n));
+% B=(B+B').*eye(n);
+% E=triu(randn(n))*noise_std;
+% E=(E+E').*eye(n);
+% 
+% W=B+E;
 if ~isempty(n_out)
     W=W(:,:,n_out);
     W=W/max(max(W));
