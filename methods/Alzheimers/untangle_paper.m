@@ -1,14 +1,16 @@
-for simcool=20
+for simcool=1:10
+    fprintf('simcool')
 clear M1 M2 E dR RE E2 RE2
-max_iter=100;
+max_iter=30;
 
 nel=nodes^2;
-[W1,We1]=wHub(nodes,nodes,noise_values(j));
-[W2,We2]=wHub(nodes,nodes,noise_values(j));
+[W1,We1]=wRand(nodes,1);
+[W2,We2]=wRand(nodes,1);
 
 mtype=[];
-mtype{1}='trans';
-mtype{2}='deg';
+mtype{1}='clust';
+mtype{2}='avndeg';
+% mtype{3}='clust';
 
 for i=1:numel(mtype)
     M1{i}=ls_network_metric(W1,mtype{i});
@@ -22,8 +24,8 @@ Wm=W1+W2;
 [R1orig asd it1] = optimise_network_multi(Wm,mtype,M1');
 [R2orig asd it2] = optimise_network_multi(Wm,mtype,M2');
 
-Eorig=1/nel*[norm(R1orig-W1,'fro') norm(R2orig-W2,'fro')];
-REorig=1/nel*norm(R1orig+R2orig-Wm,'fro');
+Eorig=[norm(R1orig-W1,'fro') norm(R2orig-W2,'fro')];
+REorig=norm(R1orig+R2orig-Wm,'fro');
 iter=1;
 dR1=Inf;dR2=Inf;
 R1=R1orig;
@@ -70,9 +72,9 @@ dR2=norm(R2-R2old,'fro');
 % RE(iter,:)=1/nel*[norm(R1+R2-Wm,'fro') norm(R12+R22-Wm,'fro')...
 %     norm(R13+R23-Wm,'fro') norm(R14+R24-Wm,'fro')];
 tmp=[norm(R1-W1,'fro') norm(R2-W2,'fro')];
-RE(iter,:)=1/nel*[norm(R1+R2-Wm,'fro')];
-E(iter,:)=1/nel*tmp;
-check=RE(iter,1);
+RE(iter,:)=[norm(R1+R2-Wm,'fro')];
+E(iter,:)=tmp;
+check=max(dR(iter,:));
 iter=iter+1;
 fprintf(num2str(iter))
 end

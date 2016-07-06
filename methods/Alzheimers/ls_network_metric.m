@@ -51,7 +51,7 @@ elseif any(strcmp(metric_type,{'deg' 'degree'}))
     
 elseif any(strcmp(metric_type,{'avndeg' 'average_neighbour_degree'}))
     
-    rho=sum(W^2);
+    rho=sum(W^2)/n;
     tau=sum(W);
     idx_to_remove=find(tau==0);
     nd=rho./tau;

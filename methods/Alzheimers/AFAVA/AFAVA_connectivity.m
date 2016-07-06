@@ -3,7 +3,7 @@ if isunix==0
     save_folder='D:\Extracted\Alzheimer\Multivariate AFAVA artefact free\AFAVA_1sectrials\';
 else
     data_folder='/home/engbiome/AlzheimerEEG/Multivariate AFAVA artefact free/';
-    save_folder='/home/lspyrou/Documents/results/AFAVA_1sectrials/';
+    save_folder='/home/engbiome/AlzheimerEEG/AFAVA fieldtrip/AFAVA_1sectrials/';
 end
 channels_correct={'C3' 'C4' 'F3' 'F4' 'F7' 'F8' 'Fp1' 'Fp2' 'O1' 'O2' 'P3' 'P4' 'T7' 'T8' 'P7' 'P8'};
 %% Connectivity Analysis

@@ -1,12 +1,15 @@
 mtype=[];
 noise_values=0+(0.05:0.15:1.5);
-clear Ec RESc Ecc E M
+clear Ec RESc Ecc E M Me Es
 iters=50;
-% read_usair
+%  read_usair
 % read_bible
-%  read_celegans
-read_baywet
-Worig=W;
+read_celegans
+Mods=[];
+%  read_baywet
+% getWM
+Worig=weight_conversion(W,'normalize');
+% Worig=W;
 nodes=size(W,1);
 permi=[0.025 0.05 0.1 0.15 0.2 0.25];
 l=1;
@@ -14,8 +17,8 @@ for j=1:numel(permi)
     
     for i=1:iters
         
-        %         [W]=ls_bin2wei(bm,0,1);        
-        W=Worig;                
+        %         [W]=ls_bin2wei(bm,0,1);
+        W=Worig;
         struc=zeros(nodes);
         idx=find(triu(ones(nodes)) & ~eye(nodes));
         tmp=randperm(numel(idx));
@@ -29,19 +32,19 @@ for j=1:numel(permi)
             W(col(jj),row(jj))=W(row(jj),col(jj));
         end
         Winit=W;
-        prior=sum(sum(Worig>0))/numel(W);
-        prior=1-prior;
+        prior=1-sum(sum(Worig>0))/numel(Worig);
+        
         mtype=[];
-        mtype{1}='deg';
-        mtype{2}='trans';
-        %         mtype{3}='clust';
+        mtype{1}='trans';
+        %         mtype{2}='trans';
+        %         mtype{3}='avndeg';
         %         mtype{4}='trans';
         for k=1:numel(mtype)
-            M{k}=ls_network_metric(Worig,mtype{k});
-            Me{k}=ls_network_metric(W,mtype{k});
+            M{k}=ls_network_metric(Worig,mtype{k},'modules',Mods);
+            Me{k}=ls_network_metric(W,mtype{k},'modules',Mods);
         end
         [c , m , it ]=optimise_network_multi(Winit,mtype,...
-            M','modules',[],'structure',struc,'learn',l);
+            M','modules',Mods,'structure',struc,'learn',l);
         
         co=c;
         tmp=find(c.*struc>0);
@@ -55,17 +58,23 @@ for j=1:numel(permi)
         tmp2=Worig-c;
         e2=mean(abs(tmp2(idx_struc)));
         idx_lstruc=find(struc>0 & Worig>0);
+        idx_nstruc=find(struc>0 & Worig==0);
+        
         el=mean(abs(tmp(idx_lstruc)));
+        el2=mean(abs(tmp2(idx_lstruc)));
+        en=mean(abs(tmp(idx_nstruc)));
+        en2=mean(abs(tmp2(idx_nstruc)));
         tmpinit=Worig-Winit;
         ei=mean(abs(tmpinit(idx_struc)));
         eli=mean(abs(tmpinit(idx_lstruc)));
-        E(:,i,j)=[e e2 el ei eli];
-        
+        eni=mean(abs(tmpinit(idx_nstruc)));
+        E(:,i,j)=[e el en 666 e2  el2  en2 666 ei eli eni];
+        Es(:,i,j)=[norm(tmp,'fro') norm(tmp2,'fro') norm(tmpinit,'fro')];
         %     Eccc(:,i,j)=mean(e);
         RESc{i,j}={{Worig} {Winit} {c} {struc} {M} {m(:,end)}};
-        i
+        fprintf(num2str(i));
     end
-    
+    Es
     
     
 end

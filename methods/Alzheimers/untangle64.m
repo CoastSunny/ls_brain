@@ -1,9 +1,9 @@
 for simcool=1:10
 clear M1 M2 E dR RE E2 RE2
-max_iter=20;
+max_iter=30;
 noise_values=0+(0.05:0.05:1.5);
 j=10;
-nodes=64;
+
 nel=nodes*(nodes-1)/2;
 rng('shuffle')
 degree_target=5;
@@ -21,24 +21,33 @@ mod_matrix = ind2mod(mods,bm2);
 
 
 mtype=[];
-mtype{1}='avndeg';
+mtype1{1}='trans';
 % mtype{2}='avndeg';
 % mtype{3}='deg';
 
-for i=1:numel(mtype)
-    M1{i}=ls_network_metric(W1,mtype{i});
-    M2{i}=ls_network_metric(W2,mtype{i});
+for i=1:numel(mtype1)
+    M1{i}=ls_network_metric(W1,mtype1{i});  
 end
 
+mtype=[];
+mtype2{1}='modul';
+% mtype{2}='avndeg';
+% mtype{3}='deg';
+
+for i=1:numel(mtype2)
+    M2{i}=ls_network_metric(W2,mtype2{i},'modules',mod_matrix);  
+end
 Wm=W1+W2;
 % Wm=Wm/max(max(Wm));
+l=1;
+opts={'learn',l,'structure',[],'modules',mod_matrix};
 
 
-[R1orig asd it1] = optimise_network_multi(Wm,mtype,M1');
-[R2orig asd it2] = optimise_network_multi(Wm,mtype,M2');
+[R1orig asd it1] = optimise_network_multi(Wm,mtype1,M1',opts);
+[R2orig asd it2] = optimise_network_multi(Wm,mtype2,M2',opts);
 
-Eorig=1/nel*[norm(R1orig-W1,'fro') norm(R2orig-W2,'fro')];
-REorig=1/nel*norm(R1orig+R2orig-Wm,'fro');
+Eorig=[norm(R1orig-W1,'fro') norm(R2orig-W2,'fro')];
+REorig=norm(R1orig+R2orig-Wm,'fro');
 iter=1;
 dR1=Inf;dR2=Inf;
 R1=R1orig;
@@ -50,8 +59,8 @@ R23=R2;
 R14=R1;
 R24=R2;
 check=Inf;
-pen=10;
-l=1;
+
+
 while ( check>.001 && iter<max_iter) 
 R1old=R1;
 R2old=R2;
@@ -62,7 +71,7 @@ tmp1=Wm-R2;tmp1(tmp1<0)=0;tmp1(tmp1>1)=1;
 % tmp14=Wm-R24;tmp14(tmp14<0)=0;tmp14(tmp14>1)=1;
 
 
-R1 = optimise_network_multi(R1,mtype,M1','constraint',{tmp1 pen},'learn',l);
+R1 = optimise_network_multi(R1,mtype1,M1','constraint',{tmp1 pen},'learn',l);
 % R12 = optimise_network_multi(Wm,mtype,M1','constraint',{tmp12 pen},'learn',l);
 % R13 = optimise_network_multi(tmp13,mtype,M1','learn',l);
 % R14 = optimise_network_multi(tmp14,mtype,M1','constraint',{tmp14 pen},'learn',l);
@@ -73,22 +82,22 @@ tmp2=Wm-R1;tmp2(tmp2<0)=0;tmp2(tmp2>1)=1;
 % tmp23=Wm-R13;tmp23(tmp23<0)=0;tmp23(tmp23>1)=1;
 % tmp24=Wm-R14;tmp24(tmp24<0)=0;tmp24(tmp24>1)=1;
 
-R2 = optimise_network_multi(R2,mtype,M2','constraint',{tmp2 pen},'learn',l);
+R2 = optimise_network_multi(R2,mtype2,M2','constraint',{tmp2 pen},'learn',l,'modules',mod_matrix);
 % R22 = optimise_network_multi(Wm,mtype,M2','constraint',{tmp22 pen},'learn',l);
 % R23 = optimise_network_multi(tmp22,mtype,M2','learn',l);
 % R24 = optimise_network_multi(tmp24,mtype,M2','constraint',{tmp24 pen},'learn',l);
 
 dR1=norm(R1-R1old,'fro');
 dR2=norm(R2-R2old,'fro');
-tmp=[norm(R1-W1,'fro') norm(R12-W1,'fro') norm(R13-W1,'fro') norm(R14-W1,'fro')...
-    norm(R2-W2,'fro') norm(R22-W2,'fro') norm(R23-W2,'fro') norm(R24-W2,'fro')];
+tmp=[norm(R1-W1,'fro')...% norm(R12-W1,'fro') norm(R13-W1,'fro') norm(R14-W1,'fro')...
+    norm(R2-W2,'fro')];% norm(R22-W2,'fro') norm(R23-W2,'fro') norm(R24-W2,'fro')];
 dR(iter,:)=[dR1 dR2];
-E(iter,:)=1/nel*tmp;
-RE(iter,:)=1/nel*[norm(R1+R2-Wm,'fro') norm(R12+R22-Wm,'fro')...
-    norm(R13+R23-Wm,'fro') norm(R14+R24-Wm,'fro')];
-check=RE(iter,1);
+E(iter,:)=tmp;
+RE(iter,:)=[norm(R1+R2-Wm,'fro')];% norm(R12+R22-Wm,'fro')...
+    %norm(R13+R23-Wm,'fro') norm(R14+R24-Wm,'fro')];
+check=max(dR(iter,:));
 iter=iter+1;
-iter
+fprintf(num2str(iter))
 end
 % 
 % mtype=[];

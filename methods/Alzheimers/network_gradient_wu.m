@@ -81,21 +81,21 @@ elseif any(strcmp(metric_type,{'deg' 'degree'}))
 elseif any(strcmp(metric_type,{'avndeg' 'average_neighbour_degree'}))
     
     R = zeros( n );
-    rho=sum(W^2);
+    rho=sum(W^2)/n;
     tau=sum(W);
        
     for i=1:n
        
         R_i = R;
-        R_i( : , i ) = ones( n , 1 ) / n;   
+        R_i( : , i ) = ones( n , 1 )/n;   
         wr=W * R_i;
         igrad( : , : , i ) = (tau(i) * ( wr + wr' ) - rho(i) * R_i.')/tau(i)^2 ;       
        
     end
     
-    idx_to_remove=find(tau(i)==0);
+    idx_to_remove=find(tau==0);
     if ~isempty(idx_to_remove)
-        igrad(:,:,idx_to_remove)=zeros(n);
+        igrad(:,:,idx_to_remove)=zeros(n,n,numel(idx_to_remove));
     end
     grad = mean( igrad , 3 );
       

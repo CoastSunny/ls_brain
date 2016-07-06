@@ -1,11 +1,10 @@
 clear E RES W We Mpat Mcon Mself
 
 mtype=[];
-mtype{1}='deg';
- 
-mtype{2}='avndeg';
-mtype{3}='clust';
-mtype{4}='trans';
+mtype{1}='trans'; 
+mtype{2}='deg';
+% mtype{3}='clust';
+% mtype{4}='deg';
 
 delta=1+(2:4);
 theta=1+(5:7);
@@ -42,7 +41,7 @@ for si=1:23
         
     end
   
-    for trial=1:min(size(Wsi,3),20)
+    for trial=1:min(size(Wsi,3),50)
         
         [Wp_est mp ip] = optimise_network_multi(Wsi(:,:,trial),mtype,Mpat','learn',lr);
         [Wc_est mc ic] = optimise_network_multi(Wsi(:,:,trial),mtype,Mcon','learn',lr);
@@ -56,5 +55,5 @@ for si=1:23
         RES{si,trial}={Wp_est Wc_est Ws_est Wsi(:,:,trial) Wsi_mean mp(:,end) mc(:,end) ms(:,end) ip ic is};
         
     end
-    
+    si
 end

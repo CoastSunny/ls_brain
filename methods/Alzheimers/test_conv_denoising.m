@@ -7,9 +7,9 @@ E1=zeros(2,iters,numel(noise_values));
 E2=zeros(2,iters,numel(noise_values));
 E3=zeros(2,iters,numel(noise_values));
 
-l=100;
+l=10;
 
-nodes=32;
+nodes=16;
 nel=nodes*(nodes-1)/2;
 for j=1:numel(noise_values)
     for i=1:iters

@@ -23,7 +23,7 @@ for j=1:numel(permi)
     for i=1:iters
         
 %         [W]=ls_bin2wei(bm,0,1);
-        W=wHub(nodes,nodes,0.1);
+        W=wRand(nodes,0.1);
         Worig=W;
         mtype=[];
         mtype{1}='deg';
@@ -55,6 +55,8 @@ for j=1:numel(permi)
         idx_struc=find(struc);
         e=mean(abs(tmp(idx_struc)));
         E(:,i,j,n)=e;
+        tmpinit=Worig-Winit;
+        Es(:,i,j,n)=[norm(tmp,'fro') norm(tmpinit,'fro')];
         %     Eccc(:,i,j)=mean(e);
         RESc{i,j}={{Worig} {Winit} {c} {struc} {M} {m(:,end)}};
         i

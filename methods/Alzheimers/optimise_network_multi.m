@@ -32,7 +32,7 @@ end
 penalty=inf;
 iter=1;
 dW=Inf;
-max_iter=20000;
+max_iter=15000;
 %while penalty>0.001 | iter>10000
 metric={inf};
 check=inf;
@@ -42,7 +42,7 @@ while check>10^-3 && iter<max_iter
     %     metric(iter)=tmp;
     %     dW=l*(abs(penalty))*sign(penalty)*network_gradient_wu(W,metric_type,...
     %         'modules',modules,'structure',structure);
-    
+   
     for i=1:numel(target_value)
         
         [metric{ i , iter }]= ls_network_metric( W , metric_type{ i } , opts );
@@ -86,9 +86,10 @@ while check>10^-3 && iter<max_iter
         l=l/10;
         continue;
     end
+ 
     W = W - l * dW;
     W( W < 0 ) = 0;
-    W( W > 1 ) = 1;
+%     W( W > 1 ) = 1;
     %     W=W/max(max(W));
     if (~isempty(true_net))
         d(iter)=1/numel(W)*norm(W-true_net,'fro');
@@ -99,8 +100,15 @@ while check>10^-3 && iter<max_iter
     if mod(iter,500)==0
         %  fprintf(num2str(check));
     end
+    
 end
 
 % W=W/max(max(W));
 
 end
+
+
+%    [a b]=sort(abs(dW(:)));
+%     d=b(a~=0);
+%     nd=numel(d);
+%     dW(d(1:round(nd*0.75)))=0;

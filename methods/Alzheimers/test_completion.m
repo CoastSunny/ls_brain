@@ -1,13 +1,13 @@
 mtype=[];
 noise_values=0+(0.05:0.15:1.5);
 clear Ec RESc Ecc E M
-iters=1; 
+iters=10; 
 E1=zeros(2,iters,numel(noise_values));
 E2=zeros(2,iters,numel(noise_values));
 E3=zeros(2,iters,numel(noise_values));
 
 
-nodes=8;
+nodes=16;
 %  modules=4;
 % 
 % [bm , mods] = random_modular_graph(nodes,modules,1,.90);
@@ -21,7 +21,7 @@ for j=1:5
     for i=1:iters
         
 %         [W]=ls_bin2wei(bm,0,1);
-        W=wHub(nodes,nodes,0.1);
+        W=wRand(nodes,0.1);
         Worig=W;
         mtype=[];
         mtype{1}='deg';
@@ -50,6 +50,8 @@ for j=1:5
         idx_struc=find(struc);
         e=mean(abs(tmp(idx_struc)));
         E(:,i,j)=e;
+        tmpinit=Worig-Winit;
+        E2(:,i,j)=[norm(tmp,'fro') ];
         %     Eccc(:,i,j)=mean(e);
         RESc{i,j}={{Worig} {Winit} {c} {struc} {M} {m(:,end)}};
         i
