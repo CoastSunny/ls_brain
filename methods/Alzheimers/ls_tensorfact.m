@@ -7,14 +7,17 @@ else
 end
 
 %%
-fidx_patients=find(gc_idx(:,1)==1);
-fidx_controls=find(gc_idx(:,1)==0);
-for q = 1:length(Conn_full)
+% fidx_patients=find(gc_idx(:,1)==1);
+% fidx_controls=find(gc_idx(:,1)==0);
+for q =1% 1:length(Conn_full)
       
-    Y=Conn_full{q};
+    Y=abs(freqc{q}.fourierspctrm);
     Options=1;
-    [Fp{q},Ip(q),Ep(q),Concp(q)]=parafac(Y,2,Options,[0 0 0]);
-    [Ft{q},Gt{q}]=tucker(Y,[2 2 -1],Options,[0 0 -1]);
+%     G=zeros(16);
+%     G(1,2:5)=1;
+    G=(abs(conn{1}.cohspctrm(:,:,4)));
+    [Fp{q},Ip(q),Ep(q),Concp(q)]=parafac_reg(Y,4,G,Options,[0 7 2]);
+%     [Ft{q},Gt{q}]=tucker(Y,[2 2 -1],Options,[0 0 -1]);
     
     
 end

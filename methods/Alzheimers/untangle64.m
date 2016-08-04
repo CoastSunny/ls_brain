@@ -1,7 +1,7 @@
-for simcool=1:10
+for simcool=1:30
 clear M1 M2 E dR RE E2 RE2
 max_iter=30;
-noise_values=0+(0.05:0.05:1.5);
+noise_values=0+(0.05:0.15:1.5);
 j=10;
 
 nel=nodes*(nodes-1)/2;

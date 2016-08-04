@@ -72,9 +72,9 @@ if ~DoWeight
 %         L1=zeros(dim_con);
         ncomps=size(ZtX,1);
         dim_con=size(ZtX,2);
-        a=100;
+        a=1000;
         A=kron(ZtZ,eye(dim_con));
-        B=0;
+        B=[];
         for i=1:5            
             S=zeros(ncomps);
             S(i,i)=1;        
