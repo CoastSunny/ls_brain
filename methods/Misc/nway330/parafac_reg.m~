@@ -464,7 +464,6 @@ else
         SSX=sum(sum(X.^2)); % To be used for evaluating the %var explained
     elseif ~(any(const==4)|any(const==5))
         SSX=sum(sum(X.^2)); % To be used for evaluating the %var explained
-        SSX=norm(X,'fro').^2;
     else
         SSX=sum(abs(X(:)));
     end
@@ -1028,7 +1027,7 @@ while (((f>crit) | (norm(connew-conold)/norm(conold)>MissConvCrit) | Constraints
             err=sum(sum((X(:)-model(:)).^2));
         elseif (DoWeight==0&~(any(const==4)|any(const==5)))
 %             err=sum(sum((X-model).^2));
-            err=norm(X-model,'fro').^2;
+            err=norm(X-model,'fro')
         elseif any(const==4)|any(const==5)
             err=sum(sum(abs(X(:)-model(:))));
         else

@@ -10,23 +10,24 @@ end
 fidx_patients=find(gc_idx(:,1)==1);
 fidx_controls=find(gc_idx(:,1)==0);
 periods=5;
-G=[];
+G=[];Y=[];
+Options=[];
 for q = 1%1:length(Conn_full)
     
     X=abs(freqc{q}.fourierspctrm);
+    for i=1:size(freqc{q}.fourierspctrm,1);
+        for j=1:size(freqc{q}.fourierspctrm,2);
+            for k=1:size(freqc{q}.fourierspctrm,3);
+            end
+        end
+    end
+      fbin=10;
     for period=1:periods
         Y(period,:,:,:)=X(period:5:end,:,:);
-    end
-    Options=1;
-    fbin=10;
-    G{1}=(abs(conn_full{q,1}.wpli_debiasedspctrm(:,:,fbin)));
-    G{2}=(abs(conn_full{q,2}.wpli_debiasedspctrm(:,:,5)));    
-    G{3}=(abs(conn_full{q,3}.wpli_debiasedspctrm(:,:,5)));    
-    G{4}=(abs(conn_full{q,4}.wpli_debiasedspctrm(:,:,5)));    
-    G{5}=(abs(conn_full{q,5}.wpli_debiasedspctrm(:,:,5)));
-    
-    
-    [Fp{q},Ip(q),Exp(q),e,Concp(q)]=parafac_reg(Y,7,G,Options,[0 0 7 2]);
+        G{period}=(weight_conversion(mean(abs(conn_full{q,period}.(parameter)(:,:,:)),3),'normalize'));
+    end      
+    Y=permute(Y,[4 3 2 1]);
+    [Fp{q},Ip(q),Exp(q),e,Concp(q)]=parafac_reg(Y,8,G,Options,[0 8 0 0]);
     %     [Ft{q},Gt{q},Ext(q)]=tucker(Y,[2 2 -1],Options,[0 0 -1]);
     
     
