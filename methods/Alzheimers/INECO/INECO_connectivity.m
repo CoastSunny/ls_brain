@@ -1,6 +1,6 @@
 if isunix==0
-    data_folder='D:\Raw\AlzheimerEEG\Multivariate AFAVA artefact free';
-    save_folder='D:\Extracted\Alzheimer\Multivariate AFAVA artefact free\AFAVA_1sectrials\';
+    data_folder='D:\Extracted\Alzheimer\INECO_fieldtrip\';
+    save_folder='D:\Extracted\Alzheimer\INECO_fieldtrip\';
 else
     data_folder='/home/engbiome/INECO/INECO_fieldtrip/';
     save_folder='/home/lspyrou/Documents/results/INECO/';
@@ -54,11 +54,11 @@ for q = 1:length(names)
     
     % Applies connectivity measure
     cfg             = [];
-    cfg.method      = 'wpli_debiased';
+%     cfg.method      = 'wpli_debiased';
     %    cfg.complex     = 'complex';
-%     cfg.method      = 'coh';
-%     cfg.complex     = 'imag';
-    parameter       = 'wpli_debiasedspctrm';
+    cfg.method      = 'coh';
+    cfg.complex     = 'imag';
+    parameter       = 'cohspctrm';
     
     %          cfg.bandwidth   = 1;
     %     for idx_trials=1:ntrials-ntrials_window
@@ -73,7 +73,7 @@ for q = 1:length(names)
     %         end
     %     end
     for period=1:periods
-        cfg.trials      = period : periods : ntrials;
+        cfg.trials      = period : periods : round(ntrials/2);
         conn_full{count,period}            = ft_connectivityanalysis(cfg, freqc{count});
         PSI_full{count,period}(:,:,:) = abs(conn_full{count,period}.(parameter));
         for idx_freq = 1:numel(freq{count}.freq)

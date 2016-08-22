@@ -1,4 +1,4 @@
-function [Factors,it,PercentExpl,err,corcondia]=parafac_reg(X,Fac,G,Options,const,OldLoad,FixMode,Weights);
+function [Factors,Xest,it,PercentExpl,err,corcondia]=parafac_reg(X,Fac,G,alpha,Options,const,OldLoad,FixMode,Weights);
 
 % PARAFAC multiway parafac model
 %
@@ -844,7 +844,7 @@ while (((f>crit) | (norm(connew-conold)/norm(conold)>MissConvCrit) | Constraints
                     ZtZ=Z'*Z;
                     ZtX=Z'*X';
                     OldLoad=reshape(Factors(lidx(i,1):lidx(i,2)),DimX(i),Fac);
-                    L=pfls(ZtZ,ZtX,G,DimX(i),const(i),OldLoad,DoWeight,Weights);
+                    L=pfls(ZtZ,ZtX,G,alpha,DimX(i),const(i),OldLoad,DoWeight,Weights);
                     %L=(pinv(ZtZ+eye*600)*ZtX)';
                     Factors(lidx(i,1):lidx(i,2))=L(:);
                 end
@@ -1007,6 +1007,7 @@ while (((f>crit) | (norm(connew-conold)/norm(conold)>MissConvCrit) | Constraints
         id1 = id2;
     end
     model=nmodel(ff);
+    Xest=model;
     model = reshape(model,DimX(1),prod(DimX(2:end)));
     if MissMeth  % Missing values present
         connew=model(id);

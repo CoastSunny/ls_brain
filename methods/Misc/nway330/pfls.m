@@ -1,4 +1,4 @@
-function load=pfls(ZtZ,ZtX,G,dimX,cons,OldLoad,DoWeight,W);
+function load=pfls(ZtZ,ZtX,G,alpha,dimX,cons,OldLoad,DoWeight,W);
 
 %PFLS
 %
@@ -72,7 +72,7 @@ if ~DoWeight
         %         L1=zeros(dim_con);
         ncomps=size(ZtX,1);
         dim_con=size(ZtX,2);
-        a=100;
+        a=alpha;
         A=kron(ZtZ,eye(dim_con));
         B=0;
         for i=1:5
@@ -89,7 +89,7 @@ if ~DoWeight
         load=OldLoad;
         F=size(OldLoad,2);
         dim_con=size(ZtX,2);
-        a=100;
+        a=alpha;
         
         for i=1:F
             if (i<6)
