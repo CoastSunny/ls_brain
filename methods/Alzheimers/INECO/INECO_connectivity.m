@@ -57,7 +57,7 @@ for q = 1:length(names)
 %     cfg.method      = 'wpli_debiased';
     %    cfg.complex     = 'complex';
     cfg.method      = 'coh';
-    cfg.complex     = 'abs';
+    cfg.complex     = 'imag';
     parameter       = 'cohspctrm';
     
     %          cfg.bandwidth   = 1;

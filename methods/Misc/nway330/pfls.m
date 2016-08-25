@@ -1,4 +1,4 @@
-function load=pfls(ZtZ,ZtX,G,alpha,dimX,cons,OldLoad,DoWeight,W);
+function [load Rpenalty]=pfls(ZtZ,ZtX,G,alpha,dimX,cons,OldLoad,DoWeight,W);
 
 %PFLS
 %
@@ -32,7 +32,7 @@ function load=pfls(ZtZ,ZtX,G,alpha,dimX,cons,OldLoad,DoWeight,W);
 % this program; if not, write to the Free Software Foundation, Inc., 51 Franklin
 % Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-
+Rpenalty=[];
 if ~DoWeight
     
     if cons==0 % No constr
@@ -79,11 +79,16 @@ if ~DoWeight
             S=zeros(ncomps);
             S(i,i)=1;
             Lap=diag( ls_network_metric(G{i},'deg') )-G{i};
-            B=B+kron(S,a*Lap);
+            B=B+kron(S,a*Lap);            
         end
         C=vec(ZtX');
         load=reshape(inv(A+B)*C,dim_con,ncomps);
-        
+        for i=1:5
+            S=zeros(ncomps);
+            S(i,i)=1;
+            Lap=diag( ls_network_metric(G{i},'deg') )-G{i};
+            Rpenalty(i)=trace(S*load'*Lap*load*S);
+        end
     elseif cons==8
         
         load=OldLoad;
@@ -100,12 +105,14 @@ if ~DoWeight
                 B=kron(1,a*Lap);
                 C=vec(ztX');
                 load(:,i)=inv(A+B)*C;
+                Rpenalty(i)=trace(load(:,i)'*Lap*load(:,i));
             else
                 ztz=ZtZ(i,i);
                 ztX=ZtX(i,:)-ZtZ(i,[1:i-1 i+1:F])*load(:,[1:i-1 i+1:F])';
                 load(:,i)=(pinv(ztz)*ztX)';
             end
         end
+        asd=12;
     elseif cons==9
         load=real(pinv(ZtZ)*ZtX)';
     elseif cons==10

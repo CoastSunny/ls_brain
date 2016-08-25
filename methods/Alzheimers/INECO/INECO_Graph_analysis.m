@@ -40,7 +40,7 @@ ccpat=abs(spctrm(:,:,:,:,fidx_patient));
 cccon=abs(spctrm(:,:,:,:,fidx_control));
 
 cfg=[];
-cfg.layout='/home/lspyrou/Documents/biosemi128.lay';
+cfg.layout='C:\Users\Loukianos\Documents\ls_brain\global\biosemi128.lay';
 cfg.newfigure='yes';
 cfg.foi=10;
 % cfg.colormap=cool;

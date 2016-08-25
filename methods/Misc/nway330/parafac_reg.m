@@ -1,4 +1,4 @@
-function [Factors,Xest,it,PercentExpl,err,corcondia]=parafac_reg(X,Fac,G,alpha,Options,const,OldLoad,FixMode,Weights);
+function [Factors,Xest,it,PercentExpl,err,Rpenalty,corcondia]=parafac_reg(X,Fac,G,alpha,Options,const,OldLoad,FixMode,Weights);
 
 % PARAFAC multiway parafac model
 %
@@ -844,7 +844,7 @@ while (((f>crit) | (norm(connew-conold)/norm(conold)>MissConvCrit) | Constraints
                     ZtZ=Z'*Z;
                     ZtX=Z'*X';
                     OldLoad=reshape(Factors(lidx(i,1):lidx(i,2)),DimX(i),Fac);
-                    L=pfls(ZtZ,ZtX,G,alpha,DimX(i),const(i),OldLoad,DoWeight,Weights);
+                    [L Rpenalty{ii}]=pfls(ZtZ,ZtX,G,alpha,DimX(i),const(i),OldLoad,DoWeight,Weights);
                     %L=(pinv(ZtZ+eye*600)*ZtX)';
                     Factors(lidx(i,1):lidx(i,2))=L(:);
                 end
