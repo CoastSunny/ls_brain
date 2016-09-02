@@ -21,7 +21,8 @@ end
 end
 
 
-Alpha=[0 10 50 100 300 500 1000 1500 2000 ];
+Alpha=[0 10 50 100 300 500 1000 1500 2000 3000 5000 7000 ];
+
 for a=1:numel(Alpha)
 for q = 1:length(Conn_full)
     G=[];Y=[];err=[];
@@ -33,12 +34,13 @@ for q = 1:length(Conn_full)
         G{period}=(weight_conversion(mean(abs(conn_full{q,period}.(parameter)(:,:,:)),3),'normalize'));
     
 %         G{period}=weight_conversion(rand(128,128),'normalize');
-       
+%        G{period}=ones(128);
 %           G{period}=squeeze(mean(W(fidx_patients,period,:,:),1));
         G{period}(eye(128)==1)=0;
     end      
 %     A=[0 1 0 0 0; 1 0 1 0 0; 0 1 0 1 0 ; 0 0 1 0 1 ; 0 0 0 1 0];
     Y=permute(Y,[4 3 2 1]);
+    Ys{q}=Y;
     ntrials=size(Y,3);
     Ytst=Y(:,:,round(ntrials/2)+1:end,:);
     Ytr=Y(:,:,1:round(ntrials/2),:);

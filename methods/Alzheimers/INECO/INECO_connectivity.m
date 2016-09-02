@@ -6,7 +6,7 @@ else
     save_folder='/home/lspyrou/Documents/results/INECO/';
 end
 %% Connectivity Analysiss
-PSI=[];PSI_full=[];conn_full=[];Conn_full=[];
+PSI=[];PSI_full=[];conn_full=[];Conn_full=[];freqc=[];freq=[];Freq=[];
 DirCon = dir([ data_folder '*.mat']);
 cd(save_folder)
 tmp=struct2cell(DirCon);
@@ -29,7 +29,7 @@ count=1;
 for q = 1:length(names)
     clear data   
 %     g_idx(q,:)=group_idx(data,g1,g2,g3);
-    if g_idx(q,3)==1 || g_idx(q,2)==1 % group exclusion criteria
+    if g_idx(q,3)==1 %|| g_idx(q,2)==1 % group exclusion criteria
         continue;
     end
     gc_idx(count,:)=g_idx(q,:);

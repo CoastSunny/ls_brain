@@ -47,7 +47,7 @@ elseif any(strcmp(metric_type,{'modul' 'modularity'}))
     
 elseif any(strcmp(metric_type,{'deg' 'degree'}))
     
-    W(W<0)=0;   
+%     W(W<0)=0;   
     metric = sum(W)';
     
 elseif any(strcmp(metric_type,{'avndeg' 'average_neighbour_degree'}))
