@@ -85,9 +85,9 @@ if ~DoWeight
         end
         C=vec(ZtX');
         load=reshape(inv(A+B)*C,dim_con,ncomps);
-%         for i=1:ncomps
-%             load(:,i)=load(:,i)/norm(load(:,i));
-%         end
+        for i=1:ncomps
+            load(:,i)=load(:,i)/norm(load(:,i));
+        end
         for i=1:5
             S=zeros(ncomps);
             S(i,i)=1;
