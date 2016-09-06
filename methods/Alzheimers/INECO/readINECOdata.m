@@ -1,3 +1,4 @@
+a
 %% Create 4-dimensional matrix of samples x trials x channels x patients
 if isunix==0
     data_folder='D:\Raw\AlzheimerEEG\Multivariate AFAVA artefact free';
