@@ -79,24 +79,25 @@ if ~DoWeight
             S=zeros(ncomps);
             S(i,i)=1;
             Dg=diag( ls_network_metric(G{i},'deg'));
-%             Lap=eye(128)-Dg^(-1/2)*G{i}*Dg^(-1/2);
+            %             Lap=eye(128)-Dg^(-1/2)*G{i}*Dg^(-1/2);
             Lap=Dg-G{i};
-            B=B+kron(S,a*Lap);            
+            B=B+kron(S,a*Lap);
         end
         C=vec(ZtX');
         load=reshape(inv(A+B)*C,dim_con,ncomps);
         for i=1:ncomps
-            load(:,i)=load(:,i)/norm(load(:,i));
+%             load(:,i)=load(:,i)/norm(load(:,i));
         end
         for i=1:5
             S=zeros(ncomps);
             S(i,i)=1;
-%             Lap=eye(128)-Dg^(-1/2)*G{i}*Dg^(-1/2);
+            %             Lap=eye(128)-Dg^(-1/2)*G{i}*Dg^(-1/2);
             Lap=Dg-G{i};
             Rpenalty(i)=trace(S*load'*Lap*load*S);
         end
     elseif cons==8
         
+        ncomps=size(ZtX,1);
         load=OldLoad;
         F=size(OldLoad,2);
         dim_con=size(ZtX,2);
@@ -107,13 +108,14 @@ if ~DoWeight
                 ztz=ZtZ(i,i);
                 ztX=ZtX(i,:)-ZtZ(i,[1:i-1 i+1:F])*load(:,[1:i-1 i+1:F])';
                 A=kron(ztz,eye(dim_con));
-%                 Lap=diag(ls_network_metric(G{i},'deg') )-G{i};
+                %                 Lap=diag(ls_network_metric(G{i},'deg') )-G{i};
                 Dg=diag( ls_network_metric(G{i},'deg'));
-                Lap=eye(128)-Dg^(-1/2)*G{i}*Dg^(-1/2);
+                Lap=Dg-G{i};
+%                 Lap=eye(128)-Dg^(-1/2)*G{i}*Dg^(-1/2);
                 B=kron(1,a*Lap);
                 C=vec(ztX');
                 load(:,i)=inv(A+B)*C;
-%                 load(:,i)=load(:,i)/norm(load(:,i));
+                %                 load(:,i)=load(:,i)/norm(load(:,i));
                 Rpenalty(i)=trace(load(:,i)'*Lap*load(:,i));
             else
                 ztz=ZtZ(i,i);
@@ -121,17 +123,19 @@ if ~DoWeight
                 load(:,i)=(pinv(ztz)*ztX)';
             end
         end
-        asd=12;
+        for i=1:ncomps
+%             load(:,i)=load(:,i)/norm(load(:,i));
+        end
     elseif cons==9
         load=real(pinv(ZtZ)*ZtX)';
     elseif cons==10
-             
+        
         ncomps=size(ZtX,1);
         dim_con=size(ZtX,2);
         a=100;
         A=kron(ZtZ,eye(dim_con));
         Lap=diag( ls_network_metric(G,'deg') )-G;
-        B=kron(eye(ncomps),a*Lap);        
+        B=kron(eye(ncomps),a*Lap);
         C=vec(ZtX');
         load=reshape(inv(A+B)*C,dim_con,ncomps);
         

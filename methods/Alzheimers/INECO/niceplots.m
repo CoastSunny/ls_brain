@@ -1,0 +1,11 @@
+aa=[];
+for i=1:64
+    for j=1:8
+        for k=1:4
+            aa(i,j,k,:)=Fp{j,i}{2}(:,k);
+        end
+    end
+end
+
+
+    
