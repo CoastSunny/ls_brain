@@ -16,7 +16,7 @@ fidx_patients_bind=intersect(find(gc_idx(:,1)==1),find(gc_idx(:,2)==0));
 fidx_controls=find(gc_idx(:,1)==0);
 periods=5;
 
-Er=[];Options=.1;W=[];Fp=[];Rpen=[];
+Er=[];Options=.01;W=[];Fp=[];Rpen=[];
 for si=1:length(conn_full)
     for period=1:periods
         W(si,period,:,:,:)=(weight_conversion(mean(abs(conn_full{si,period}.(parameter)(:,:,:)),3),'normalize'));
@@ -25,7 +25,7 @@ end
 
 
 % Alpha=[0 10 50 100 300 500 1000 1500 2000 3000 5000 7000 ];
-Alpha=[500];
+Alpha=[100 500 1000];
 
 AA=random_modular_graph(128,4,1,1);
 for a=1:numel(Alpha)
@@ -45,7 +45,7 @@ for a=1:numel(Alpha)
            
         end
             
-        dis_pen=-0.3;
+        dis_pen=-1;
         temp=AA;temp(33:end,33:end)=0;
         temp([33:end],[1:32])=dis_pen;temp([1:32],[33:end])=dis_pen;temp(eye(128)==1)=0;G{1}=temp;
         temp=AA;temp([1:32 65:end],[1:32 65:end])=0;
@@ -76,7 +76,7 @@ for a=1:numel(Alpha)
         Ytst=Y(:,:,round(ntrials/2)+1:end,:);
         Ytr=Y(:,:,1:round(ntrials/2),:);
         %     [Fp{q},Ip(q),Exp(q),e,Concp(q)]=parafac_reg(Y,8,G,Options,[0 0 0 0]);
-        [Fp{a,q},Yest,Ip(q),Exp(q),e,Rpen{a,q}]=parafac_reg(Ytst,5,G,Alpha(a),Options,[2 8 2 2]);
+        [Fp{a,q},Yest,Ip(q),Exp(q),e,Rpen{a,q}]=parafac_reg(Ytst,6,G,Alpha(a),Options,[2 8 2 2]);
         mYtst=mean(Ytst,3);
         mYtr=mean(Ytr,3);
         for i=1:size(Yest,3)
