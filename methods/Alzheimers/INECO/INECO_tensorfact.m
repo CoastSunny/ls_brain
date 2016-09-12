@@ -16,7 +16,7 @@ fidx_patients_bind=intersect(find(gc_idx(:,1)==1),find(gc_idx(:,2)==0));
 fidx_controls=find(gc_idx(:,1)==0);
 periods=5;
 
-Er=[];Options=.01;W=[];Fp=[];Rpen=[];
+Er=[];Options=.001;W=[];Fp=[];Rpen=[];
 for si=1:length(conn_full)
     for period=1:periods
         W(si,period,:,:,:)=(weight_conversion(mean(abs(conn_full{si,period}.(parameter)(:,:,:)),3),'normalize'));
@@ -25,7 +25,7 @@ end
 
 
 % Alpha=[0 10 50 100 300 500 1000 1500 2000 3000 5000 7000 ];
-Alpha=[0 1 10 20 50 100 500 1000];
+Alpha=[0 1 10 20 35 50 100 500 1000];
 
 AA=random_modular_graph(128,4,1,1);
 for a=1:numel(Alpha)
