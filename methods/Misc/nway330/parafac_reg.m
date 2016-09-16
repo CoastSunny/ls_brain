@@ -464,7 +464,7 @@ else
         SSX=sum(sum(X.^2)); % To be used for evaluating the %var explained
     elseif ~(any(const==4)|any(const==5))
         SSX=sum(sum(X.^2)); % To be used for evaluating the %var explained
-        SSX=norm(X,'fro').^2;
+        SSX=norm(X,'fro').^2;        
     else
         SSX=sum(abs(X(:)));
     end
@@ -842,7 +842,7 @@ while (((f>crit) | (norm(connew-conold)/norm(conold)>MissConvCrit) | Constraints
                         Z=krb(L1,Z);
                     end
                     ZtZ=Z'*Z;
-                    ZtX=Z'*X';
+                    ZtX=Z'*X.';
                     OldLoad=reshape(Factors(lidx(i,1):lidx(i,2)),DimX(i),Fac);
                     [L Rpenalty{ii}]=pfls(ZtZ,ZtX,G,alpha,DimX(i),const(i),OldLoad,DoWeight,Weights);
                     %L=(pinv(ZtZ+eye*600)*ZtX)';
@@ -850,7 +850,7 @@ while (((f>crit) | (norm(connew-conold)/norm(conold)>MissConvCrit) | Constraints
                 end
                 x=zeros(prod(DimX([1:ii-1 ii+1:ord])),DimX(ii));  % Rotate X so the current last mode is the first
                 x(:)=X;
-                X=x';
+                X=x.';
             end
         elseif DoWeight
             for ii=ord:-1:1
@@ -880,9 +880,9 @@ while (((f>crit) | (norm(connew-conold)/norm(conold)>MissConvCrit) | Constraints
                 end
                 x=zeros(prod(DimX([1:ii-1 ii+1:ord])),DimX(ii));
                 x(:)=X;
-                X=x';
+                X=x.';
                 x(:)=Weights;
-                Weights=x';
+                Weights=x.';
             end
         elseif (any(const==4)|any(const==5))
             for ii=ord:-1:1
@@ -916,7 +916,7 @@ while (((f>crit) | (norm(connew-conold)/norm(conold)>MissConvCrit) | Constraints
                 end
                 x=zeros(prod(DimX([1:ii-1 ii+1:ord])),DimX(ii));
                 x(:)=X;
-                X=x';
+                X=x.';
             end
         end
         
@@ -948,55 +948,55 @@ while (((f>crit) | (norm(connew-conold)/norm(conold)>MissConvCrit) | Constraints
             end
             x=zeros(prod(DimX([1:ii-1 ii+1:ord])),DimX(ii));  % Rotate X so the current last mode is the first
             x(:)=X;
-            X=x';
+            X=x.';
         end
     end    
     
     % POSTPROCES LOADINGS (ALL VARIANCE IN FIRST MODE)
-    if ~any(FixMode)
-        A=reshape(Factors(lidx(1,1):lidx(1,2)),DimX(1),Fac);
-        for i=2:ord
-            B=reshape(Factors(lidx(i,1):lidx(i,2)),DimX(i),Fac);
-            for ff=1:Fac
-                A(:,ff)=A(:,ff)*norm(B(:,ff));
-                B(:,ff)=B(:,ff)/norm(B(:,ff));
-            end
-            Factors(lidx(i,1):lidx(i,2))=B(:);
-        end
-        Factors(lidx(1,1):lidx(1,2))=A(:);
-    end
+%     if ~any(FixMode)
+%         A=reshape(Factors(lidx(1,1):lidx(1,2)),DimX(1),Fac);
+%         for i=2:ord
+%             B=reshape(Factors(lidx(i,1):lidx(i,2)),DimX(i),Fac);
+%             for ff=1:Fac
+%                 A(:,ff)=A(:,ff)*norm(B(:,ff));
+%                 B(:,ff)=B(:,ff)/norm(B(:,ff));
+%             end
+%             Factors(lidx(i,1):lidx(i,2))=B(:);
+%         end
+%         Factors(lidx(1,1):lidx(1,2))=A(:);
+%     end
     % APPLY SIGN CONVENTION IF NO FIXED MODES
     %  FixMode=1
-    if ~iscell(const)
-    if ~any(FixMode)&~(any(const==2)|any(const==3))
-        Sign = ones(1,Fac);
-        for i=ord:-1:2
-            A=reshape(Factors(lidx(i,1):lidx(i,2)),DimX(i),Fac);
-            Sign2=ones(1,Fac);
-            for ff=1:Fac
-                [out,sig]=max(abs(A(:,ff)));
-                Sign(ff) = Sign(ff)*sign(A(sig,ff));
-                Sign2(ff) = sign(A(sig,ff));
-            end
-            A=A*diag(Sign2);
-            Factors(lidx(i,1):lidx(i,2))=A(:);
-        end
-        A=reshape(Factors(lidx(1,1):lidx(1,2)),DimX(1),Fac);
-        A=A*diag(Sign);
-        Factors(lidx(1,1):lidx(1,2))=A(:);
-    end
-    end
-    % Check if nonneg_obeyed
-    if ~iscell(const)
-    for i=1:ord
-        if const(i)==2|const(i)==3
-            A=reshape(Factors(lidx(i,1):lidx(i,2)),DimX(i),Fac);
-            if any(A(:))<0
-                nonneg_obeyed=0;
-            end
-        end
-    end
-    end
+%     if ~iscell(const)
+%     if ~any(FixMode)&~(any(const==2)|any(const==3))
+%         Sign = ones(1,Fac);
+%         for i=ord:-1:2
+%             A=reshape(Factors(lidx(i,1):lidx(i,2)),DimX(i),Fac);
+%             Sign2=ones(1,Fac);
+%             for ff=1:Fac
+%                 [out,sig]=max(abs(A(:,ff)));
+%                 Sign(ff) = Sign(ff)*sign(A(sig,ff));
+%                 Sign2(ff) = sign(A(sig,ff));
+%             end
+%             A=A*diag(Sign2);
+%             Factors(lidx(i,1):lidx(i,2))=A(:);
+%         end
+%         A=reshape(Factors(lidx(1,1):lidx(1,2)),DimX(1),Fac);
+%         A=A*diag(Sign);
+%         Factors(lidx(1,1):lidx(1,2))=A(:);
+%     end
+%     end
+%     % Check if nonneg_obeyed
+%     if ~iscell(const)
+%     for i=1:ord
+%         if const(i)==2|const(i)==3
+%             A=reshape(Factors(lidx(i,1):lidx(i,2)),DimX(i),Fac);
+%             if any(A(:))<0
+%                 nonneg_obeyed=0;
+%             end
+%         end
+%     end
+%     end
     
     % EVALUATE SOFAR
     % Convert to new format
@@ -1186,24 +1186,24 @@ if showfit~=-1
 end
 
 % POSTPROCES LOADINGS (ALL VARIANCE IN FIRST MODE)
-if Options(4)==0|Options(4)==1
-    A=reshape(Factors(lidx(1,1):lidx(1,2)),DimX(1),Fac);
-    for i=2:ord
-        if ~FixMode(i)
-            B=reshape(Factors(lidx(i,1):lidx(i,2)),DimX(i),Fac);
-            for ff=1:Fac
-                A(:,ff)=A(:,ff)*norm(B(:,ff));
-                B(:,ff)=B(:,ff)/norm(B(:,ff));
-            end
-            Factors(lidx(i,1):lidx(i,2))=B(:);
-        end
-    end
-    Factors(lidx(1,1):lidx(1,2))=A(:);
-    if showfit~=-1
-        disp(' ')
-        disp(' Components have been normalized in all but the first mode')
-    end
-end
+% if Options(4)==0|Options(4)==1
+%     A=reshape(Factors(lidx(1,1):lidx(1,2)),DimX(1),Fac);
+%     for i=2:ord
+%         if ~FixMode(i)
+%             B=reshape(Factors(lidx(i,1):lidx(i,2)),DimX(i),Fac);
+%             for ff=1:Fac
+%                 A(:,ff)=A(:,ff)*norm(B(:,ff));
+%                 B(:,ff)=B(:,ff)/norm(B(:,ff));
+%             end
+%             Factors(lidx(i,1):lidx(i,2))=B(:);
+%         end
+%     end
+%     Factors(lidx(1,1):lidx(1,2))=A(:);
+%     if showfit~=-1
+%         disp(' ')
+%         disp(' Components have been normalized in all but the first mode')
+%     end
+% end
 
 % PERMUTE SO COMPONENTS ARE IN ORDER AFTER VARIANCE DESCRIBED (AS IN PCA) IF NO FIXED MODES
 % if ~any(FixMode)

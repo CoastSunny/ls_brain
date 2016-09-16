@@ -37,7 +37,7 @@ if ~DoWeight
     
     if cons==0 % No constr
         %load=((Z'*Z)\Z'*Xinuse)';
-        load=(pinv(ZtZ)*ZtX)';
+        load=(inv(ZtZ)*ZtX).';
         
     elseif cons==1 % Orthogonal loadings acc. to Harshman & Lundy 94
         load=ZtX'*(ZtX*ZtX')^(-.5);

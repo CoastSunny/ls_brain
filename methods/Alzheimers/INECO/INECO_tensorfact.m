@@ -24,9 +24,9 @@ for si=1:length(conn_full)
 end
 
 
-% Alpha=[0 10 50 100 300 500 1000 1500 2000 3000 5000 7000 ];
-Alpha=[0 1 10 20 35 50 100 500 1000];
-
+% Alpha=[0 10 50 100 300 500 1000 1500 2000 3000 5000 7000 ];icassp
+% Alpha=[0 1 10 20 35 50 100 500 1000];icassp
+Alpha=[0];
 AA=random_modular_graph(128,4,1,1);
 for a=1:numel(Alpha)
     for q = 1:length(Conn_full)
@@ -76,7 +76,7 @@ for a=1:numel(Alpha)
         Ytst=Y(:,:,round(ntrials/2)+1:end,:);
         Ytr=Y(:,:,1:round(ntrials/2),:);
         %     [Fp{q},Ip(q),Exp(q),e,Concp(q)]=parafac_reg(Y,8,G,Options,[0 0 0 0]);
-        [Fp{a,q},Yest,Ip(q),Exp(q),e,Rpen{a,q}]=parafac_reg(Ytst,6,G,Alpha(a),Options,[2 8 2 2]);
+        [Fp{a,q},Yest,Ip(q),Exp(q),e,Rpen{a,q}]=parafac_reg(Ytst,6,G,Alpha(a),Options,[0 0 0 0]);
         mYtst=mean(Ytst,3);
         mYtr=mean(Ytr,3);
         for i=1:size(Yest,3)

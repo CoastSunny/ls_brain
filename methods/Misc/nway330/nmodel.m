@@ -185,7 +185,7 @@ elseif Orthomode==1,
     Xm=G;
     newi=CurDimX(2);
     newj=prod(CurDimX)/CurDimX(2);
-    Xm=reshape(Xm',newi,newj);
+    Xm=reshape(Xm.',newi,newj);
     for c=2:N,
         if Fac_orig(c)~=-1,
             A=reshape(Factors(FIdx0(c):FIdx1(c)),DimX(c),Fac(c));
@@ -201,7 +201,7 @@ elseif Orthomode==1,
 				newi=CurDimX(1);
             newj=prod(CurDimX)/CurDimX(1);
         end;
-        Xm=reshape(Xm',newi,newj);
+        Xm=reshape(Xm.',newi,newj);
     end;
     if Fac_orig(1)~=-1,
         A=reshape(Factors(FIdx0(1):FIdx1(1)),DimX(1),Fac(1));
