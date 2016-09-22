@@ -512,6 +512,9 @@ elseif Init==0
                 [A,B,C]=dtld(reshape(X,DimX),Fac);
             catch
                 A = rand(DimX(1),Fac);B = rand(DimX(2),Fac);C = rand(DimX(3),Fac);
+                A = complex(rand(DimX(1),Fac),rand(DimX(1),Fac));
+                B = complex(rand(DimX(2),Fac),rand(DimX(2),Fac));
+                C = complex(rand(DimX(3),Fac),rand(DimX(3),Fac));
             end
         else
             if showfit~=-1
@@ -522,7 +525,7 @@ elseif Init==0
             end
             A = Factors{1};B=Factors{2};C = Factors{3};
         end
-        A=real(A);B=real(B);C=real(C);
+%         A=real(A);B=real(B);C=real(C);
         % Check for signs and reflect if appropriate
         for f=1:Fac
             if sign(sum(A(:,f)))<0
@@ -552,7 +555,8 @@ elseif Init==0
         catch
             Factors=[];
             for i=1:length(DimX);
-                l = rand(DimX(i),Fac);
+                l = complex(randn(DimX(i),Fac),randn(DimX(i),Fac));
+%                 l = rand(DimX(i),Fac);
                 Factors{i} =l;
             end
             if showfit~=-1
@@ -639,22 +643,22 @@ else
 end
 
 % Check for signs and reflect if appropriate
-for f=1:Fac
-    for m=1:ord-1
-        if sign(sum(Factors{m}(:,f)<0)) & FixMode(m)==0
-            contin=1;
-            for m2 = m+1:ord
-                if contin & FixMode(m2)==0
-                    if sign(sum(Factors{m2}(:,f)<0))
-                        Factors{m}(:,f)=-Factors{m}(:,f);
-                        Factors{m2}(:,f)=-Factors{m2}(:,f);
-                        contin=0;
-                    end
-                end
-            end
-        end
-    end
-end
+% for f=1:Fac
+%     for m=1:ord-1
+%         if sign(sum(Factors{m}(:,f)<0)) & FixMode(m)==0
+%             contin=1;
+%             for m2 = m+1:ord
+%                 if contin & FixMode(m2)==0
+%                     if sign(sum(Factors{m2}(:,f)<0))
+%                         Factors{m}(:,f)=-Factors{m}(:,f);
+%                         Factors{m2}(:,f)=-Factors{m2}(:,f);
+%                         contin=0;
+%                     end
+%                 end
+%             end
+%         end
+%     end
+% end
 % Convert to old format
 
 
@@ -844,7 +848,7 @@ while (((f>crit) | (norm(connew-conold)/norm(conold)>MissConvCrit) | Constraints
                     ZtZ=Z'*Z;
                     ZtX=Z'*X.';
                     OldLoad=reshape(Factors(lidx(i,1):lidx(i,2)),DimX(i),Fac);
-                    [L Rpenalty{ii}]=pfls(ZtZ,ZtX,G,alpha,DimX(i),const(i),OldLoad,DoWeight,Weights);
+                    [L Rpenalty{ii}]=pfls_reg(ZtZ,ZtX,G,alpha,DimX(i),const(i),OldLoad,DoWeight,Weights);
                     %L=(pinv(ZtZ+eye*600)*ZtX)';
                     Factors(lidx(i,1):lidx(i,2))=L(:);
                 end
@@ -1242,34 +1246,34 @@ end
 
 % APPLY SIGN CONVENTION IF NO FIXED MODES
 %  FixMode=1
-if ~iscell(const)
-if ~any(FixMode)&~(any(const==2)|any(const==3))
-    Sign = ones(1,Fac);
-    for i=ord:-1:2
-        A=reshape(Factors(lidx(i,1):lidx(i,2)),DimX(i),Fac);
-        Sign2=ones(1,Fac);
-        for ff=1:Fac
-            [out,sig]=max(abs(A(:,ff)));
-            Sign(ff) = Sign(ff)*sign(A(sig,ff));
-            Sign2(ff) = sign(A(sig,ff));
-        end
-        A=A*diag(Sign2);
-        Factors(lidx(i,1):lidx(i,2))=A(:);
-    end
-    A=reshape(Factors(lidx(1,1):lidx(1,2)),DimX(1),Fac);
-    A=A*diag(Sign);
-    Factors(lidx(1,1):lidx(1,2))=A(:);
-    
-    %   % Instead of above, do signs so as to make them as "natural" as possible
-    %   Factors = signswtch(Factors,reshape(X,DimX));
-    %   DIDN't WORK (TOOK AGES FOR 7WAY DATA)
-    
-    
-    if showfit~=-1
-        disp(' Components have been reflected according to convention')
-    end
-end
-end
+% if ~iscell(const)
+% if ~any(FixMode)&~(any(const==2)|any(const==3))
+%     Sign = ones(1,Fac);
+%     for i=ord:-1:2
+%         A=reshape(Factors(lidx(i,1):lidx(i,2)),DimX(i),Fac);
+%         Sign2=ones(1,Fac);
+%         for ff=1:Fac
+%             [out,sig]=max(abs(A(:,ff)));
+%             Sign(ff) = Sign(ff)*sign(A(sig,ff));
+%             Sign2(ff) = sign(A(sig,ff));
+%         end
+%         A=A*diag(Sign2);
+%         Factors(lidx(i,1):lidx(i,2))=A(:);
+%     end
+%     A=reshape(Factors(lidx(1,1):lidx(1,2)),DimX(1),Fac);
+%     A=A*diag(Sign);
+%     Factors(lidx(1,1):lidx(1,2))=A(:);
+%     
+%     %   % Instead of above, do signs so as to make them as "natural" as possible
+%     %   Factors = signswtch(Factors,reshape(X,DimX));
+%     %   DIDN't WORK (TOOK AGES FOR 7WAY DATA)
+%     
+%     
+%     if showfit~=-1
+%         disp(' Components have been reflected according to convention')
+%     end
+% end
+% end
 % Convert to new format
 clear ff,id1 = 0;
 for i = 1:length(DimX)

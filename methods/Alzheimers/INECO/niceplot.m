@@ -1,8 +1,12 @@
+cfg.layout='/home/lspyrou/Documents/ls_brain/global/biosemi128.lay';
+cfg.parameter='powspctrm';
+cfg.comment='no';
+
 temp=freq{1};
 aaa=[];bbb=[];ccc=[];ddd=[];
 faaa=[];fbbb=[];fccc=[];fddd=[];
 Pa=[];Pb=[];Pc=[];Pd=[];
-reg_pars=9;
+reg_pars=1;
 for s=1:19
     for i=1:6
         for j=1:reg_pars
@@ -60,38 +64,38 @@ end
 % end
 
 
-reg=4;j=reg;
+reg=1;j=reg;
 Sel={1:32 33:64 65:96 97:128 [1:32 65:96]};
 figure
 for i=1:6
     subplot(4,6,i)
-    temp.powspctrm=repmat(squeeze(mean(aaa(:,i,reg,:),1)),1,15);
+    temp.powspctrm=abs(repmat(squeeze(mean(aaa(:,i,reg,:),1)),1,15)).^2;
     if i<6; Pa(i,j)=mean(mean(temp.powspctrm(Sel{i},:))); end;
-    ft_topoplotTFR(cfg,temp)    
+    ft_topoplotTFR(cfg,temp)    ;
 end
 % Pa(:,j)=Pa(:,j)/sum(Pa(:,j));
 % figure
 for i=1:6
     subplot(4,6,i+6)
-    temp.powspctrm=repmat(squeeze(mean(bbb(:,i,reg,:),1)),1,15);
+    temp.powspctrm=abs(repmat(squeeze(mean(bbb(:,i,reg,:),1)),1,15)).^2;
     if i<6;Pb(i,j)=mean(mean(temp.powspctrm(Sel{i},:)));end;
-    ft_topoplotTFR(cfg,temp)
+    ft_topoplotTFR(cfg,temp);
 end
 % Pb(:,j)=Pb(:,j)/sum(Pb(:,j));
 % figure
 for i=1:6
     subplot(4,6,i+12)
-    temp.powspctrm=repmat(squeeze(mean(ccc(:,i,reg,:),1)),1,15);
+    temp.powspctrm=abs(repmat(squeeze(mean(ccc(:,i,reg,:),1)),1,15)).^2;
     if i<6;Pc(i,j)=mean(mean(temp.powspctrm(Sel{i},:)));end;
-    ft_topoplotTFR(cfg,temp)
+    ft_topoplotTFR(cfg,temp);
 end
 % Pc(:,j)=Pc(:,j)/sum(Pc(:,j));
 % figure
 for i=1:6
     subplot(4,6,i+18)
-    temp.powspctrm=repmat(squeeze(mean(ddd(:,i,reg,:),1)),1,15);
+    temp.powspctrm=abs(repmat(squeeze(mean(ddd(:,i,reg,:),1)),1,15)).^2;
     if i<6;Pd(i,j)=mean(mean(temp.powspctrm(Sel{i},:)));end;
-    ft_topoplotTFR(cfg,temp)
+    ft_topoplotTFR(cfg,temp);
 end
 % Pd(:,j)=Pd(:,j)/sum(Pd(:,j));
 % 

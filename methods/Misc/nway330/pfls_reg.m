@@ -1,4 +1,4 @@
-function [load]=pfls(ZtZ,ZtX,dimX,cons,OldLoad,DoWeight,W);
+function [load Rpenalty]=pfls_reg(ZtZ,ZtX,G,alpha,dimX,cons,OldLoad,DoWeight,W);
 
 %PFLS
 %
@@ -32,12 +32,12 @@ function [load]=pfls(ZtZ,ZtX,dimX,cons,OldLoad,DoWeight,W);
 % this program; if not, write to the Free Software Foundation, Inc., 51 Franklin
 % Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-
+Rpenalty=[];
 if ~DoWeight
     
     if cons==0 % No constr
         %load=((Z'*Z)\Z'*Xinuse)';
-        load=(pinv(ZtZ)*ZtX)';
+        load=(pinv(ZtZ)*ZtX).';
         
     elseif cons==1 % Orthogonal loadings acc. to Harshman & Lundy 94
         load=ZtX'*(ZtX*ZtX')^(-.5);
@@ -83,8 +83,8 @@ if ~DoWeight
             Lap=Dg-G{i};
             B=B+kron(S,a*Lap);
         end
-        C=vec(ZtX');
-        load=reshape(inv(A+B)*C,dim_con,ncomps);
+        C=vec(ZtX.');
+        load=reshape(pinv(A+B)*C,dim_con,ncomps);
         for i=1:ncomps
 %             load(:,i)=load(:,i)/norm(load(:,i));
         end
@@ -106,21 +106,21 @@ if ~DoWeight
         for i=1:F
             if (i<6)
                 ztz=ZtZ(i,i);
-                ztX=ZtX(i,:)-ZtZ(i,[1:i-1 i+1:F])*load(:,[1:i-1 i+1:F])';
+                ztX=ZtX(i,:)-ZtZ(i,[1:i-1 i+1:F])*load(:,[1:i-1 i+1:F]).';
                 A=kron(ztz,eye(dim_con));
                 %                 Lap=diag(ls_network_metric(G{i},'deg') )-G{i};
                 Dg=diag( ls_network_metric(G{i},'deg'));
                 Lap=Dg-G{i};
 %                 Lap=eye(128)-Dg^(-1/2)*G{i}*Dg^(-1/2);
                 B=kron(1,a*Lap);
-                C=vec(ztX');
-                load(:,i)=inv(A+B)*C;
+                C=vec(ztX.');
+                load(:,i)=(inv(A+B)*C);
                 %                 load(:,i)=load(:,i)/norm(load(:,i));
                 Rpenalty(i)=trace(load(:,i)'*Lap*load(:,i));
             else
                 ztz=ZtZ(i,i);
-                ztX=ZtX(i,:)-ZtZ(i,[1:i-1 i+1:F])*load(:,[1:i-1 i+1:F])';
-                load(:,i)=(pinv(ztz)*ztX)';
+                ztX=ZtX(i,:)-ZtZ(i,[1:i-1 i+1:F])*load(:,[1:i-1 i+1:F]).';
+                load(:,i)=(pinv(ztz)*ztX).';
             end
         end
         for i=1:ncomps
