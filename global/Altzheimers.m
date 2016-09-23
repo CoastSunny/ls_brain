@@ -26,4 +26,6 @@ addpath([home '/Documents/ls_brain/methods/Misc/matlab-bgl-master'])
 addpath([home '/Documents/ls_brain/methods/Misc/2016_01_16_BCT'])
 a=which('trace');
 rmpath(a(1:end-7));
+cd ~/Documents/ls_brain/methods/Alzheimers/INECO/
+load g_idx
 cd([home '/Documents/ls_brain/methods/Alzheimers'])

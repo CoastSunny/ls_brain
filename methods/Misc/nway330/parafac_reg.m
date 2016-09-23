@@ -512,9 +512,9 @@ elseif Init==0
                 [A,B,C]=dtld(reshape(X,DimX),Fac);
             catch
                 A = rand(DimX(1),Fac);B = rand(DimX(2),Fac);C = rand(DimX(3),Fac);
-                A = complex(rand(DimX(1),Fac),rand(DimX(1),Fac));
-                B = complex(rand(DimX(2),Fac),rand(DimX(2),Fac));
-                C = complex(rand(DimX(3),Fac),rand(DimX(3),Fac));
+%                 A = complex(rand(DimX(1),Fac),rand(DimX(1),Fac));
+%                 B = complex(rand(DimX(2),Fac),rand(DimX(2),Fac));
+%                 C = complex(rand(DimX(3),Fac),rand(DimX(3),Fac));
             end
         else
             if showfit~=-1
@@ -525,7 +525,7 @@ elseif Init==0
             end
             A = Factors{1};B=Factors{2};C = Factors{3};
         end
-%         A=real(A);B=real(B);C=real(C);
+         A=real(A);B=real(B);C=real(C);
         % Check for signs and reflect if appropriate
         for f=1:Fac
             if sign(sum(A(:,f)))<0
@@ -556,7 +556,7 @@ elseif Init==0
             Factors=[];
             for i=1:length(DimX);
                 l = complex(randn(DimX(i),Fac),randn(DimX(i),Fac));
-%                 l = rand(DimX(i),Fac);
+                 l = rand(DimX(i),Fac);
                 Factors{i} =l;
             end
             if showfit~=-1
