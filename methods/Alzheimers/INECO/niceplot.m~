@@ -64,7 +64,7 @@ end
 % end
 
 cfg=rmfield(cfg,'zlim');
-reg=4;j=reg;
+reg=1;j=reg;
 Sel={1:32 33:64 65:96 97:128 [1:32 65:96]};
 figure
 for i=1:6
@@ -107,7 +107,8 @@ end
 % Pa(:,j)=Pa(:,j)/sum(Pa(:,j));
 
 cfg.zlim=[-180 180];
-
+reg=1;j=reg;
+Sel={1:32 33:64 65:96 97:128 [1:32 65:96]};
 figure
 for i=1:6
     subplot(4,6,i)
