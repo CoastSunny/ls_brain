@@ -64,7 +64,7 @@ end
 % end
 
 cfg=rmfield(cfg,'zlim');
-reg=4;j=reg;
+reg=9;j=reg;
 Sel={1:32 33:64 65:96 97:128 [1:32 65:96]};
 figure
 for i=1:6

@@ -84,7 +84,7 @@ if ~DoWeight
             B=B+kron(S,a*Lap);
         end
         C=vec(ZtX.');
-        load=reshape(inv(A+B)*C,dim_con,ncomps);
+%         load=reshape(inv(A+B)*C,dim_con,ncomps);
         load=reshape((A+B)\C,dim_con,ncomps);
 
         for i=1:ncomps

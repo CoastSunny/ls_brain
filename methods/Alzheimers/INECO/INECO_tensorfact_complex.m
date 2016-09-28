@@ -37,8 +37,8 @@ for a=1:numel(Alpha)
         for period=1:periods
             Y(period,:,:,:)=X(period:5:end,:,:);
             G{period}=(weight_conversion(mean(abs(conn_full{q,period}.(parameter)(:,:,:)),3),'normalize'));
-%                 
-             G{period}(eye(128)==1)=0;
+            G{period}=squeeze(mean(W(fidx_patients,period,:,:),1));      
+            G{period}(eye(128)==1)=0;
            
         end
         dis_pen=-1;
