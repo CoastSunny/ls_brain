@@ -16,7 +16,7 @@ fidx_patients_bind=intersect(find(gc_idx(:,1)==1),find(gc_idx(:,2)==0));
 fidx_controls=find(gc_idx(:,1)==0);
 periods=5;
 
-Er=[];Options=[];Options(4)=2;W=[];Fp=[];Rpen=[];
+Er=[];Options=.1;Options(4)=2;W=[];Fp=[];Rpen=[];
 for si=1:length(conn_full)
     for period=1:periods
         W(si,period,:,:,:)=(weight_conversion(mean(abs(conn_full{si,period}.(parameter)(:,:,:)),3),'normalize'));
@@ -64,7 +64,7 @@ for a=1:numel(Alpha)
 %             Y=squeeze(Ytst(:,:,trial,:));
             %Ytst=randn(10,10,10)+randn(10,10,10)*i;
             %[Fp{q},Ip(q),Exp(q),e,Concp(q)]=parafac_reg(Y,8,G,Options,[0 0 0 0]);
-        [Fp{a,q},Yest(:,:,:,trial),Ip(q),Exp(q,trial),e,Rpen{a,q}]=parafac_reg(Y,6,G,Alpha(a),Options,[0 7 0]);
+        [Fp{a,q},Yest(:,:,:,trial),Ip(q),Exp(q,trial),e,Rpen{a,q}]=parafac_reg(Y,10,G,Alpha(a),Options,[0 7 0]);
             
 %         end
 %         [tmp]=parafac(Ytst,22,Options,[0 0 0 0]);
