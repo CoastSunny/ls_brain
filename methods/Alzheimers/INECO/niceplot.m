@@ -1,4 +1,5 @@
 cfg.layout='/home/lspyrou/Documents/ls_brain/global/biosemi128.lay';
+cfg.layout='C:\Users\Loukianos\Documents\ls_brain\global\biosemi128.lay';
 cfg.parameter='powspctrm';
 cfg.comment='no';
 
@@ -65,7 +66,7 @@ end
 % end
 
 cfg=rmfield(cfg,'zlim');
-reg=2;j=reg;
+reg=1;j=reg;
 Sel={1:32 33:64 65:96 97:128 [1:32 65:96]};
 figure
 for i=1:comps
