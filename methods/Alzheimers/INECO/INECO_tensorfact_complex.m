@@ -27,7 +27,7 @@ clear j
 
 % Alpha=[0 10 50 100 300 500 1000 1500 2000 3000 5000 7000 ];icassp
 Alpha=[0 1 10 20 35 50 100 500 1000];%icassp
-Alpha=[500];
+Alpha=[15000];
 AA=random_modular_graph(128,4,1,1);
 for a=1:numel(Alpha)
     for q = 1:length(Conn_full)
@@ -42,7 +42,7 @@ for a=1:numel(Alpha)
             G{period}(eye(128)==1)=0;
            
         end
-        dis_pen=-1;
+        dis_pen=0;
         temp=AA;temp(33:end,33:end)=0;
         temp([33:end],[1:32])=dis_pen;temp([1:32],[33:end])=dis_pen;temp(eye(128)==1)=0;G{1}=temp;
         temp=AA;temp([1:32 65:end],[1:32 65:end])=0;
