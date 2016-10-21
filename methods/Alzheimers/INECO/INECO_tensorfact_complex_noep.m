@@ -21,7 +21,7 @@ AA=random_modular_graph(128,4,1,1);
 for a=1:numel(Alpha)
     for q = 1:length(conn_full)
         G=[];Y=[];err=[];
-        X=(freqc{q}.fourierspctrm);
+        X=abs(freqc{q}.fourierspctrm);
              
         dis_pen=0;
         temp=AA;temp(33:end,33:end)=0;
@@ -46,7 +46,7 @@ for a=1:numel(Alpha)
 %             Y=squeeze(Ytst(:,:,trial,:));
             %Ytst=randn(10,10,10)+randn(10,10,10)*i;
             %[Fp{q},Ip(q),Exp(q),e,Concp(q)]=parafac_reg(Y,8,G,Options,[0 0 0 0]);
-        [Fp{a,q},Yest,Ip(q),Exp(q,a),e,Rpen{a,q}]=parafac_reg(Y,15,G,Alpha(a),Options,[3 9 0]);
+        [Fp{a,q},Yest,Ip(q),Exp(q,a),e,Rpen{a,q}]=parafac_reg(Y,5,G,Alpha(a),Options,[3 9 0]);
             
 %         end
 %         [tmp]=parafac(Ytst,22,Options,[0 0 0 0]);

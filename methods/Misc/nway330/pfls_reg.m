@@ -56,9 +56,9 @@ if ~DoWeight
         F=size(OldLoad,2);
         if F>1
             for i=1:F
-                ztz=ZtZ(i,i);
-                ztX=ZtX(i,:)-ZtZ(i,[1:i-1 i+1:F])*load(:,[1:i-1 i+1:F]).';
-                beta=real(pinv(ztz)*ztX).';
+                ztz=real(ZtZ(i,i));
+                ztX=real(ZtX(i,:)-ZtZ(i,[1:i-1 i+1:F])*load(:,[1:i-1 i+1:F]).');
+                beta=(pinv(ztz)*ztX).';
                 load(:,i)=ulsr(beta,1);
             end
         else

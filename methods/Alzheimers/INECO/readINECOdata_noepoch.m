@@ -16,8 +16,8 @@ cfg.reref       = 'yes';
 cfg.refchannel  = 'all'; % average reference
 cfg.lpfilter    = 'no';
 cfg.lpfreq      = 40;
-cfg.demean='yes';
-cfg.detrend='yes';
+% cfg.demean='yes';
+% cfg.detrend='yes';
 
 for i = 1:length(subjects)
     
