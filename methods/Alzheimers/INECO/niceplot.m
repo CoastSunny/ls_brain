@@ -8,7 +8,7 @@ aaa=[];bbb=[];ccc=[];ddd=[];
 faaa=[];fbbb=[];fccc=[];fddd=[];
 Pa=[];Pb=[];Pc=[];Pd=[];
 reg_pars=numel(Alpha);
-comps=10;
+comps=1;
 for s=1:19
     for i=1:comps
         for j=1:reg_pars

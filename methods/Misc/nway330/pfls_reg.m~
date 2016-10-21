@@ -78,13 +78,16 @@ if ~DoWeight
         for i=1:5
             S=zeros(ncomps);
             S(i,i)=1;
+            
             Dg=diag( ls_network_metric(G{i},'deg'));
             %             Lap=eye(128)-Dg^(-1/2)*G{i}*Dg^(-1/2);
             Lap=Dg-G{i};
             B=B+kron(S,a*Lap);
         end
         C=vec(ZtX.');
-        load=reshape(pinv(A+B)*C,dim_con,ncomps);
+%         load=reshape(inv(A+B)*C,dim_con,ncomps);
+        load=reshape((A+B)\C,dim_con,ncomps);
+
         for i=1:ncomps
 %             load(:,i)=load(:,i)/norm(load(:,i));
         end
@@ -114,7 +117,7 @@ if ~DoWeight
 %                 Lap=eye(128)-Dg^(-1/2)*G{i}*Dg^(-1/2);
                 B=kron(1,a*Lap);
                 C=vec(ztX.');
-                load(:,i)=conj(inv(A+B)*C);
+                load(:,i)=(inv(A+B)*C);
                 %                 load(:,i)=load(:,i)/norm(load(:,i));
                 Rpenalty(i)=trace(load(:,i)'*Lap*load(:,i));
             else

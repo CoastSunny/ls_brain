@@ -1,4 +1,4 @@
-function [Factors,G,ExplX,Xm]=tucker(X,Fac,Options,ConstrF,ConstrG,Factors,G);
+function [Factors,G,ExplX,Xm]=tucker_nwaytb_eklfix(X,Fac,Options,ConstrF,NonNegG,ConstrG,Factors,G)
 %TUCKER multi-way tucker model
 %
 % function [Factors,G,ExplX,Xm]=tucker(X,Fac[,Options[,ConstrF,[ConstrG[,Factors[,G]]]]]);
@@ -144,10 +144,11 @@ i=find(Options_);
 Options(i)=Options_(i);
 if isnan(Options(5)),
     prlvl = 0;
+    Options(5) = 1;%This is to stop the bug causing extraordinarily long run times. Replacing the value with the default.
 else
     prlvl = 1;
 end;
-Options12=Options(1);Options12=1;
+Options12=Options(1);
 Options11=Options12*10;
 Options21=Options(2);
 Options31=Options(3);
@@ -229,7 +230,7 @@ for k=1:N,
         Mth(k)=5; %nonneg
         MethodO=2; %use the flexible scheme
         UpdateCore(k)=0; %Update the core in this mode
-        CalcOrdinar(k)=1;        
+        CalcOrdinar(k)=1;
     end;
     if ConstrF(k)==2,
         Mth(k)=6; %uncon
@@ -314,10 +315,23 @@ end;
 % Initialize the Factors by some method
 UserFactors=1;
 if isempty(Factors),
-    Factors=inituck(reshape(X,DimX),Fac_orig,2,[]);
-%     for i=1:DimX
-%         Factors{i}(Factors{i}<0)=rand(size(Factors{i}(Factors{i}<0)));
-%     end
+    %USE A CHECK FLAG TO SEE IF WE WANT A NON-NEGATIVE CORE! If so, use
+    %non-negative only initialization for this problem.
+    if NonNegG ~= 0
+    %CURRENTLY- Inituck_nonneg is the same as inittuck)
+    Factors=inituck(reshape(X,DimX),Fac_orig,2,[]); %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%LOUK1%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
+    %Use a check to see if we want a non-negative core specifically.
+    
+       %Initialize the negative factors with only positive random values!
+       for i = 1:length(DimX)
+          Factors{i}(Factors{i}<0) = rand(size(Factors{i}(Factors{i}<0)));
+       end
+    else
+    Factors = inituck(reshape(X,DimX),Fac_orig,2,[]);
+    end
+
+    
     % Convert to old factors
     ff = [];
     for f=1:length(Factors)
@@ -541,10 +555,11 @@ if MethodO==1, %Can use the faster projection technique
                     id2 = sum(DimX(1:i).*Fac(1:i));ff{i} = reshape(Factors(id1+1:id2),DimX(i),Fac(i));id1 = id2;
                 end
                 Fact = ff;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% START HERE!!!!!!!!!!!!%%%%%%%%%%%%%%%%%%%%%%
                 G=calcore(reshape(X,DimX),Fact,[],1,MissingExist);
                 G = reshape(G,size(G,1),prod(size(G))/size(G,1));
             elseif Core_nonneg==1,
-                g=t3core(reshape(X,DimX),Fact,[],1);
+                g=T3core(reshape(X,DimX),Fact,0,1);
                 G=reshape(g,Fac(1),prod(Fac(2:N)));
             else
                 tmpM2=1;
@@ -676,19 +691,23 @@ elseif MethodO==2, %Must use slower but more general schemes
         Converged1=0;
         while ~Converged1,
             it1=it1+1;
-            %Iterate over the modes %Iterate over the modes %Iterate over the modes
+            %Iterate over the modes
             for c=1:N,
                 faclist1=[N:-1:1 N:-1:1];
                 faclist=faclist1(N-c+2:N-c+2+(N-2));
                 tmpM2=1;
                 tmpM2Pinv=1;
-                for k=1:N-1;
+                for k=1:N-1;%Running this as parfor results in the iterations spiraling out of control. This is due to the definition of tmpM2
                     if Mth(faclist(k))==4,
                         tmpM1=eye(DimX(faclist(k)));
                     else
+                        %IF tmpM1 uses FACTORS, those will have negative
+                        %values!
                         tmpM1=reshape(Factors(FIdx0(faclist(k)):FIdx1(faclist(k))),DimX(faclist(k)),Fac(faclist(k)));
                     end;
                     if CalcOrdinar(c)==1,
+                        %THIS IS WHERE NON-NEGATIVITY IS BEING IGNORED, DUE
+                        %TO NEGATIVE FACTORS IN tmpM1!
                         tmpM2=ckron(tmpM2,tmpM1');
                     end
                 end
@@ -788,6 +807,7 @@ elseif MethodO==2, %Must use slower but more general schemes
                         tmpM3=reshape(Factors(FIdx0(c):FIdx1(c)),DimX(c),Fac(c));
                         if CalcOrdinar(c) == 1,
                             if dbg, ss1=sum(sum( (X-tmpM3*G*tmpM2).^2 ));end;
+                            %NEED TO FORCE G TO BE NONNEGATIVE HERE!
                             G=tmpM3\(X/tmpM2);
                             if dbg, ss2=sum(sum( (X-tmpM3*G*tmpM2).^2 ));
                                 fprintf('Core report  (Ordi) %15.8d  %15.8d\n',ss1,ss2);end;
@@ -833,10 +853,10 @@ elseif MethodO==2, %Must use slower but more general schemes
             end;
             
             %Estimate the new core after each MAIN iteration
-            if CoreupdatedInner==0,                 
+            if CoreupdatedInner==0,
                 if ~Core_const & Core_cmplex==0,
                     if Core_nonneg==1,
-                        g=t3core(reshape(X,DimX),Fact,[],1);
+                        g=t3core(reshape(X,DimX),Fact,0,1);%WHY IS THIS STILL NEGATIVE ALLOWED?!?
                         G=reshape(g,Fac(1),prod(Fac(2:N)));
                     elseif Core_nonneg==0,
                         % Convert to new format
@@ -906,7 +926,16 @@ elseif MethodO==2, %Must use slower but more general schemes
                     end
                 end
                 Fact = ff;
-%                 Fact{end+1}=[];
+                %Included here is a set of lines to allow Fact to be same size as
+                %the input models.
+                if any(Fac_orig<0) %Check for negative values to hold the dimension constant
+                    cnst_dims = find(Fac_orig<0); %Find where the constant dimensions are
+                    num_cnst_dims = size(cnst_dims,2); %Get the number of dimensions held
+                    curr_fact_size = size(Fact,2); %Get the current size of Fact
+                    for b = 1:num_cnst_dims
+                        Fact{curr_fact_size+b} = []; %Add empty dimensions to run
+                    end
+                end
                 Xm = nmodel(Fact,reshape(G,FacNew));
                 Xm = reshape(Xm,DimX(1),prod(DimX(2:end)));
                 if MissingExist,

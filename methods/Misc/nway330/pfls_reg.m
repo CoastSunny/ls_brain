@@ -57,12 +57,12 @@ if ~DoWeight
         if F>1
             for i=1:F
                 ztz=ZtZ(i,i);
-                ztX=ZtX(i,:)-ZtZ(i,[1:i-1 i+1:F])*load(:,[1:i-1 i+1:F])';
-                beta=(pinv(ztz)*ztX)';
+                ztX=ZtX(i,:)-ZtZ(i,[1:i-1 i+1:F])*load(:,[1:i-1 i+1:F]).';
+                beta=real(pinv(ztz)*ztX).';
                 load(:,i)=ulsr(beta,1);
             end
         else
-            beta=(pinv(ZtZ)*ZtX)';
+            beta=(pinv(ZtZ)*ZtX).';
             load=ulsr(beta,1);
         end
         
@@ -78,6 +78,7 @@ if ~DoWeight
         for i=1:5
             S=zeros(ncomps);
             S(i,i)=1;
+            
             Dg=diag( ls_network_metric(G{i},'deg'));
             %             Lap=eye(128)-Dg^(-1/2)*G{i}*Dg^(-1/2);
             Lap=Dg-G{i};

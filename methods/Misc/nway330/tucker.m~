@@ -228,8 +228,8 @@ for k=1:N,
     if ConstrF(k)==1,
         Mth(k)=5; %nonneg
         MethodO=2; %use the flexible scheme
-        UpdateCore(k)=0; %Update the core in this mode
-        CalcOrdinar(k)=1;        
+        UpdateCore(k)=1; %Update the core in this mode
+        CalcOrdinar(k)=1;
     end;
     if ConstrF(k)==2,
         Mth(k)=6; %uncon
@@ -315,9 +315,9 @@ end;
 UserFactors=1;
 if isempty(Factors),
     Factors=inituck(reshape(X,DimX),Fac_orig,2,[]);
-%     for i=1:DimX
-%         Factors{i}(Factors{i}<0)=rand(size(Factors{i}(Factors{i}<0)));
-%     end
+    for i=1:DimX
+        Factors{i}(Factors{i}<0)=rand(size(Factors{i}(Factors{i}<0)));
+    end
     % Convert to old factors
     ff = [];
     for f=1:length(Factors)
@@ -544,7 +544,7 @@ if MethodO==1, %Can use the faster projection technique
                 G=calcore(reshape(X,DimX),Fact,[],1,MissingExist);
                 G = reshape(G,size(G,1),prod(size(G))/size(G,1));
             elseif Core_nonneg==1,
-                g=t3core(reshape(X,DimX),Fact,[],1);
+                g=t3core(reshape(X,DimX),Fac,Factors(:),[],1);
                 G=reshape(g,Fac(1),prod(Fac(2:N)));
             else
                 tmpM2=1;
@@ -676,7 +676,7 @@ elseif MethodO==2, %Must use slower but more general schemes
         Converged1=0;
         while ~Converged1,
             it1=it1+1;
-            %Iterate over the modes %Iterate over the modes %Iterate over the modes
+            %Iterate over the modes
             for c=1:N,
                 faclist1=[N:-1:1 N:-1:1];
                 faclist=faclist1(N-c+2:N-c+2+(N-2));
@@ -833,10 +833,10 @@ elseif MethodO==2, %Must use slower but more general schemes
             end;
             
             %Estimate the new core after each MAIN iteration
-            if CoreupdatedInner==0,                 
+            if CoreupdatedInner==0,
                 if ~Core_const & Core_cmplex==0,
                     if Core_nonneg==1,
-                        g=t3core(reshape(X,DimX),Fact,[],1);
+                        g=t3core(reshape(X,DimX),Fac,Factors,0,1);
                         G=reshape(g,Fac(1),prod(Fac(2:N)));
                     elseif Core_nonneg==0,
                         % Convert to new format
@@ -906,7 +906,7 @@ elseif MethodO==2, %Must use slower but more general schemes
                     end
                 end
                 Fact = ff;
-%                 Fact{end+1}=[];
+                Fact{end+1}=[];
                 Xm = nmodel(Fact,reshape(G,FacNew));
                 Xm = reshape(Xm,DimX(1),prod(DimX(2:end)));
                 if MissingExist,

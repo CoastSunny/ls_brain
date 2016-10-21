@@ -37,7 +37,7 @@ end
 Y=Y+0*randn(freqs,ch,ep,tr);
 ncomps=5;
 
-[Fp,Ye,Ip,Exp,e,Rpen]=parafac_reg(Y,ncomps,G,Alpha(a),Options,[0 7 0 0]);
+[Fp,Ye,Ip,Exp,e,Rpen]=parafac_reg(Y,ncomps,G,Alpha(a),Options,[0 8 0 0]);
 % figure,plot(abs(Fp{3})./(ones(5,1)*abs(std(Fp{3},0,1))))
 % figure,plot(abs(xep)./(ones(5,1)*abs(std(xep,0,1))))
 

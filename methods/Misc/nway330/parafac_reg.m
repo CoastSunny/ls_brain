@@ -956,19 +956,19 @@ while (((f>crit) | (norm(connew-conold)/norm(conold)>MissConvCrit) | Constraints
         end
     end    
     
-    % POSTPROCES LOADINGS (ALL VARIANCE IN FIRST MODE)
-%     if ~any(FixMode)
-%         A=reshape(Factors(lidx(1,1):lidx(1,2)),DimX(1),Fac);
-%         for i=2:ord
-%             B=reshape(Factors(lidx(i,1):lidx(i,2)),DimX(i),Fac);
-%             for ff=1:Fac
-%                 A(:,ff)=A(:,ff)*norm(B(:,ff));
-%                 B(:,ff)=B(:,ff)/norm(B(:,ff));
-%             end
-%             Factors(lidx(i,1):lidx(i,2))=B(:);
-%         end
-%         Factors(lidx(1,1):lidx(1,2))=A(:);
-%     end
+   % POSTPROCES LOADINGS (ALL VARIANCE IN FIRST MODE)
+    if ~any(FixMode)
+        A=reshape(Factors(lidx(1,1):lidx(1,2)),DimX(1),Fac);
+        for i=2:ord
+            B=reshape(Factors(lidx(i,1):lidx(i,2)),DimX(i),Fac);
+            for ff=1:Fac
+                A(:,ff)=A(:,ff)*norm(B(:,ff));
+                B(:,ff)=B(:,ff)/norm(B(:,ff));
+            end
+            Factors(lidx(i,1):lidx(i,2))=B(:);
+        end
+        Factors(lidx(1,1):lidx(1,2))=A(:);
+    end
     % APPLY SIGN CONVENTION IF NO FIXED MODES
     %  FixMode=1
 %     if ~iscell(const)

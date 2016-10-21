@@ -1,4 +1,4 @@
-function G=T3core(X,Load,Weights,NonNeg);
+function G=t3core(X,Load,Weights,NonNeg)
 %T3CORE calculate Tucker core
 %
 % G=T3core(X,Load,Weights,NonNeg);
