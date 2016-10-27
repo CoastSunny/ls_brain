@@ -5,7 +5,7 @@ ep=5;
 tr=50;
 clear j xf xch xep PC0 PC7 FC0 FC7
 Y=0;
-nsource=10;
+nsource=5;
 Options=[];
 G=[];FC=[];PC=[];
 for si=1:nsource
@@ -24,8 +24,8 @@ for si=1:nsource
     S=tprod(temp,[1 2 -3],xtr(:,si),[3 -3]);
     Y=Y+S;
 end
-Y=Y+5*randn(freqs,ch,tr);
-ncomps=10;
+Y=Y+0*randn(freqs,ch,tr);
+ncomps=5;
 
 [Fp,Ye,Ip,Exp,e,Rpen]=parafac_reg(Y,ncomps,[],[],Options,[9 9 0]);
 Fp{1}=Fp;
@@ -56,5 +56,5 @@ for jj=1:ncomps
     end
 end
 %FC,
-PC
+PC,max(abs(PC))
 % resgood(end+1,:)=[mean(max(abs(PC0))) mean(diag(abs(PC7))) mean(max(abs(FC0))) mean(diag(abs(FC7)))]

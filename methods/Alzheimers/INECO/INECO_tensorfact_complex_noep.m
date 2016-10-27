@@ -8,7 +8,7 @@ fidx_patients_bind=intersect(find(gc_idx(:,1)==1),find(gc_idx(:,2)==0));
 fidx_controls=find(gc_idx(:,1)==0);
 
 
-Er=[];Options=[];Options(4)=2;W=[];Fp=[];Rpen=[];
+Er=[];Options=0.001;Options(4)=2;W=[];Fp=[];Rpen=[];
 
 clear j
 
@@ -46,7 +46,7 @@ for a=1:numel(Alpha)
 %             Y=squeeze(Ytst(:,:,trial,:));
             %Ytst=randn(10,10,10)+randn(10,10,10)*i;
             %[Fp{q},Ip(q),Exp(q),e,Concp(q)]=parafac_reg(Y,8,G,Options,[0 0 0 0]);
-        [Fp{a,q},Yest,Ip(q),Exp(q,a),e,Rpen{a,q}]=parafac_reg(Y,25,G,Alpha(a),Options,[9 9 0]);
+        [Fp{a,q},Yest,Ip(q),Exp(q,a),e,Rpen{a,q}]=parafac_reg(Y,55,G,Alpha(a),Options,[9 9 0]);
             
 %         end
 %         [tmp]=parafac(Ytst,22,Options,[0 0 0 0]);
