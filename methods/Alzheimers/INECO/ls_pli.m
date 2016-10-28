@@ -7,11 +7,17 @@ ch=size(X,2);
 for i=1:tr
     for j=1:fr
 
-        x=X(fr,:,i);
-        csd(:,:,i)=x'*x;
+        x=X(j,:,i);
+        csd(j,:,:,i)=x'*x;
     
     end
 
 end
 
-pli=abs(mean(sign(imag(conj(csd))),3));
+for i=1:fr
+
+    pli(i,:,:)=abs(mean(sign(imag(conj(csd(i,:,:,:)))),4));    
+    
+end
+
+figure,imagesc(squeeze(mean(pli,1)))
