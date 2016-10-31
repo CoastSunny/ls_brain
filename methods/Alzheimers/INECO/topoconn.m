@@ -1,7 +1,10 @@
 function out = topoconn(Fp,idx1,idx2,subj,freq)
 temp=freq{1};
-cfg.layout='/home/lspyrou/Documents/ls_brain/global/biosemi128.lay';
-cfg.layout='C:\Users\Loukianos\Documents\ls_brain\global\biosemi128.lay';
+if isunix==1
+    cfg.layout='/home/lspyrou/Documents/ls_brain/global/biosemi128.lay';
+else
+    cfg.layout='C:\Users\Loukianos\Documents\ls_brain\global\biosemi128.lay';
+end
 cfg.parameter='powspctrm';
 cfg.comment='no';
 figure

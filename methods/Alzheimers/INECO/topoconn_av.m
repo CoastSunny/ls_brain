@@ -22,14 +22,12 @@ for i=1:size(out,1)
             
             Xi=Fp{subj}{2}(:,i);
             Xj=Fp{subj}{2}(:,j);
-            fXi=1;mean(abs(Fp{subj}{1}(band,i)));
-            fXj=1;mean(abs(Fp{subj}{1}(band,j)));
-            if (i==3 && j==4)
-               a=1;
-            elseif (i==7 && j==9)
-                a=1;
-            end
-            Cx=Cx+abs(out(i,j)*Xi*Xj'/(max(max(Xi*Xj'))))*fXi*fXj;
+            fXi=mean(abs(Fp{subj}{1}(band,i)));
+            fXj=mean(abs(Fp{subj}{1}(band,j)));
+           
+%             Cx=Cx+abs(out(i,j)*Xi*Xj');
+            Cx=Cx+abs(out(i,j)*Xi*Xj'*fXi*fXj);
+
             
             
         end
