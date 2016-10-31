@@ -29,7 +29,7 @@ clear j
 Alpha=[0 1 10 20 35 50 100 500 1000];%icassp
 % Alpha=[0];
 AA=random_modular_graph(128,4,1,1);
-for a=1:numel(Alpha)
+for a=1%:numel(Alpha)
     for q = 1:length(Conn_full)
         G=[];Y=[];err=[];
         X=(freqc{q}.fourierspctrm);
@@ -55,28 +55,30 @@ for a=1:numel(Alpha)
         temp([65:96], [33:end])=dis_pen;temp([33:end],[65:96])=dis_pen;temp(eye(128)==1)=0;G{5}=temp;       
      
         Y=permute(Y,[4 3 2 1]);
-        Ys{q}=Y;
+       
         ntrials=size(Y,3);
         Ytst=Y(:,:,round(ntrials/2)+1:end,:);
         Ytr=Y(:,:,1:round(ntrials/2),:);clear i
-        %Y=squeeze(mean(Ytst,3));
+%         Y=squeeze(mean(Ytst,4));
+        Y=squeeze(Y(:,:,:,2));
+        Ys{q}=Y;
 %         for trial=1:size(Ytst,3)
             
 %             Y=squeeze(Ytst(:,:,trial,:));
             %Ytst=randn(10,10,10)+randn(10,10,10)*i;
             %[Fp{q},Ip(q),Exp(q),e,Concp(q)]=parafac_reg(Y,8,G,Options,[0 0 0 0]);
-        [Fp{a,q},Yest,Ip(q),Exp(q,a),e,Rpen{a,q}]=parafac_reg(Y,15,G,Alpha(a),Options,[9 7 0 9]);
+        [Fp{a,q},Yest,Ip(q),Exp(q,a),e,Rpen{a,q}]=parafac_reg(Y,15,G,Alpha(a),Options,[9 9 0]);
             
 %         end
 %         [tmp]=parafac(Ytst,22,Options,[0 0 0 0]);
 
 %         mYtst=mean(Ytst,3);
-        mYtr=mean(Ytr,3);
-        for i=1:size(Yest,3)
-            tmp=Yest(:,:,i,:);
-            err(i)=norm(abs(tmp(:))-abs(mYtr(:)),'fro');
-        end
-         Er(a,q,:)=[ e mean(err)];
+%         mYtr=mean(Ytr,3);
+%         for i=1:size(Yest,3)
+%             tmp=Yest(:,:,i,:);
+%             err(i)=norm(abs(tmp(:))-abs(mYtr(:)),'fro');
+%         end
+%          Er(a,q,:)=[ e mean(err)];
 %         %     [Ft{q},Gt{q},Ext(q)]=tucker(Y,[2 2 -1],Options,[0 0 -1]);
         
         

@@ -2,26 +2,26 @@
 ch=128;
 freqs=30;
 ep=5;
-tr=150;
+tr=100;
 clear j xf xch xep PC0 PC7 FC0 FC7
 Y=0;
 nsource=15;
-Options=[];
+Options=0.001;
 G=[];FC=[];PC=[];xf=[];xch=[];xtr=[];ph=[];
 for si=1:nsource
     xf(:,si)=rand(freqs,1);
 %     xch(:,si)=randn(ch,1);    
-    xch(:,si)=normpdf(1:128,mod(19*si,128),5);
-    ph(:,si)=randn(tr,1);
+    xch(:,si)=normpdf(1:128,mod(19*si,128),10);
+    ph(:,si)=1*randn(tr,1);
     xtr(:,si)=exp(-j*ph(:,si));
     if si==5
-         xtr(:,si)=exp(-j*(ph(:,3)+1+ph(:,5)));
+         xtr(:,si)=exp(-j*(ph(:,3)+1.5+ph(:,5)));
     end
     if si==2
-          xtr(:,si)=exp(-j*(ph(:,1)+1+ph(:,2)));
+          xtr(:,si)=exp(-j*(ph(:,1)+1.5+ph(:,2)));
     end
     if si==8
-        xtr(:,si)=exp(-j*(ph(:,6)+1+ph(:,8)));
+        xtr(:,si)=exp(-j*(ph(:,6)+1.5+ph(:,8)));
     end
     temp=tprod(xf(:,si),[1 -2],xch(:,si),[2 -2]);
 %     temp=tprod(temp,[1 2 -3],xep(:,si),[3 -3]); old
@@ -64,6 +64,6 @@ end
 PC,max(abs(PC))
 out=tensor_connectivity(Fp,1,3);
 % figure,imagesc(out)
-Cpli=ls_pli(Y);
-Cx=topoconn_av(Fp,out,1,3,freq);
+Cpli=ls_pli(Y,[]);
+Cx=topoconn_av(Fp,out,1,[],freq,[]);
 % resgood(end+1,:)=[mean(max(abs(PC0))) mean(diag(abs(PC7))) mean(max(abs(FC0))) mean(diag(abs(FC7)))]

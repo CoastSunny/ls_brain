@@ -1,5 +1,10 @@
-function pli=ls_pli(X)
-
+function pli=ls_pli(X,band,vis)
+if nargin<3
+    vis=1;
+end
+if isempty(band)
+    band=1:size(X,1);
+end
 tr=size(X,3);
 fr=size(X,1);
 ch=size(X,2);
@@ -19,5 +24,7 @@ for i=1:fr
     pli(i,:,:)=abs(mean(sign(imag(conj(csd(i,:,:,:)))),4));    
     
 end
-
-figure,imagesc(squeeze(mean(pli,1)))
+pli=mean(pli(band,:,:),1);
+if vis==1
+    figure,imagesc(squeeze(pli)),title('pli')
+end

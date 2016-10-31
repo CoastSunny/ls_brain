@@ -1,0 +1,5 @@
+for i=1:64
+    out=tensor_connectivity(Fp,i,3);
+    Cx(:,:,i)=topoconn_av(Fp,out,i,3,freq,0);    
+end
+figure,imagesc(mea
