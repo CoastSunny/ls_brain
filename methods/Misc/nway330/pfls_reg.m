@@ -45,8 +45,8 @@ if ~DoWeight
     elseif cons==2 % Nonnegativity constraint
         load=zeros(size(OldLoad));
         for i=1:dimX
-            load(i,:)=fastnnls(ZtZ,ZtX(:,i))';
-%             load(i,:)=fastnnls(real(ZtZ),real(ZtX(:,i))).';
+%             load(i,:)=fastnnls(ZtZ,ZtX(:,i))';
+             load(i,:)=fastnnls(real(ZtZ),real(ZtX(:,i))).';
 %             load(i,:)=real(fastnnls(ZtZ,ZtX(:,i))).';
 
             %       if min(load(i,:))<-eps*1000
