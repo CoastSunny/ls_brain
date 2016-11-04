@@ -211,9 +211,9 @@ function [Factors,Xest,it,PercentExpl,err,Rpenalty,corcondia]=parafac_reg(X,Fac,
 % $ Version 2.16 $ Jun 2010 $ Fixed that scaling of component is not done in fixed modes $ RB $ Not compiled $
 
 NumbIteraInitia=20;
-%accel_pattern='none';
+accel_pattern='none';
 %accel_pattern='shifted'; % Use every-iteration linesearch
-accel_pattern='paired'; % Use every second iteration linesearch
+% accel_pattern='paired'; % Use every second iteration linesearch
 if nargin==0
     disp(' ')
     disp(' ')
@@ -525,7 +525,7 @@ elseif Init==0
             end
             A = Factors{1};B=Factors{2};C = Factors{3};
         end
-         A=real(A);B=real(B);C=real(C);
+          A=real(A);B=real(B);C=real(C);
         % Check for signs and reflect if appropriate
         for f=1:Fac
             if sign(sum(A(:,f)))<0
@@ -848,7 +848,7 @@ while (((f>crit) | (norm(connew-conold)/norm(conold)>MissConvCrit) | Constraints
                     ZtZ=Z'*Z;
                     ZtX=Z'*X.';
                     OldLoad=reshape(Factors(lidx(i,1):lidx(i,2)),DimX(i),Fac);
-                    [L Rpenalty{ii}]=pfls_reg(ZtZ,ZtX,G,alpha,DimX(i),const(i),OldLoad,DoWeight,Weights);
+                    [L Rpenalty{ii}]=pfls_reg(ZtZ,ZtX,G,alpha,DimX(i),const(i),OldLoad,DoWeight,Weights,Z,X);
                     %L=(pinv(ZtZ+eye*600)*ZtX)';
                     Factors(lidx(i,1):lidx(i,2))=L(:);
                 end
@@ -957,18 +957,18 @@ while (((f>crit) | (norm(connew-conold)/norm(conold)>MissConvCrit) | Constraints
     end    
     
    % POSTPROCES LOADINGS (ALL VARIANCE IN FIRST MODE)
-    if ~any(FixMode)
-        A=reshape(Factors(lidx(1,1):lidx(1,2)),DimX(1),Fac);
-        for i=2:ord
-            B=reshape(Factors(lidx(i,1):lidx(i,2)),DimX(i),Fac);
-            for ff=1:Fac
-                A(:,ff)=A(:,ff)*norm(B(:,ff));
-                B(:,ff)=B(:,ff)/norm(B(:,ff));
-            end
-            Factors(lidx(i,1):lidx(i,2))=B(:);
-        end
-        Factors(lidx(1,1):lidx(1,2))=A(:);
-    end
+%     if ~any(FixMode)
+%         A=reshape(Factors(lidx(1,1):lidx(1,2)),DimX(1),Fac);
+%         for i=2:ord
+%             B=reshape(Factors(lidx(i,1):lidx(i,2)),DimX(i),Fac);
+%             for ff=1:Fac
+%                 A(:,ff)=A(:,ff)*norm(B(:,ff));
+%                 B(:,ff)=B(:,ff)/norm(B(:,ff));
+%             end
+%             Factors(lidx(i,1):lidx(i,2))=B(:);
+%         end
+%         Factors(lidx(1,1):lidx(1,2))=A(:);
+%     end
     % APPLY SIGN CONVENTION IF NO FIXED MODES
     %  FixMode=1
 %     if ~iscell(const)

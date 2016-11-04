@@ -1,4 +1,4 @@
-function [load Rpenalty]=pfls_reg(ZtZ,ZtX,G,alpha,dimX,cons,OldLoad,DoWeight,W);
+function [load Rpenalty]=pfls_reg(ZtZ,ZtX,G,alpha,dimX,cons,OldLoad,DoWeight,W,Z,X);
 
 %PFLS
 %
@@ -37,8 +37,13 @@ if ~DoWeight
     
     if cons==0 % No constr
         %load=((Z'*Z)\Z'*Xinuse)';
-        load=(pinv(ZtZ)*ZtX).';
-        
+%          load=(pinv(ZtZ)*ZtX).';
+         tmp=(pinv(ZtZ)*ZtX);
+         tmp2=real(-j*log(tmp));
+         load=exp(j*tmp2).';
+%           load2=(pinv(ZtZ)*ZtX).';
+%         ph=1/2*angle((ZtX).'*pinv(real(ZtZ)));
+%         load=exp(j*ph).';
     elseif cons==1 % Orthogonal loadings acc. to Harshman & Lundy 94
         load=ZtX'*(ZtX*ZtX')^(-.5);
         
@@ -132,8 +137,8 @@ if ~DoWeight
         for i=1:ncomps
 %             load(:,i)=load(:,i)/norm(load(:,i));
         end
-    elseif cons==9
-        load=real(pinv(ZtZ)*ZtX)';
+    elseif cons==9        
+        load=(pinv(real(ZtZ))*real(ZtX)).';
     elseif cons==10
         
         ncomps=size(ZtX,1);

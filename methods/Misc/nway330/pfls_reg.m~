@@ -1,4 +1,4 @@
-function [load Rpenalty]=pfls_reg(ZtZ,ZtX,G,alpha,dimX,cons,OldLoad,DoWeight,W);
+function [load Rpenalty]=pfls_reg(ZtZ,ZtX,G,alpha,dimX,cons,OldLoad,DoWeight,W,Z,X);
 
 %PFLS
 %
@@ -45,7 +45,10 @@ if ~DoWeight
     elseif cons==2 % Nonnegativity constraint
         load=zeros(size(OldLoad));
         for i=1:dimX
-            load(i,:)=fastnnls(ZtZ,ZtX(:,i))';
+%             load(i,:)=fastnnls(ZtZ,ZtX(:,i))';
+             load(i,:)=fastnnls(real(ZtZ),real(ZtX(:,i))).';
+%             load(i,:)=real(fastnnls(ZtZ,ZtX(:,i))).';
+
             %       if min(load(i,:))<-eps*1000
             %          load(i,:)=OldLoad(i,:);
             %       end
@@ -56,13 +59,13 @@ if ~DoWeight
         F=size(OldLoad,2);
         if F>1
             for i=1:F
-                ztz=ZtZ(i,i);
-                ztX=ZtX(i,:)-ZtZ(i,[1:i-1 i+1:F])*load(:,[1:i-1 i+1:F])';
-                beta=(pinv(ztz)*ztX)';
+                ztz=real(ZtZ(i,i));
+                ztX=real(ZtX(i,:)-ZtZ(i,[1:i-1 i+1:F])*load(:,[1:i-1 i+1:F]).');
+                beta=(pinv(ztz)*ztX).';
                 load(:,i)=ulsr(beta,1);
             end
         else
-            beta=(pinv(ZtZ)*ZtX)';
+            beta=(pinv(ZtZ)*ZtX).';
             load=ulsr(beta,1);
         end
         
@@ -130,7 +133,8 @@ if ~DoWeight
 %             load(:,i)=load(:,i)/norm(load(:,i));
         end
     elseif cons==9
-        load=real(pinv(ZtZ)*ZtX)';
+        ZtX=Z'*real(X).';
+        load=(pinv(ZtZ)*(ZtX)).';
     elseif cons==10
         
         ncomps=size(ZtX,1);
