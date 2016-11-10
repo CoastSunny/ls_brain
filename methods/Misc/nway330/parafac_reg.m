@@ -1147,8 +1147,8 @@ if showfit~=-1 & DimX(1)>1
         id2 = sum(DimX(1:i).*Fac);ff{i} = reshape(Factors(id1+1:id2),DimX(i),Fac);id1 = id2;
     end
     [phi,out]=ncosine(ff,ff);
-    disp(phi)
-    disp(' ')
+    disp(phi);
+    disp(' ');
     if max(max(abs(phi)-diag(diag(phi))))>.85
         disp(' ')
         disp(' ')
@@ -1187,27 +1187,30 @@ if showfit~=-1
     if NumberOfInc>0
         disp([' There were ',num2str(NumberOfInc),' iterations that increased fit']);
     end
+    
 end
 
-%POSTPROCES LOADINGS (ALL VARIANCE IN FIRST MODE)
-if Options(4)==0|Options(4)==1
-    A=reshape(Factors(lidx(1,1):lidx(1,2)),DimX(1),Fac);
-    for i=2:ord
-        if ~FixMode(i)
-            B=reshape(Factors(lidx(i,1):lidx(i,2)),DimX(i),Fac);
-            for ff=1:Fac
-                A(:,ff)=A(:,ff)*norm(B(:,ff));
-                B(:,ff)=B(:,ff)/norm(B(:,ff));
-            end
-            Factors(lidx(i,1):lidx(i,2))=B(:);
-        end
-    end
-    Factors(lidx(1,1):lidx(1,2))=A(:);
-    if showfit~=-1
-        disp(' ')
-        disp(' Components have been normalized in all but the first mode')
-    end
-end
+
+%
+% POSTPROCES LOADINGS (ALL VARIANCE IN FIRST MODE)
+% if Options(4)==0|Options(4)==1
+%     A=reshape(Factors(lidx(1,1):lidx(1,2)),DimX(1),Fac);
+%     for i=2:ord
+%         if ~FixMode(i)
+%             B=reshape(Factors(lidx(i,1):lidx(i,2)),DimX(i),Fac);
+%             for ff=1:Fac
+%                 A(:,ff)=A(:,ff)*norm(B(:,ff));
+%                 B(:,ff)=B(:,ff)/norm(B(:,ff));
+%             end
+%             Factors(lidx(i,1):lidx(i,2))=B(:);
+%         end
+%     end
+%     Factors(lidx(1,1):lidx(1,2))=A(:);
+%     if showfit~=-1
+%         disp(' ')
+%         disp(' Components have been normalized in all but the first mode')
+%     end
+% end
 
 % PERMUTE SO COMPONENTS ARE IN ORDER AFTER VARIANCE DESCRIBED (AS IN PCA) IF NO FIXED MODES
 % if ~any(FixMode)

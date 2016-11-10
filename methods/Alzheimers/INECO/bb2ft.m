@@ -6,7 +6,7 @@ fs=100;
 
 data.fsample    = fs;
 data.label=sa.EEG_clab_electrodes;
-EEG=reshape(EEG_data,108,100,[]);
+EEG=reshape(EEG_data,108,500,[]);
 for k=1:size(EEG,3)
     data.trial{1,k} = EEG(:,:,k);
     data.time{1,k}  = (0:(size(EEG,2)-1))/fs;
@@ -30,9 +30,9 @@ cfg.output      = 'fourier';
 freqc      = ft_freqanalysis(cfg, data);
 
 Y=permute(freqc.fourierspctrm,[3 2 1]);
-nsource=7;
-ncomps=7;Options=0.00001;
-[Fp,Ye,Ip,Exp,e,Rpen]=parafac_reg(Y,ncomps,[],[],Options,[9 9 0]);
+nsource=502;
+ncomps=510;Options=0.00001;
+[Fp,Ye,Ip,Exp,e,Rpen]=parafac_reg(Y,ncomps,[],[],Options,[2 9 0]);
 temp=Fp;Fp=[];
 Fp{1}=temp;
 xch=[truth.EEG_field_pat truth.EEG_noise_pat];
