@@ -3,8 +3,8 @@ if isunix==0
     save_folder='D:\Extracted\Alzheimer\INECO_fieldtrip\';
 else
 %     data_folder='/home/engbiome/INECO/INECO_fieldtrip/';
-    data_folder='/home/lspyrou/Documents/results/INECO/';
-    save_folder='/home/lspyrou/Documents/results/INECO/';
+    data_folder='/home/lspyrou/Documents/results/INECO/FAD/';
+    save_folder='/home/lspyrou/Documents/results/INECO/FAD/';
 end
 %% Connectivity Analysiss
 PSI=[];PSI_full=[];conn_full=[];Conn_full=[];freqc=[];freq=[];Freq=[];
@@ -27,9 +27,10 @@ g1={'PATIENTS' 'CONTROLS'};%[1 0]
 g2={'SHAPE' 'BINDING'};
 g3={'ENCOD' 'TEST'};
 count=1;
-for q = 1:length(names)
+for q =1:length(names)
     clear data   
-%     g_idx(q,:)=group_idx(data,g1,g2,g3);
+    load( fullfile(data_folder,names{q}) )
+    g_idx(q,:)=group_idx(data,g1,g2,g3);
     if g_idx(q,3)==1 %|| g_idx(q,2)==1 % group exclusion criteria
         continue;
     end

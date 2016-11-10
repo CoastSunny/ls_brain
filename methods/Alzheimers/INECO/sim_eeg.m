@@ -5,7 +5,7 @@ ep=5;
 tr=50;
 clear j xf xch xep PC0 PC7 FC0 FC7 xtr
 Y=0;
-nsource=15;
+nsource=52;
 Options=[];
 G=[];FC=[];PC1=[];PC2=[];xf=[];xch=[];xtr=[];ph=[];
 for si=1:nsource
@@ -19,7 +19,7 @@ for si=1:nsource
           xtr(:,si)=exp(j*(ph(:,1)+1+ph(:,2)));
     end
     if si==5
-          xtr(:,si)=exp(j*(ph(:,3)+1+ph(:,5)));
+%           xtr(:,si)=exp(j*(ph(:,3)+1+ph(:,5)));
     end
    
 %     if si==8
@@ -32,7 +32,7 @@ for si=1:nsource
 end
 Y=Y+.00*(randn(freqs,ch,tr)+j*randn(freqs,ch,tr));
 Fy{1}{1}=xf;Fy{1}{2}=xch;Fy{1}{3}=xtr;
-ncomps=15;
+ncomps=52;
 
 [Fp,Ye,Ip,Exp,e,Rpen]=parafac_reg(Y,ncomps,[],[],Options,[9 9 0]);
 temp=Fp;Fp=[];
@@ -73,5 +73,5 @@ subplot(1,2,2),imagesc(out_tr)
 % figure,imagesc(out)
 Cpli=ls_pli(Y,[]);
 Cx=topoconn_av(Fp,out,1,[],freq,[],0);
-Cx=topoconn_av(Fy,out_tr,1,[],freq,[],0);
+Cx=topoconn_av(Fy,out_tr,1,1,freq,[],0);
 % resgood(end+1,:)=[mean(max(abs(PC0))) mean(diag(abs(PC7))) mean(max(abs(FC0))) mean(diag(abs(FC7)))]

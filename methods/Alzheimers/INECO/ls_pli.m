@@ -27,4 +27,8 @@ end
 pli=mean(pli(band,:,:),1);
 if vis==1
     figure,imagesc(squeeze(pli)),title('pli')
+    set(gca,'Xtick',[16 48 80 112])
+    set(gca,'Xticklabels',{'back' 'right' 'front' 'left'})
+    set(gca,'Ytick',[16 48 80 112])
+    set(gca,'Yticklabels',{'back' 'right' 'front' 'left'})  
 end

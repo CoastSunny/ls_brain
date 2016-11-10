@@ -40,16 +40,17 @@ for i = 1:length(EEG)
     for k = 1:size(EEG{i},3)
         data.fsample    = fs;
         data.trial{1,k} = EEG{i}(:,:,k);
-        data.time{1,k}  = (0:(size(EEG{i},2)-1))/fs;
+        data.time{1,k}  = (0:(size(EEG{i},2)-1))/fs;       
+    end
         cfg             = [];
         cfg.reref       = 'yes';
         cfg.refchannel  = 'all'; % average reference
         cfg.lpfilter    = 'no';
         cfg.lpfreq      = 40;
         cfg.preproc.demean='yes';
-        cfg.preproc.detrend='yes';
+        cfg.preproc.detrend='yes';    
         data            = ft_preprocessing(cfg,data);
-    end
+        
     eval(['save(''' save_folder 'preproctrials1sectrials' num2str(i) ''', ''data'');'])
 end
 clear all

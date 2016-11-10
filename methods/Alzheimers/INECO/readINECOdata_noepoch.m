@@ -4,8 +4,8 @@ if isunix==0
     data_folder='D:\Raw\AlzheimerEEG\Multivariate AFAVA artefact free';
     save_folder='D:\Extracted\Alzheimer\Multivariate AFAVA artefact free\AFAVA_1sectrials\';
 else
-    data_folder='/home/engbiome/INECO/SING CASES/MCI/';
-    save_folder='/home/lspyrou/Documents/results/INECO/';
+    data_folder='/home/engbiome/INECO/SING CASES/MCI-FAD/';
+    save_folder='/home/lspyrou/Documents/results/INECO/FAD/';
 end
 
 cd(data_folder)
@@ -26,7 +26,7 @@ for i = 1:length(subjects)
     try
         data            = ft_preprocessing(cfg);                  
         cd(save_folder)
-         save([save_folder 'subject_noep' num2str(i)], 'data')
+         save([save_folder 'subject_noep_fad' num2str(i)], 'data')
     catch err
     end
 end
