@@ -31,8 +31,8 @@ freqc      = ft_freqanalysis(cfg, data);
 
 Y=permute(freqc.fourierspctrm,[3 2 1]);
 nsource=502;
-ncomps=510;Options=0.00001;
-[Fp,Ye,Ip,Exp,e,Rpen]=parafac_reg(Y,ncomps,[],[],Options,[2 9 0]);
+ncomps=510;Options=[];
+[Fp,Ye,Ip,Exp,e,Rpen]=parafac_reg(Y,ncomps,[],[],Options,[9 9 0]);
 temp=Fp;Fp=[];
 Fp{1}=temp;
 xch=[truth.EEG_field_pat truth.EEG_noise_pat];

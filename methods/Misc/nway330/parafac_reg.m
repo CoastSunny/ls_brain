@@ -1083,7 +1083,7 @@ while (((f>crit) | (norm(connew-conold)/norm(conold)>MissConvCrit) | Constraints
                         id2 = sum(DimX(1:i).*Fac);ff{i} = reshape(Factors(id1+1:id2),DimX(i),Fac);id1 = id2;
                     end
                     [phi,out]=ncosine(ff,ff);
-                    disp(phi),
+%                     disp(phi),
                     if MissMeth
                         fprintf(' Change in estim. missing values %12.10f',norm(connew-conold)/norm(conold));
                         disp(' ')
@@ -1147,8 +1147,8 @@ if showfit~=-1 & DimX(1)>1
         id2 = sum(DimX(1:i).*Fac);ff{i} = reshape(Factors(id1+1:id2),DimX(i),Fac);id1 = id2;
     end
     [phi,out]=ncosine(ff,ff);
-    disp(phi);
-    disp(' ');
+    %disp(phi);
+    %disp(' ');
     if max(max(abs(phi)-diag(diag(phi))))>.85
         disp(' ')
         disp(' ')
