@@ -21,7 +21,7 @@ end
 
 for i=1:fr
 
-    pli(i,:,:)=abs(mean(sign(imag(conj(csd(i,:,:,:)))),4));    
+    pli(i,:,:)=abs(mean(sign(imag((csd(i,:,:,:)))),4));    
     
 end
 pli=mean(pli(band,:,:),1);

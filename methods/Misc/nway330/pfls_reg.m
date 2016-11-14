@@ -38,9 +38,9 @@ if ~DoWeight
     if cons==0 % No constr
         %load=((Z'*Z)\Z'*Xinuse)';
          load=(pinv(ZtZ)*ZtX).';
-         tmp=(pinv(ZtZ)*ZtX);
-         tmp2=real(-j*log(tmp));
-         load=exp(j*tmp2).';
+%          tmp=(pinv(ZtZ)*ZtX);
+%          tmp2=real(-j*log(tmp));
+%          load=exp(j*tmp2).';
 %           load2=(pinv(ZtZ)*ZtX).';
 %         ph=1/2*angle((ZtX).'*pinv(real(ZtZ)));
 %         load=exp(j*ph).';
@@ -51,7 +51,7 @@ if ~DoWeight
         load=zeros(size(OldLoad));
         for i=1:dimX
 %             load(i,:)=fastnnls(ZtZ,ZtX(:,i))';
-             load(i,:)=fastnnls(real(ZtZ),real(ZtX(:,i))).';
+             load(i,:)=fastnnls([ZtZ; conj(ZtZ)],[ZtX(:,i); conj(ZtX(:,i))]).';
 %             load(i,:)=real(fastnnls(ZtZ,ZtX(:,i))).';
 
             %       if min(load(i,:))<-eps*1000
@@ -139,6 +139,7 @@ if ~DoWeight
         end
     elseif cons==9        
         load=(pinv(real(ZtZ))*real(ZtX)).';
+%         load=real((pinv(([ZtZ; conj(ZtZ)]))*([ZtX; conj(ZtX)]))).';
     elseif cons==10
         
         ncomps=size(ZtX,1);
