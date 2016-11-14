@@ -5,7 +5,7 @@ ep=5;
 tr=50;
 clear j xf xch xep PC0 PC7 FC0 FC7 xtr
 Y=0;
-nsource=52;
+nsource=2;
 Options=[];
 G=[];FC=[];PC1=[];PC2=[];xf=[];xch=[];xtr=[];ph=[];
 for si=1:nsource
@@ -32,7 +32,7 @@ for si=1:nsource
 end
 Y=Y+.00*(randn(freqs,ch,tr)+j*randn(freqs,ch,tr));
 Fy{1}{1}=xf;Fy{1}{2}=xch;Fy{1}{3}=xtr;
-ncomps=52;
+ncomps=2;
 
 [Fp,Ye,Ip,Exp,e,Rpen]=parafac_reg(Y,ncomps,[],[],Options,[9 9 0]);
 temp=Fp;Fp=[];

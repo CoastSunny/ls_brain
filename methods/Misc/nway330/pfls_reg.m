@@ -37,7 +37,7 @@ if ~DoWeight
     
     if cons==0 % No constr
         %load=((Z'*Z)\Z'*Xinuse)';
-         load=(pinv(ZtZ)*ZtX).';
+         load=(inv(ZtZ)*ZtX).';
 %          tmp=(pinv(ZtZ)*ZtX);
 %          tmp2=real(-j*log(tmp));
 %          load=exp(j*tmp2).';
@@ -138,8 +138,9 @@ if ~DoWeight
 %             load(:,i)=load(:,i)/norm(load(:,i));
         end
     elseif cons==9        
-        load=(pinv(real(ZtZ))*real(ZtX)).';
+        load=(inv(real(ZtZ))*real(ZtX)).';
 %         load=real((pinv(([ZtZ; conj(ZtZ)]))*([ZtX; conj(ZtX)]))).';
+        
     elseif cons==10
         
         ncomps=size(ZtX,1);

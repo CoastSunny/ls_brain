@@ -213,7 +213,7 @@ function [Factors,Xest,it,PercentExpl,err,Rpenalty,corcondia]=parafac_reg(X,Fac,
 NumbIteraInitia=20;
 accel_pattern='none';
 % accel_pattern='shifted'; % Use every-iteration linesearch
-% accel_pattern='paired'; % Use every second iteration linesearch
+accel_pattern='paired'; % Use every second iteration linesearch
 if nargin==0
     disp(' ')
     disp(' ')
@@ -514,7 +514,7 @@ elseif Init==0
                 A = rand(DimX(1),Fac);B = rand(DimX(2),Fac);C = rand(DimX(3),Fac);
 %                 A = complex(rand(DimX(1),Fac),rand(DimX(1),Fac));
 %                 B = complex(rand(DimX(2),Fac),rand(DimX(2),Fac));
-                 C = complex(rand(DimX(3),Fac),rand(DimX(3),Fac));
+%                  C = complex(randn(DimX(3),Fac),randn(DimX(3),Fac));
             end
         else
             if showfit~=-1
@@ -526,7 +526,7 @@ elseif Init==0
             A = Factors{1};B=Factors{2};C = Factors{3};
         end
           A=real(A);B=real(B);C=real(C);
-          C = complex(randn(DimX(3),Fac),randn(DimX(3),Fac));
+%           C = complex(randn(DimX(3),Fac),randn(DimX(3),Fac));
         % Check for signs and reflect if appropriate
         for f=1:Fac
             if sign(sum(A(:,f)))<0
@@ -958,18 +958,18 @@ while (((f>crit) | (norm(connew-conold)/norm(conold)>MissConvCrit) | Constraints
     end    
     
    % POSTPROCES LOADINGS (ALL VARIANCE IN FIRST MODE)
-%     if ~any(FixMode)
-%         A=reshape(Factors(lidx(1,1):lidx(1,2)),DimX(1),Fac);
-%         for i=2:ord
-%             B=reshape(Factors(lidx(i,1):lidx(i,2)),DimX(i),Fac);
-%             for ff=1:Fac
-%                 A(:,ff)=A(:,ff)*norm(B(:,ff));
-%                 B(:,ff)=B(:,ff)/norm(B(:,ff));
-%             end
-%             Factors(lidx(i,1):lidx(i,2))=B(:);
-%         end
-%         Factors(lidx(1,1):lidx(1,2))=A(:);
-%     end
+    if ~any(FixMode)
+        A=reshape(Factors(lidx(1,1):lidx(1,2)),DimX(1),Fac);
+        for i=2:ord
+            B=reshape(Factors(lidx(i,1):lidx(i,2)),DimX(i),Fac);
+            for ff=1:Fac
+                A(:,ff)=A(:,ff)*norm(B(:,ff));
+                B(:,ff)=B(:,ff)/norm(B(:,ff));
+            end
+            Factors(lidx(i,1):lidx(i,2))=B(:);
+        end
+        Factors(lidx(1,1):lidx(1,2))=A(:);
+    end
     % APPLY SIGN CONVENTION IF NO FIXED MODES
     %  FixMode=1
 %     if ~iscell(const)
