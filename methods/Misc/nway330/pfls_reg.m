@@ -139,7 +139,7 @@ if ~DoWeight
         end
     elseif cons==9        
         load=(inv(real(ZtZ))*real(ZtX)).';
-%         load=real((pinv(([ZtZ; conj(ZtZ)]))*([ZtX; conj(ZtX)]))).';
+%          load=real((pinv(([ZtZ; conj(ZtZ)]))*([ZtX; conj(ZtX)]))).';
         
     elseif cons==10
         

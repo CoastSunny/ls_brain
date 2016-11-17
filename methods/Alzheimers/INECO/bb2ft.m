@@ -25,8 +25,8 @@ cfg.reref       = 'no';
 cfg.refchannel  = 'all'; % average reference
 cfg.lpfilter    = 'no';
 cfg.lpfreq      = 40;
-cfg.preproc.demean='no';
-cfg.preproc.detrend='no';
+cfg.preproc.demean='yes';
+cfg.preproc.detrend='yes';
 data            = ft_preprocessing(cfg,data);
 
 cfg             = [];
@@ -38,9 +38,9 @@ cfg.taper       = 'hanning';
 cfg.output      = 'fourier';
 freqc      = ft_freqanalysis(cfg, data);
 
-Y=permute(freqc.fourierspctrm,[3 2 1]);
-nsource=502;
-ncomps=502;Options=10^-3;
+Y=permute(freqc.fourierspctrm,[1 2 3]);
+nsource=2;
+ncomps=502;Options=10^-2;
 [Fp,Ye,Ip,Exp,e,Rpen]=parafac_reg(Y,ncomps,[],[],Options,[0 9 0]);
 temp=Fp;Fp=[];
 Fp{1}=temp;
@@ -57,4 +57,11 @@ for jj=1:ncomps
     end
 end
 [i m]=max(abs(PC));i(1:2),m(1:2)
-out=tensor_connectivity(Fp,1,3);imagesc(out)
+out=tensor_connectivity(Fp,1,3);imagesc(out),colorbar
+figure,hold on,plot(xch(:,1)),plot(xch(:,2),'r')
+figure,hold on,plot((Fp{1}{2}(:,m(1)))),plot((Fp{1}{2}(:,m(2))),'r')
+
+
+
+
+

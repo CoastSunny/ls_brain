@@ -213,7 +213,7 @@ function [Factors,Xest,it,PercentExpl,err,Rpenalty,corcondia]=parafac_reg(X,Fac,
 NumbIteraInitia=20;
 accel_pattern='none';
 % accel_pattern='shifted'; % Use every-iteration linesearch
-accel_pattern='paired'; % Use every second iteration linesearch
+% accel_pattern='paired'; % Use every second iteration linesearch
 if nargin==0
     disp(' ')
     disp(' ')
