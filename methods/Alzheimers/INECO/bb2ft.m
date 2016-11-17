@@ -40,7 +40,7 @@ freqc      = ft_freqanalysis(cfg, data);
 
 Y=permute(freqc.fourierspctrm,[1 2 3]);
 nsource=2;
-ncomps=502;Options=10^-2;
+ncomps=2;Options=10^-2;
 [Fp,Ye,Ip,Exp,e,Rpen]=parafac_reg(Y,ncomps,[],[],Options,[0 9 0]);
 temp=Fp;Fp=[];
 Fp{1}=temp;

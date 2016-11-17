@@ -1,6 +1,7 @@
 function [A,H,C,P,fit,AddiOutput]=parafac2(X,F,Constraints,Options,A,H,C,P);
 
-% $ Version 1.01 $ Date 28. December 1998 $ Not compiled $ RB
+% $ Version 1.01 $ Date 28. December 1998 $ Not compiled $ RB
+
 % $ Version 1.02 $ Date 31. March    1999 $ Added X-validation and added function $ Not compiled $ RB
 % $ Version 1.03 $ Date 20. April    1999 $ Cosmetic changes $ Not compiled $ RB
 % $ Version 1.04 $ Date 25. April    1999 $ Cosmetic changes $ Not compiled $ RB
@@ -8,13 +9,15 @@ function [A,H,C,P,fit,AddiOutput]=parafac2(X,F,Constraints,Options,A,H,C,P);
 % $ Version 1.06 $ Date 14. September1999 $ Changed helpfile $ Not compiled $ RB
 % $ Version 1.07 $ Date 20. October  1999 $ Added unimodality $ Not compiled $ RB
 % $ Version 1.08 $ Date 27. March    2000 $ Optimized handling of missing dat $ Not compiled $ RB
-%
+%
+
 % This M-file and the code in it belongs to the holder of the 
 % copyrights and is made public under the following constraints:
 % It must not be changed or modified and code cannot be added.
 % The file must be regarded as read-only. Furthermore, the
 % code can not be made part of any toolbox or similar.
-% In case of doubt, contact the holder of the copyrights.
+% In case of doubt, contact the holder of the copyrights.
+
 %
 % Rasmus Bro
 % Chemometrics Group, Food Technology
@@ -24,13 +27,15 @@ function [A,H,C,P,fit,AddiOutput]=parafac2(X,F,Constraints,Options,A,H,C,P);
 % Phone  +45 35283296
 % Fax    +45 35283245
 % E-mail rb@kvl.dk
-%
+%
+
 %     ___________________________________________________
 %
 %                  THE PARAFAC2 MODEL
 %     ___________________________________________________
 % 
-%
+%
+
 % Algorithm to fit the PARAFAC2 model which is an advanced variant of the 
 % normal PARAFAC1 model. It handles slab-wise deviations between components
 % in one mode as long as the cross-product of the components stays 
@@ -138,27 +143,44 @@ function [A,H,C,P,fit,AddiOutput]=parafac2(X,F,Constraints,Options,A,H,C,P);
 % Incorporate ulsr
 
 
-if nargin==0
-   disp(' ')
-   disp(' ')
-   disp(' THE PARAFAC2 MODEL')
-   disp(' ')
-   disp(' Type <<help parafac2>> for more info')
+if nargin==0
+
+   disp(' ')
+
+   disp(' ')
+
+   disp(' THE PARAFAC2 MODEL')
+
+   disp(' ')
+
+   disp(' Type <<help parafac2>> for more info')
+
    disp('  ')
    disp(' I/O ')
    disp(' [A,H,C,P]=parafac2(X,F);')
-   disp(' ')
+   disp(' ')
+
    disp(' Or optionally')
-   disp(' ')
-   disp(' [A,H,C,P,fit]=parafac2(X,F,Constraints,Options);')
-   disp(' ')
-   disp(' Options=[Crit MaxIt Init Xval Show]')
-   disp(' ')
-   disp(' ')
-   break
- elseif nargin<2&~all(X=='demo')
-    error(' The inputs X and F must be given')
- end
+   disp(' ')
+
+   disp(' [A,H,C,P,fit]=parafac2(X,F,Constraints,Options);')
+
+   disp(' ')
+
+   disp(' Options=[Crit MaxIt Init Xval Show]')
+
+   disp(' ')
+
+   disp(' ')
+
+%    break
+
+ elseif nargin<2&~all(X=='demo')
+
+    error(' The inputs X and F must be given')
+
+ end
+
  
   if isstr(X) & all(X=='demo')
     F=3;
@@ -215,7 +237,7 @@ if nargin==0
        eval(['title([''2. mode, k = '',num2str(i)])'])
        hold off
     end,
-    break
+%     break
    
 end
 
@@ -390,7 +412,7 @@ if Options(4)==1
       end
       title([' C resampled during Xval for ',num2str(b),' comp.'])
       hold off
-      break
+%       break
 end
 
 % Find missing and replace with average 
