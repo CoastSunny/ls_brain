@@ -14,7 +14,7 @@ data.label=sa.EEG_clab_electrodes;
 % EEG_data=EEG_field_pat*sources_int;
 
 % EEG_data=truth.EEG_field_pat*randn(2,18000);
-EEG=reshape(EEG_data,108,100,[]);
+EEG=reshape(EEG_data,108,500,[]);
 for k=1:size(EEG,3)
     data.trial{1,k} = EEG(:,:,k);
     data.time{1,k}  = (0:(size(EEG,2)-1))/fs;

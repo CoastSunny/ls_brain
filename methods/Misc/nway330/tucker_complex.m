@@ -1,4 +1,4 @@
-function [Factors,G,ExplX,Xm]=tucker(X,Fac,Options,ConstrF,ConstrG,Factors,G);
+function [Factors,G,ExplX,Xm]=tucker_complex(X,Fac,Options,ConstrF,ConstrG,Factors,G);
 %TUCKER multi-way tucker model
 %
 % function [Factors,G,ExplX,Xm]=tucker(X,Fac[,Options[,ConstrF,[ConstrG[,Factors[,G]]]]]);
@@ -746,6 +746,15 @@ elseif MethodO==2, %Must use slower but more general schemes
                     end;
                 end;
                 if Mth(c)==7, %Not updated
+                    cthFactor=reshape(Factors(FIdx0(c):FIdx1(c)),DimX(c),Fac(c));
+                    if CalcOrdinar(c) == 1,
+                        M_=G*tmpM2;
+                        if dbg, ss1=sum(sum( (X-cthFactor*G*tmpM2).^2 ));end;
+                        cthFactor=real(X)/real(M_);
+%                         cthFactor=([X conj(X)])/([M_ conj(M_)]);
+                        if dbg, ss2=sum(sum( (X-cthFactor*G*tmpM2).^2 ));
+                            fprintf('Uncon report (Ordi) %15.8d  %15.8d\n',ss1,ss2);end;
+                    end;
                 end;
                 if Mth(c)==8, %Unimodality
                     tmpM3=reshape(Factors(FIdx0(c):FIdx1(c)),DimX(c),Fac(c));
@@ -766,7 +775,7 @@ elseif MethodO==2, %Must use slower but more general schemes
                 
                 
                 %Update 'Factors' with the current estimates
-                if Mth(c)~=4 & Mth(c)~=7
+                if Mth(c)~=4 %& Mth(c)~=7
                     cn=sum(cthFactor.^2);
                     for i=1:Fac(c);
                         if it1<=10 & cn(i)<eps,
