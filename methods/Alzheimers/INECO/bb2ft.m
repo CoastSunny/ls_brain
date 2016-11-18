@@ -25,13 +25,13 @@ cfg.reref       = 'no';
 cfg.refchannel  = 'all'; % average reference
 cfg.lpfilter    = 'no';
 cfg.lpfreq      = 40;
-cfg.preproc.demean='yes';
-cfg.preproc.detrend='yes';
+cfg.preproc.demean='no';
+cfg.preproc.detrend='no';
 data            = ft_preprocessing(cfg,data);
 
 cfg             = [];
 cfg.method      = 'mtmfft';                                    
-freqs=2:2:40;
+freqs=2:4:40;
 cfg.foi         = freqs;                                       
 cfg.tapsmofrq   = 1;                                           
 cfg.taper       = 'hanning';

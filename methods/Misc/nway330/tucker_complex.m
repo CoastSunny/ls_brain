@@ -750,8 +750,8 @@ elseif MethodO==2, %Must use slower but more general schemes
                     if CalcOrdinar(c) == 1,
                         M_=G*tmpM2;
                         if dbg, ss1=sum(sum( (X-cthFactor*G*tmpM2).^2 ));end;
-                        cthFactor=real(X)/real(M_);
-%                         cthFactor=([X conj(X)])/([M_ conj(M_)]);
+%                         cthFactor=real(X)/real(M_);
+                        cthFactor=([X conj(X)])/([M_ conj(M_)]);
                         if dbg, ss2=sum(sum( (X-cthFactor*G*tmpM2).^2 ));
                             fprintf('Uncon report (Ordi) %15.8d  %15.8d\n',ss1,ss2);end;
                     end;
