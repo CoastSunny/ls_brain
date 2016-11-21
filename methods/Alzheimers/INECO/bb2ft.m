@@ -31,7 +31,7 @@ data            = ft_preprocessing(cfg,data);
 
 cfg             = [];
 cfg.method      = 'mtmfft';                                    
-freqs=2:4:40;
+freqs=2:2:20;
 cfg.foi         = freqs;                                       
 cfg.tapsmofrq   = 1;                                           
 cfg.taper       = 'hanning';
@@ -41,10 +41,10 @@ freqc      = ft_freqanalysis(cfg, data);
 Y=permute(freqc.fourierspctrm,[1 2 3]);
 nsource=2;
 ncomps=2;Options=10^-2;
+xch=[truth.EEG_field_pat truth.EEG_noise_pat];
 [Fp,Ye,Ip,Exp,e,Rpen]=parafac_reg(Y,ncomps,[],[],Options,[0 9 0]);
 temp=Fp;Fp=[];
 Fp{1}=temp;
-xch=[truth.EEG_field_pat truth.EEG_noise_pat];
 PC=[];
 for jj=1:ncomps
     for ii=1:nsource

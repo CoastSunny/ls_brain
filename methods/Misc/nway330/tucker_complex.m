@@ -345,7 +345,7 @@ if ConstrG==0,
     G=calcore(reshape(X,DimX),Fact,[],1,MissingExist);
     G = reshape(G,size(G,1),prod(size(G))/size(G,1));
     Core_uncon=1;
-elseif prod(size(ConstrG)==[Fac(1) prod(Fac(2:N))]),
+elseif  prod(size(ConstrG)==[Fac(1) prod(Fac(2:N))]),    
     tmpM2=1;
     for k=1:N;
         if Mth(k)==4,
@@ -691,7 +691,7 @@ elseif MethodO==2, %Must use slower but more general schemes
                         tmpM1=reshape(Factors(FIdx0(faclist(k)):FIdx1(faclist(k))),DimX(faclist(k)),Fac(faclist(k)));
                     end;
                     if CalcOrdinar(c)==1,
-                        tmpM2=ckron(tmpM2,tmpM1.');
+                        tmpM2=ckron(tmpM2,tmpM1');
                     end
                 end
                 %Estimate Factors for the cth way
@@ -750,7 +750,7 @@ elseif MethodO==2, %Must use slower but more general schemes
                     if CalcOrdinar(c) == 1,
                         M_=G*tmpM2;
                         if dbg, ss1=sum(sum( (X-cthFactor*G*tmpM2).^2 ));end;
-%                         cthFactor=real(X)/real(M_);
+                        cthFactor=real(X)/real(M_);
                         cthFactor=([X conj(X)])/([M_ conj(M_)]);
                         if dbg, ss2=sum(sum( (X-cthFactor*G*tmpM2).^2 ));
                             fprintf('Uncon report (Ordi) %15.8d  %15.8d\n',ss1,ss2);end;
@@ -856,7 +856,7 @@ elseif MethodO==2, %Must use slower but more general schemes
                             id2 = sum(DimX(1:i).*Fac(1:i));ff{i} = reshape(Factors(id1+1:id2),DimX(i),Fac(i));id1 = id2;
                         end
                         Fact = ff;
-                        G=calcore(reshape(X,DimX),Fact,[],0,MissingExist);
+                        G = calcore(reshape(X,DimX),Fact,[],0,MissingExist);
                         G = reshape(G,size(G,1),prod(size(G))/size(G,1));
                     end
                 end;
