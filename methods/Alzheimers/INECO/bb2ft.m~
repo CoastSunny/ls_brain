@@ -14,7 +14,7 @@ data.label=sa.EEG_clab_electrodes;
 % EEG_data=EEG_field_pat*sources_int;
 
 % EEG_data=truth.EEG_field_pat*randn(2,18000);
-EEG=reshape(EEG_data,108,100,[]);
+EEG=reshape(EEG_data,108,500,[]);
 for k=1:size(EEG,3)
     data.trial{1,k} = EEG(:,:,k);
     data.time{1,k}  = (0:(size(EEG,2)-1))/fs;
@@ -31,7 +31,7 @@ data            = ft_preprocessing(cfg,data);
 
 cfg             = [];
 cfg.method      = 'mtmfft';                                    
-freqs=2:2:40;
+freqs=2:2:20;
 cfg.foi         = freqs;                                       
 cfg.tapsmofrq   = 1;                                           
 cfg.taper       = 'hanning';
@@ -40,11 +40,16 @@ freqc      = ft_freqanalysis(cfg, data);
 
 Y=permute(freqc.fourierspctrm,[1 2 3]);
 nsource=2;
-ncomps=4Options=10^-3;
+ncomps=2;Options=10^-2;
+xch=[truth.EEG_field_pat truth.EEG_noise_pat];
+Y=permute(Y,[2 1 3]);
+[a h c p m]=parafac2(Y,2,[4 4]);
+continue
 [Fp,Ye,Ip,Exp,e,Rpen]=parafac_reg(Y,ncomps,[],[],Options,[0 9 0]);
+
+
 temp=Fp;Fp=[];
 Fp{1}=temp;
-xch=[truth.EEG_field_pat truth.EEG_noise_pat];
 PC=[];
 for jj=1:ncomps
     for ii=1:nsource
@@ -60,3 +65,8 @@ end
 out=tensor_connectivity(Fp,1,3);imagesc(out),colorbar
 figure,hold on,plot(xch(:,1)),plot(xch(:,2),'r')
 figure,hold on,plot((Fp{1}{2}(:,m(1)))),plot((Fp{1}{2}(:,m(2))),'r')
+
+
+
+
+

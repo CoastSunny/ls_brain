@@ -1,4 +1,4 @@
-function [A,H,C,P,fit,AddiOutput]=parafac2(X,F,Constraints,Options,A,H,C,P);
+function [A,H,C,P,M,fit,AddiOutput]=parafac2(X,F,Constraints,Options,A,H,C,P);
 
 % $ Version 1.01 $ Date 28. December 1998 $ Not compiled $ RB
 
@@ -180,7 +180,6 @@ if nargin==0
     error(' The inputs X and F must be given')
 
  end
-
  
   if isstr(X) & all(X=='demo')
     F=3;
@@ -240,7 +239,6 @@ if nargin==0
 %     break
    
 end
-
 
 ShowFit  = 1000; % Show fit every 'ShowFit' iteration
 NumRep   = 10; %Number of repetead initial analyses
@@ -451,7 +449,7 @@ if nargin<5
       Opt = Options;
       Opt = Options(1)/20;
       Opt(2) = NumItInRep; % Max NumItInRep iterations
-      Opt(3) = 1;  % Init with SVD
+      Opt(3) = 2;  % Init with SVD
       Opt(4) = 0;
       Opt(5) = 1;
       [A,H,C,P,bestfit]=parafac2(X,F,Constraints,Opt);
@@ -503,6 +501,8 @@ if initi~=1
    end
 end  
 fit    = sum(diag(XtX));
+
+
 oldfit = fit*2;
 fit0   = fit;
 it     = 0;
@@ -518,7 +518,9 @@ end
 while abs(fit-oldfit)>oldfit*ConvCrit & it<MaxIt & fit>1000*eps
     oldfit = fit;
     it   = it + 1;
-    
+    if any(isnan(A))==1
+        keyboard
+    end
     % Update P
     for k = 1:K
       Qk       = X{k}'*(A*diag(C(k,:))*H');
@@ -529,7 +531,7 @@ while abs(fit-oldfit)>oldfit*ConvCrit & it<MaxIt & fit>1000*eps
     
     % Update A,H,C using PARAFAC-ALS
     [A,H,C,ff]=parafac(reshape(Y,I,F*K),[I F K],F,1e-4,[Constraints(1) ConstB Constraints(2)],A,H,C,5);
-    [fit,X] = pf2fit(X,A,H,C,P,K,MissingElements,MissingOnes);
+    [fit,X,M] = pf2fit(X,A,H,C,P,K,MissingElements,MissingOnes);
       
     % Print interim result
     if rem(it,ShowFit)==0|it == 1
@@ -555,13 +557,13 @@ end
 
 
 
-function [fit,X]=pf2fit(X,A,H,C,P,K,MissingElements,MissingOnes);
+function [fit,X,M]=pf2fit(X,A,H,C,P,K,MissingElements,MissingOnes);
 
    % Calculate fit and impute missing elements from model
 
    fit = 0;
    for k = 1:K
-     M   = A*diag(C(k,:))*(P{k}*H)';
+     M(:,:,k)   = A*diag(C(k,:))*(P{k}*H)';
      % if missing values replace missing elements with model estimates
      if nargout == 2 
        if any(MissingOnes{k})
@@ -570,7 +572,8 @@ function [fit,X]=pf2fit(X,A,H,C,P,K,MissingElements,MissingOnes);
          X{k} = x;
        end
      end
-     fit = fit + sum(sum(abs (X{k} - M ).^2));
+     fit = fit + sum(sum(abs (X{k} - M(:,:,k) ).^2));
+%      fit = fit + norm(X{k}-M,'fro').^2;
    end
 
 
@@ -711,6 +714,8 @@ while abs((fit-fitold)/fitold)>crit&it<maxit&fit>10*eps
       A = Xbc*(Xbc'*Xbc)^(-.5);
    elseif ConstA == 3 % Unimodality
       A = unimodalcrossproducts((B'*B).*(C'*C),Xbc',A);
+   elseif ConstA == 4 % Unconstrained
+      A = real(Xbc)*pinv(real((B'*B).*(C'*C))).';
    end
 
    % Project X down on orth(A) - saves time if first mode is large
@@ -770,6 +775,11 @@ while abs((fit-fitold)/fitold)>crit&it<maxit&fit>10*eps
           xab = [xab diag(Ra'* x(:,(k-1)*J+1:k*J)*B)];
        end
        C = unimodalcrossproducts((Ra'*Ra).*(B'*B),xab,C);
+    elseif ConstC == 4 % Unconstrained
+       ab=pinv(real((Ra'*Ra).*(B'*B)));
+       for k=1:K 
+          C(k,:) = (ab*real(diag(Ra'* x(:,(k-1)*J+1:k*J)*conj(B)))).';
+       end
     elseif ConstC == 10 % GPA => Isotropic scaling factor
        ab=(Ra'*Ra).*(B'*B);
        ab = pinv(ab(:));

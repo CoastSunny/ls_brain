@@ -42,7 +42,13 @@ Y=permute(freqc.fourierspctrm,[1 2 3]);
 nsource=2;
 ncomps=2;Options=10^-2;
 xch=[truth.EEG_field_pat truth.EEG_noise_pat];
+Y=permute(Y,[2 1 3]);
+[a h c p m]=parafac2(Y,2,[4 4]);
+out=tensor_connectivity2(p,h)
+continue
 [Fp,Ye,Ip,Exp,e,Rpen]=parafac_reg(Y,ncomps,[],[],Options,[0 9 0]);
+
+
 temp=Fp;Fp=[];
 Fp{1}=temp;
 PC=[];
