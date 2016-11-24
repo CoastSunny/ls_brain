@@ -1,5 +1,6 @@
 OUT=[];OUT_b=[];PC=[];
-
+locs=sa.cortex75K.EEG_V_fem_normal(:, sa.cortex2K.in_from_cortex75K);
+roindcs=inds_roi_outer_2K;
 for i=1:25
     
     load(['~/Documents/bb/data/testsnrsensor/EEG/dataset_' num2str(i) '/data']),
@@ -16,7 +17,7 @@ for i=1:25
     bandpass=[8 13];
     data=[];
     data.fsample    = fs;
-    data.label=sa.EEG_clab_electrodes;
+    data.label      = sa.EEG_clab_electrodes;
     % [sources_int, sources_nonint, P_ar] = generate_sources_ar(fs, len, bandpass);
     % EEG_field_pat(:,2) = sa.cortex75K.EEG_V_fem_normal(:,randi(74382));
     % EEG_field_pat(:,2) = sa.cortex75K.EEG_V_fem_normal(:,randi(74382));
@@ -58,7 +59,7 @@ for i=1:25
     Y=permute(freqc.fourierspctrm,[2 1 3]);
     Y_b=permute(freqc_b.fourierspctrm,[2 1 3]);
     nsource=2;
-    ncomps=40;
+    ncomps=502;
     xch=[truth.EEG_field_pat truth.EEG_noise_pat];
     Xch{i}=xch;
 
@@ -85,6 +86,39 @@ for i=1:25
             
         end
     end
-    
-    
+    [l m]=max(abs(PC(:,:,i)));
+
+Cx=0;
+out=triu(out(:,:,5));
+[tmp itmp]=sort(out(:));
+tmp=flipud(itmp);
+[tmpr tmpc]=ind2sub(size(out),tmp(1));
+r=tmpr;
+c=tmpc;    
+
+for jj=1:size(locs,2)
+    tempr=corrcoef(T{1}(:,r),locs(:,jj));
+    tempc=corrcoef(T{1}(:,c),locs(:,jj));
+    scr(jj)=tempr(1,2);
+    scc(jj)=tempc(1,2);
+end
+
+[q Mr]=max(abs(scr));
+[q Mc]=max(abs(scc));
+
+for jj=1:8
+
+    Rr(jj)=isempty(find(roindcs{jj}==Mr));
+    Rc(jj)=isempty(find(roindcs{jj}==Mc));
+
+end
+
+% figure,subplot(3,2,1),plot(xch(:,1)/norm(xch(:,1))),subplot(3,2,2),plot(xch(:,2)/norm(xch(:,2)))
+% subplot(3,2,3),plot(T{1}(:,r)/norm(T{1}(:,r))),subplot(3,2,4),plot(T{1}(:,c)/norm(T{1}(:,c)))
+% subplot(3,2,5),plot(-T{1}(:,r)/norm(T{1}(:,r))),subplot(3,2,6),plot(-T{1}(:,c)/norm(T{1}(:,c)))
+% 
+% figure,subplot(1,3,1),plot(xch(:,1)),subplot(1,3,2),plot(T{1}(:,m(1))),subplot(1,3,3),plot(-T{1}(:,m(1)))
+% figure,subplot(1,3,1),plot(xch(:,2)),subplot(1,3,2),plot(T{1}(:,m(2))),subplot(1,3,3),plot(-T{1}(:,m(2)))
+INT(i),SNR(i),max(max(OUT{i}(:,:,5))),max(max(OUT_b{i}(:,:,5)))
+A(:,:,i)=[find(Rr==0) find(Rc==0);truth.in_roi];
 end
