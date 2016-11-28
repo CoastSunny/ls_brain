@@ -21,14 +21,21 @@ function generate_datasets_ar(ndatasets, dataset_string)
 %
 %    You should have received a copy of the GNU General Public License
 %    along with this program.  If not, see http://www.gnu.org/licenses/.
+if isunix==0
+    home='C:\Users\Loukianos';
+    home_bci='D:\';
+else
+    home='~';
+    home_bci='~';
+end
 
 
 % load head model and some miscallaneous data
-load('~/Documents/bb/data/sa')
-load('~/Documents/bb/data/miscdata')
+load([home '/Documents/bb/data/sa'])
+load([home '/Documents/bb/data/miscdata'])
 
 % create directory to store data in
-mkdir(['~/Documents/bb/data/' dataset_string])
+mkdir([home '/Documents/bb/data/' dataset_string])
 
 % initialize random number generator
 rng('default');
@@ -36,7 +43,7 @@ rng('shuffle');
 sd = rng;
 
 % save random number seed
-save(['~/Documents/bb/data/' dataset_string '/sd'], 'sd');
+save([home '/Documents/bb/data/' dataset_string '/sd'], 'sd');
 
 % if true, a lot of plots are generated
 plotting = 0;
@@ -78,9 +85,9 @@ end
 for idata = 1:ndatasets
   
   % create folder for dataset idata
-  mkdir(['~/Documents/bb/data/' dataset_string '/EEG/dataset_' num2str(idata)])
+  mkdir([home '/Documents/bb/data/' dataset_string '/EEG/dataset_' num2str(idata)])
 %   mkdir(['data/' dataset_string '/MEG/dataset_' num2str(idata)])
-  mkdir(['~/Documents/bb/data/' dataset_string '/truth/dataset_' num2str(idata)])
+  mkdir([home '/Documents/bb/data/' dataset_string '/truth/dataset_' num2str(idata)])
   
   disp(['generating dataset ' num2str(idata) '/' num2str(ndatasets)])
 
@@ -196,7 +203,7 @@ for idata = 1:ndatasets
 %   MEG_sensor_noise = MEG_sensor_noise ./ norm(MEG_sensor_noise, 'fro');
 
   % overall noise is dominated by biological noise
-  sensor_noise=0.1;
+  sensor_noise=0.0;
   EEG_data = (1-sensor_noise)*EEG_brain_signal_noise + sensor_noise*EEG_sensor_noise;
 %   MEG_data = 0.9*MEG_brain_signal_noise + 0.1*MEG_sensor_noise;
 
@@ -231,7 +238,7 @@ for idata = 1:ndatasets
   %% plotting
   if plotting
 
-    load('~/Documents/ls_brain/methods/Misc/bb/tools/cm17')
+    load([home '/Documents/ls_brain/methods/Misc/bb/tools/cm17'])
 
 %       freq_inds = (truth.bandpass(1)*2+1):(truth.bandpass(2)*2+1); 
 %       [psi, stdpsi] = data2psi2(truth.sources_int', fs*2, fs*4, freq_inds);
@@ -390,9 +397,9 @@ for idata = 1:ndatasets
   truth = rmfield(truth, 'sources_int');
   truth.sensor_noise=sensor_noise;  
   % save data  
-  save(['~/Documents/bb/data/' dataset_string '/EEG/dataset_' num2str(idata) '/data'], 'EEG_data', 'EEG_baseline_data', 'fs');
+  save([home '/Documents/bb/data/' dataset_string '/EEG/dataset_' num2str(idata) '/data'], 'EEG_data', 'EEG_baseline_data', 'fs');
 %   save(['data/' dataset_string '/MEG/dataset_' num2str(idata) '/data'], 'MEG_data', 'MEG_baseline_data', 'fs');
-  save(['~/Documents/bb/data/' dataset_string '/truth/dataset_' num2str(idata) '/truth'], 'truth');
+  save([home '/Documents/bb/data/' dataset_string '/truth/dataset_' num2str(idata) '/truth'], 'truth');
   
 end
   

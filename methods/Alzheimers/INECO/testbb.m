@@ -1,17 +1,29 @@
-OUT=[];OUT_b=[];PC=[];
+if isunix==0
+    home='C:/Users/Loukianos';
+    home_bci='D:\';
+else
+    home='~';
+    home_bci='~';
+end
+if ~exist('sa')
+        load([home '/Documents/bb/data/sa'])     
+end
+if ~exist('inds_roi_outer_2K')
+        load([home '/Documents/bb/data/miscdata'])
+end
+
+OUT=[];OUT_b=[];PC=[];A=[];B=[];
 locs=sa.cortex75K.EEG_V_fem_normal(:, sa.cortex2K.in_from_cortex75K);
 roindcs=inds_roi_outer_2K;
-for i=1:25
+for i=1:50
     
-    load(['~/Documents/bb/data/testsnrsensor/EEG/dataset_' num2str(i) '/data']),
-    load(['~/Documents/bb/data/testsnrsensor/truth/dataset_' num2str(i) '/truth']),
+    load([home '/Documents/bb/data/testsensor0snrrange/EEG/dataset_' num2str(i) '/data']),
+    load([home '/Documents/bb/data/testsensor0snrrange/truth/dataset_' num2str(i) '/truth']),
     truth
     INT(i)=truth.interaction;
     SNR(i)=truth.snr;
     data=[];
-    if ~exist('sa')
-        load('~/Documents/bb/data/sa')
-    end
+    
     fs=100;
     len=180;
     bandpass=[8 13];
@@ -59,7 +71,7 @@ for i=1:25
     Y=permute(freqc.fourierspctrm,[2 1 3]);
     Y_b=permute(freqc_b.fourierspctrm,[2 1 3]);
     nsource=2;
-    ncomps=502;
+    ncomps=100;
     xch=[truth.EEG_field_pat truth.EEG_noise_pat];
     Xch{i}=xch;
 
@@ -119,6 +131,10 @@ end
 % 
 % figure,subplot(1,3,1),plot(xch(:,1)),subplot(1,3,2),plot(T{1}(:,m(1))),subplot(1,3,3),plot(-T{1}(:,m(1)))
 % figure,subplot(1,3,1),plot(xch(:,2)),subplot(1,3,2),plot(T{1}(:,m(2))),subplot(1,3,3),plot(-T{1}(:,m(2)))
-INT(i),SNR(i),max(max(OUT{i}(:,:,5))),max(max(OUT_b{i}(:,:,5)))
+
 A(:,:,i)=[find(Rr==0) find(Rc==0);truth.in_roi];
+B(:,i)=[INT(i) SNR(i)...
+    max(max(OUT{i}(:,:,5))) max(max(OUT_b{i}(:,:,5))) max(max(max(OUT{i}))) max(max(max(OUT_b{i})))];
+% A,B
+dummy=1;
 end
