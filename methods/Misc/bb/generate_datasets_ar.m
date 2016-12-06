@@ -92,8 +92,7 @@ for idata = 1:ndatasets
   disp(['generating dataset ' num2str(idata) '/' num2str(ndatasets)])
 
   % sample snr
-  truth.snr = truth.snr_range(1) + diff(truth.snr_range)*rand(1);
-  % truth.snr=1;
+  truth.snr = truth.snr_range(1) + diff(truth.snr_range)*rand(1);  
   
   %% spatial structure definition
   % sample source rois
@@ -130,10 +129,7 @@ for idata = 1:ndatasets
   % calculate field spread assuming perpendicular source orientations
   truth.EEG_field_pat(:, 1) = sa.cortex75K.EEG_V_fem_normal(:, sa.cortex2K.in_from_cortex75K)*truth.source_amp(:, 1);
   truth.EEG_field_pat(:, 2) = sa.cortex75K.EEG_V_fem_normal(:, sa.cortex2K.in_from_cortex75K)*truth.source_amp(:, 2);
-% 
-%   truth.MEG_field_pat(:, 1) = sa.cortex75K.MEG_V_bem_normal(:, sa.cortex2K.in_from_cortex75K)*truth.source_amp(:, 1);
-%   truth.MEG_field_pat(:, 2) = sa.cortex75K.MEG_V_bem_normal(:, sa.cortex2K.in_from_cortex75K)*truth.source_amp(:, 2);
-
+  
   %% time series generation
   % randomize if dataset contains interaction
   truth.interaction=rand(1)>0.5;
@@ -149,10 +145,7 @@ for idata = 1:ndatasets
   % generate source time series restricted to band of interest
   % [truth.sources_int, truth.sources_nonint, truth.lag, truth.sourcecorr] = generate_sources_lagged(fs, truth.len, truth.bandpass);
   [truth.sources_int, truth.sources_nonint, truth.P_ar] = generate_sources_ar(fs, truth.len, truth.bandpass);
-   truth.sources_int(1,:)=truth.sources_int(1,:)/norm(truth.sources_int(1,:));
-   truth.sources_int(2,:)=truth.sources_int(2,:)/norm(truth.sources_int(2,:));
-   truth.sources_nonint(1,:)=truth.sources_nonint(1,:)/norm(truth.sources_nonint(1,:));
-   truth.sources_nonint(2,:)=truth.sources_nonint(2,:)/norm(truth.sources_nonint(2,:));
+
   % sample noise source locations
   noise_inds = ceil(size(sa.cortex75K.EEG_V_fem_normal, 2)*rand(n_noise_sources, 1));
   
@@ -160,12 +153,12 @@ for idata = 1:ndatasets
       % generate pseudo-EEG/MEG with interacting sources     
       no_signal = norm(truth.source_amp*truth.sources_int, 'fro');
       EEG_signal = truth.EEG_field_pat*truth.sources_int;
-%       MEG_signal = truth.MEG_field_pat*truth.sources_int;
+      % MEG_signal = truth.MEG_field_pat*truth.sources_int;
   else      
       % generate pseudo-EEG/MEG with non-interacting sources
       no_signal = norm(truth.source_amp*truth.sources_nonint, 'fro');
       EEG_signal = truth.EEG_field_pat*truth.sources_nonint;
-%       MEG_signal = truth.MEG_field_pat*truth.sources_nonint;    
+      % MEG_signal = truth.MEG_field_pat*truth.sources_nonint;    
   end
   
   EEG_signal = EEG_signal ./ no_signal;
@@ -203,7 +196,7 @@ for idata = 1:ndatasets
 %   MEG_sensor_noise = MEG_sensor_noise ./ norm(MEG_sensor_noise, 'fro');
 
   % overall noise is dominated by biological noise
-  sensor_noise=0.0;
+  sensor_noise=0.1;
   EEG_data = (1-sensor_noise)*EEG_brain_signal_noise + sensor_noise*EEG_sensor_noise;
 %   MEG_data = 0.9*MEG_brain_signal_noise + 0.1*MEG_sensor_noise;
 
@@ -211,30 +204,19 @@ for idata = 1:ndatasets
   EEG_data = filtfilt(b_high, a_high, EEG_data')';
 %   MEG_data = filtfilt(b_high, a_high, MEG_data')';
   
-  
-  
   %% generate pseudo-baseline EEG/MEG without sources 
   % everything as above except that no signal is added at all
   pn = mkpinknoise(N, n_noise_sources)';
   EEG_brain_noise = sa.cortex75K.EEG_V_fem_normal(:, noise_inds)*pn;
-  EEG_brain_noise = EEG_brain_noise ./ norm(EEG_brain_noise, 'fro');
-% 
-%   MEG_brain_noise = sa.cortex75K.MEG_V_bem_normal(:, noise_inds)*pn;
-%   MEG_brain_noise = MEG_brain_noise ./ norm(MEG_brain_noise, 'fro');
+  EEG_brain_noise = EEG_brain_noise ./ norm(EEG_brain_noise, 'fro');  
 
   % white sensor noise
   EEG_sensor_noise = randn(EEG_M, N);
   EEG_sensor_noise = EEG_sensor_noise ./ norm(EEG_sensor_noise, 'fro');
-% 
-%   MEG_sensor_noise = randn(MEG_M, N);
-%   MEG_sensor_noise = MEG_sensor_noise ./ norm(MEG_sensor_noise, 'fro');
 
   EEG_baseline_data = (1-sensor_noise)*EEG_brain_noise + sensor_noise*EEG_sensor_noise;  
   EEG_baseline_data = filtfilt(b_high, a_high, EEG_baseline_data')';
    
-%   MEG_baseline_data = 0.9*MEG_brain_noise + 0.1*MEG_sensor_noise;
-%   MEG_baseline_data = filtfilt(b_high, a_high, MEG_baseline_data')';
-  
   %% plotting
   if plotting
 

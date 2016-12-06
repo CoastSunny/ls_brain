@@ -2,7 +2,7 @@ band=[];
 Cpli=[];Cx=[];
 for i=1:numel(FT)
     out=tensor_connectivity2(FT{1,i}{4},FT{1,i}{2});
-    out=mean(out,3);
+%     out=mean(out,3);
     out=out(:,:,5);
     Cx(:,:,i)=topoconn_av2(FT,out,i,1,freq,band,0,0);  
     Cpli(:,:,i)=ls_pli(Ys{i},band,0);

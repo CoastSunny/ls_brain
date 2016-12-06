@@ -3,8 +3,8 @@ if isunix==0
     save_folder='D:\Extracted\Alzheimer\noep\';
 else
 %     data_folder='/home/engbiome/INECO/INECO_fieldtrip/';
-    data_folder='/home/lspyrou/Documents/results/INECO/FAD/';
-    save_folder='/home/lspyrou/Documents/results/INECO/FAD/';
+    data_folder='/home/lspyrou/Documents/results/INECO/';
+    save_folder='/home/lspyrou/Documents/results/INECO/';
 end
 %% Connectivity Analysiss
 PSI=[];PSI_full=[];Conn=[];conn=[];conn_full=[];Conn_full=[];freqc=[];freq=[];Freq=[];
@@ -21,7 +21,7 @@ gc_idx=[];
 %numberOfBands = size(freqBands,1);
 %PSI = NaN(16,16,100,5,50);
 % ntrials_window=2;
-freqs=1:1:20;
+freqs=1:1:30;
 periods=5;
 g1={'PATIENTS' 'CONTROLS'};%[1 0]
 g2={'SHAPE' 'BINDING'};
@@ -31,7 +31,7 @@ for q =1:length(names)
     clear data   
     load( fullfile(data_folder,names{q}) )
     g_idx(q,:)=group_idx(data,g1,g2,g3);
-    if g_idx(q,3)==1 %|| g_idx(q,2)==1 % group exclusion criteria
+    if g_idx(q,3)==1 || g_idx(q,2)==1 % group exclusion criteria
         continue;
     end
     gc_idx(count,:)=g_idx(q,:);
@@ -62,24 +62,27 @@ for q =1:length(names)
     cfg.complex     = 'imag';
     parameter       = 'cohspctrm';
     
-%              cfg.bandwidth   = 1;
-%    ntrials_window=2;    
-%         for idx_trials=1:ntrials-ntrials_window
-%             cfg.trials      = idx_trials:idx_trials+ntrials_window-1;
-%             conn{count}            = ft_connectivityanalysis(cfg, freqc{count});
-%             PSI{count}(:,:,:,idx_trials) = abs(conn{count}.cohspctrm);
-%             for idx_freq = 1:numel(freq{count}.freq)
-%                 tmp               = (PSI{count}(:,:,idx_freq,idx_trials));
-%                 idx_toremove      = find(tril(ones(size(tmp))));
-%                 tmp(idx_toremove) = [];
-%                 Conn{count}(:,idx_freq,idx_trials)  = tmp;
-%             end
-%         end
-% 
-%          cfg.trials      = 'all';
-%          conn_full{count}            = ft_connectivityanalysis(cfg, freqc{count});
-%          PSI_full{count}(:,:,:) = abs(conn_full{count}.(parameter));
+             cfg.bandwidth   = 1;
+   ntrials_window=2;    
+        for idx_trials=1:ntrials-ntrials_window
+            cfg.trials      = idx_trials:idx_trials+ntrials_window-1;
+            conn{count}            = ft_connectivityanalysis(cfg, freqc{count});
+            PSI{count}(:,:,:,idx_trials) = abs(conn{count}.cohspctrm);
+            for idx_freq = 1:numel(freq{count}.freq)
+                tmp               = (PSI{count}(:,:,idx_freq,idx_trials));
+                idx_toremove      = find(tril(ones(size(tmp))));
+                tmp(idx_toremove) = [];
+                Conn{count}(:,idx_freq,idx_trials)  = tmp;
+            end
+        end
+
+         cfg.trials      = 'all';
+         conn_full{count}            = ft_connectivityanalysis(cfg, freqc{count});
+         PSI_full{count}(:,:,:) = abs(conn_full{count}.(parameter));
                
     count=count+1;
     
 end
+PSI_mci=PSI;
+PSI_full_mci=PSI_full;
+gc_idx_mci=gc_idx;

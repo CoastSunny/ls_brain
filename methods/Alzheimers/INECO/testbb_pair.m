@@ -15,12 +15,13 @@ end
 OUT=[];OUT_b=[];PC=[];A=[];B=[];
 locs=sa.cortex75K.EEG_V_fem_normal(:, sa.cortex2K.in_from_cortex75K);
 roindcs=inds_roi_outer_2K;
-for i=1:100
-    
-    load([home '/Documents/bb/data/testsensor01snrrange/EEG/dataset_' num2str(i) '/data']),
-    load([home '/Documents/bb/data/testsensor01snrrange/truth/dataset_' num2str(i) '/truth']),
+for i=1
+    d1='/Documents/bb/data/test/EEG/dataset_';
+    d2='/Documents/bb/data/test/truth/dataset_';
+    load([home d1 num2str(i) '/data']),
+    load([home d2 num2str(i) '/truth']),
     truth
-    INT(i)=truth.interaction;
+    INT(i,:)=truth.interaction;
     SNR(i)=truth.snr;
     data=[];
     
@@ -49,7 +50,7 @@ for i=1:100
     end
     cfg             = [];
     
-    cfg.reref       = 'no';
+    cfg.reref       = 'yes';
     cfg.refchannel  = 'all'; % average reference
     cfg.lpfilter    = 'no';
     cfg.lpfreq      = 40;
@@ -60,7 +61,7 @@ for i=1:100
     
     cfg             = [];
     cfg.method      = 'mtmfft';
-    freqs=2:2:20;
+    freqs=1:1:40;
     cfg.foi         = freqs;
     cfg.tapsmofrq   = 1;
     cfg.taper       = 'hanning';
@@ -70,13 +71,13 @@ for i=1:100
     
     Y=permute(freqc.fourierspctrm,[2 1 3]);
     Y_b=permute(freqc_b.fourierspctrm,[2 1 3]);
-    nsource=2;
-    ncomps=10;
+    nsource=4;
+    ncomps=4;
     xch=[truth.EEG_field_pat truth.EEG_noise_pat];
     Xch{i}=xch;
 
     Options=[];
-    Options(1)=10^-3;
+    Options(1)=10^-2;
     Options(3)=2;
     Options(5)=1;
     [T{1} T{2} T{3} T{4} T{5}]=parafac2(Y,ncomps,[4 4],Options);
@@ -101,7 +102,7 @@ for i=1:100
     [l m]=max(abs(PC(:,:,i)));
 
 Cx=0;
-out=triu(mean(out(:,:,[4 5 6]),3));
+out=triu(mean(out(:,:,[8:13]),3));
 [tmp itmp]=sort(out(:));
 tmp=flipud(itmp);
 [tmpr tmpc]=ind2sub(size(out),tmp(1));
@@ -136,6 +137,12 @@ end
 [q Mr]=max(abs(scr));
 [q Mc]=max(abs(scc));
 
+for jj=1:8
+
+    RrT(jj)=isempty(find(roindcs{jj}==Mr));
+    RcT(jj)=isempty(find(roindcs{jj}==Mc));
+
+end
 % figure,subplot(3,2,1),plot(xch(:,1)/norm(xch(:,1))),subplot(3,2,2),plot(xch(:,2)/norm(xch(:,2)))
 % subplot(3,2,3),plot(T{1}(:,r)/norm(T{1}(:,r))),subplot(3,2,4),plot(T{1}(:,c)/norm(T{1}(:,c)))
 % subplot(3,2,5),plot(-T{1}(:,r)/norm(T{1}(:,r))),subplot(3,2,6),plot(-T{1}(:,c)/norm(T{1}(:,c)))
@@ -143,7 +150,7 @@ end
 % figure,subplot(1,3,1),plot(xch(:,1)),subplot(1,3,2),plot(T{1}(:,m(1))),subplot(1,3,3),plot(-T{1}(:,m(1)))
 % figure,subplot(1,3,1),plot(xch(:,2)),subplot(1,3,2),plot(T{1}(:,m(2))),subplot(1,3,3),plot(-T{1}(:,m(2)))
 
-A(:,:,i)=[find(Rr==0) find(Rc==0);truth.in_roi;];
+A(:,:,i)=[find(Rr==0) find(Rc==0);truth.in_roi;find(RrT==0) find(RcT==0)];
 B(:,i)=[INT(i) SNR(i)...
     max(max(OUT{i}(:,:,5))) max(max(OUT_b{i}(:,:,5))) max(max(max(OUT{i}))) max(max(max(OUT_b{i})))];
 % A,B

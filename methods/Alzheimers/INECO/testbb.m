@@ -15,10 +15,11 @@ end
 OUT=[];OUT_b=[];PC=[];A=[];B=[];
 locs=sa.cortex75K.EEG_V_fem_normal(:, sa.cortex2K.in_from_cortex75K);
 roindcs=inds_roi_outer_2K;
-for i=1:50
-    
-    load([home '/Documents/bb/data/testsensor0snrrange/EEG/dataset_' num2str(i) '/data']),
-    load([home '/Documents/bb/data/testsensor0snrrange/truth/dataset_' num2str(i) '/truth']),
+for i=1:100
+    d1='/Documents/bb/data/testSensor01SnrrangeNNorm/EEG/dataset_';
+    d2='/Documents/bb/data/testSensor01SnrrangeNNorm/truth/dataset_';
+    load([home d1 num2str(i) '/data']),
+    load([home d2 num2str(i) '/truth']),
     truth
     INT(i)=truth.interaction;
     SNR(i)=truth.snr;
@@ -60,7 +61,7 @@ for i=1:50
     
     cfg             = [];
     cfg.method      = 'mtmfft';
-    freqs=2:2:20;
+    freqs=1:1:40;
     cfg.foi         = freqs;
     cfg.tapsmofrq   = 1;
     cfg.taper       = 'hanning';
@@ -101,7 +102,7 @@ for i=1:50
     [l m]=max(abs(PC(:,:,i)));
 
 Cx=0;
-out=triu(out(:,:,5));
+out=triu(mean(out(:,:,[4 5 6]),3));
 [tmp itmp]=sort(out(:));
 tmp=flipud(itmp);
 [tmpr tmpc]=ind2sub(size(out),tmp(1));
@@ -125,6 +126,23 @@ for jj=1:8
 
 end
 
+
+for jj=1:size(locs,2)
+    tempr=corrcoef(xch(:,1),locs(:,jj));
+    tempc=corrcoef(xch(:,2),locs(:,jj));
+    scr(jj)=tempr(1,2);
+    scc(jj)=tempc(1,2);
+end
+
+[q Mr]=max(abs(scr));
+[q Mc]=max(abs(scc));
+
+for jj=1:8
+
+    RrT(jj)=isempty(find(roindcs{jj}==Mr));
+    RcT(jj)=isempty(find(roindcs{jj}==Mc));
+
+end
 % figure,subplot(3,2,1),plot(xch(:,1)/norm(xch(:,1))),subplot(3,2,2),plot(xch(:,2)/norm(xch(:,2)))
 % subplot(3,2,3),plot(T{1}(:,r)/norm(T{1}(:,r))),subplot(3,2,4),plot(T{1}(:,c)/norm(T{1}(:,c)))
 % subplot(3,2,5),plot(-T{1}(:,r)/norm(T{1}(:,r))),subplot(3,2,6),plot(-T{1}(:,c)/norm(T{1}(:,c)))
@@ -132,7 +150,7 @@ end
 % figure,subplot(1,3,1),plot(xch(:,1)),subplot(1,3,2),plot(T{1}(:,m(1))),subplot(1,3,3),plot(-T{1}(:,m(1)))
 % figure,subplot(1,3,1),plot(xch(:,2)),subplot(1,3,2),plot(T{1}(:,m(2))),subplot(1,3,3),plot(-T{1}(:,m(2)))
 
-A(:,:,i)=[find(Rr==0) find(Rc==0);truth.in_roi];
+A(:,:,i)=[find(Rr==0) find(Rc==0);truth.in_roi;find(RrT==0) find(RcT==0)];
 B(:,i)=[INT(i) SNR(i)...
     max(max(OUT{i}(:,:,5))) max(max(OUT_b{i}(:,:,5))) max(max(max(OUT{i}))) max(max(max(OUT_b{i})))];
 % A,B
