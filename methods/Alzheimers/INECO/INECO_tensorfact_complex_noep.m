@@ -12,7 +12,7 @@ fidx_controls=find(gc_idx(:,1)==0);
 Options=[];
 Options(1)=10^-3;
 Options(3)=2;
-Options(5)=1;
+Options(5)=0;
 Er=[];W=[];Fp=[];Rpen=[];FT=[];
 
 clear j
@@ -40,7 +40,7 @@ for a=1:numel(Alpha)
         %Ytst=randn(10,10,10)+randn(10,10,10)*i;
         %[Fp{q},Ip(q),Exp(q),e,Concp(q)]=parafac_reg(Y,8,G,Options,[0 0 0 0]);
         %         [Fp{a,q},Yest,Ip(q),Exp(q,a),e,Rpen{a,q}]=parafac_reg(Y,35,G,Alpha(a),Options,[9 9 0]);
-        ncomps=30;
+        ncomps=100;
         Y=permute(Y,[2 3 1]);
         [FT{a,q}{1} FT{a,q}{2} FT{a,q}{3} FT{a,q}{4} FT{a,q}{5}]=parafac2(Y,ncomps,[4 4],Options);
         

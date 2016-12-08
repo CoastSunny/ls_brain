@@ -72,14 +72,14 @@ for i=1:100
     Y=permute(freqc.fourierspctrm,[2 1 3]);
     Y_b=permute(freqc_b.fourierspctrm,[2 1 3]);
     nsource=2;
-    ncomps=2;
+    ncomps=502;
     xch=[truth.EEG_field_pat truth.EEG_noise_pat];
     Xch{i}=xch;
 
     Options=[];
     Options(1)=10^-3;
     Options(3)=2;
-    Options(5)=1;
+    Options(5)=0;
     [T{1} T{2} T{3} T{4} T{5}]=parafac2(Y,ncomps,[4 4],Options);
     [T_b{1} T_b{2} T_b{3} T_b{4} T_b{5}]=parafac2(Y_b,ncomps,[4 4],Options);
     out=tensor_connectivity2(T{4},T{2});
