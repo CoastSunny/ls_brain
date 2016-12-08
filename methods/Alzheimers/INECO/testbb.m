@@ -16,8 +16,8 @@ OUT=[];OUT_b=[];PC=[];A=[];B=[];
 locs=sa.cortex75K.EEG_V_fem_normal(:, sa.cortex2K.in_from_cortex75K);
 roindcs=inds_roi_outer_2K;
 for i=1:100
-    d1='/Documents/bb/data/testSensor01SnrrangeNNorm/EEG/dataset_';
-    d2='/Documents/bb/data/testSensor01SnrrangeNNorm/truth/dataset_';
+    d1='/Documents/bb/data/Pair1Noise01SNRanyNotnormalised/EEG/dataset_';
+    d2='/Documents/bb/data/Pair1Noise01SNRanyNotnormalised/truth/dataset_';
     load([home d1 num2str(i) '/data']),
     load([home d2 num2str(i) '/truth']),
     truth
@@ -72,7 +72,7 @@ for i=1:100
     Y=permute(freqc.fourierspctrm,[2 1 3]);
     Y_b=permute(freqc_b.fourierspctrm,[2 1 3]);
     nsource=2;
-    ncomps=100;
+    ncomps=2;
     xch=[truth.EEG_field_pat truth.EEG_noise_pat];
     Xch{i}=xch;
 

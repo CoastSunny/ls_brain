@@ -134,8 +134,7 @@ for idata = 1:ndatasets
   % randomize if dataset contains interaction
   truth.interaction=rand(1)>0.5;
   
-%     truth.interaction=1;
-
+% truth.interaction=1;
   if truth.interaction==1
       truth.dataset = {'interacting'};
   else
@@ -153,24 +152,19 @@ for idata = 1:ndatasets
       % generate pseudo-EEG/MEG with interacting sources     
       no_signal = norm(truth.source_amp*truth.sources_int, 'fro');
       EEG_signal = truth.EEG_field_pat*truth.sources_int;
-      % MEG_signal = truth.MEG_field_pat*truth.sources_int;
   else      
       % generate pseudo-EEG/MEG with non-interacting sources
       no_signal = norm(truth.source_amp*truth.sources_nonint, 'fro');
       EEG_signal = truth.EEG_field_pat*truth.sources_nonint;
-      % MEG_signal = truth.MEG_field_pat*truth.sources_nonint;    
   end
   
   EEG_signal = EEG_signal ./ no_signal;
-%   MEG_signal = MEG_signal ./ no_signal;
  
   % biological noise, mixture of independent pink noise sources 
   pn = mkpinknoise(N, n_noise_sources)';
   
   EEG_brain_noise = sa.cortex75K.EEG_V_fem_normal(:, noise_inds)*pn;
   truth.EEG_noise_pat = sa.cortex75K.EEG_V_fem_normal(:, noise_inds);
-
-%   MEG_brain_noise = sa.cortex75K.MEG_V_bem_normal(:, noise_inds)*pn;
 
   % compute noise amplitude in band of interest (only needed for SNR computation)
   if ~isempty(truth.bandpass)
@@ -180,30 +174,21 @@ for idata = 1:ndatasets
   end
   % normalize noise by amplitude in band of interest
   EEG_brain_noise = EEG_brain_noise ./ norm_brain_noise;
-%   MEG_brain_noise = MEG_brain_noise ./ norm_brain_noise;
 
   EEG_brain_signal_noise = truth.snr*EEG_signal + (1-truth.snr)*EEG_brain_noise;
   EEG_brain_signal_noise = EEG_brain_signal_noise ./ norm(EEG_brain_signal_noise, 'fro');
-  
-%   MEG_brain_signal_noise = truth.snr*MEG_signal + (1-truth.snr)*MEG_brain_noise;
-%   MEG_brain_signal_noise = MEG_brain_signal_noise ./ norm(MEG_brain_signal_noise, 'fro');
-
+ 
   % white sensor noise
   EEG_sensor_noise = randn(EEG_M, N);
   EEG_sensor_noise = EEG_sensor_noise ./ norm(EEG_sensor_noise, 'fro');
-% 
-%   MEG_sensor_noise = randn(MEG_M, N);
-%   MEG_sensor_noise = MEG_sensor_noise ./ norm(MEG_sensor_noise, 'fro');
-
+ 
   % overall noise is dominated by biological noise
   sensor_noise=0.1;
   EEG_data = (1-sensor_noise)*EEG_brain_signal_noise + sensor_noise*EEG_sensor_noise;
-%   MEG_data = 0.9*MEG_brain_signal_noise + 0.1*MEG_sensor_noise;
 
   % apply high-pass
   EEG_data = filtfilt(b_high, a_high, EEG_data')';
-%   MEG_data = filtfilt(b_high, a_high, MEG_data')';
-  
+
   %% generate pseudo-baseline EEG/MEG without sources 
   % everything as above except that no signal is added at all
   pn = mkpinknoise(N, n_noise_sources)';

@@ -30,12 +30,9 @@ for i=1:nsource
     c(i)=tmpc;    
 end
 
-for i=1:numel(r)   
-        tmpr=sign(max(FT{1,subj}{1}(:,r(i))));
-        tmpc=sign(max(FT{1,subj}{1}(:,c(i))));
-        
-        Xi=tmpr*FT{1,subj}{1}(:,r(i))+min(tmpr*FT{1,subj}{1}(:,r(i)));
-        Xj=tmpc*FT{1,subj}{1}(:,c(i))+min(tmpc*FT{1,subj}{1}(:,c(i)));
+for i=1:numel(r)                  
+        Xi=FT{1,subj}{1}(:,r(i))+min();
+        Xj=FT{1,subj}{1}(:,c(i))+min;
         Xij=abs(Xi*Xj');%Xij=Xij/max(max(Xij));
 %         Sij=single(and(sign(Xi)==1,sign(Xj)==1))*single(and(sign(Xi)==1,sign(Xj)==1)');
         Xji=abs(Xj*Xi');%Xji=Xji/max(max(Xji));

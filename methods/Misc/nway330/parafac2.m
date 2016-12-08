@@ -530,20 +530,20 @@ while abs(fit-oldfit)>oldfit*ConvCrit & it<MaxIt & fit>1000*eps
     end
     
     % Update A,H,C using PARAFAC-ALS
-    [A,H,C,ff]=parafac(reshape(Y,I,F*K),[I F K],F,1e-4,[Constraints(1) ConstB Constraints(2)],A,H,C,5);
+    [A,H,C,ff]=parafac(reshape(Y,I,F*K),[I F K],F,1e-4,[Constraints(1) ConstB Constraints(2)],A,H,C,100);
     [fit,X,M] = pf2fit(X,A,H,C,P,K,MissingElements,MissingOnes);
       
     % Print interim result
-    if rem(it,ShowFit)==0|it == 1
+    if rem(it,10)==0|it == 1
        if Options(5)==0
           fprintf(' %12.10f       %g        %3.4f \n',fit,it,100*(1-fit/fit0));
-          subplot(2,2,1)
-          plot(A),title('First mode')
-          subplot(2,2,2)
-          plot(C),title('Third mode')
-          subplot(2,2,3)
-          plot(P{1}*H),title('Second mode (only first k-slab shown)')
-          drawnow
+%           subplot(2,2,1)
+%           plot(A),title('First mode')
+%           subplot(2,2,2)
+%           plot(C),title('Third mode')
+%           subplot(2,2,3)
+%           plot(P{1}*H),title('Second mode (only first k-slab shown)')
+%           drawnow
        end
     end
 

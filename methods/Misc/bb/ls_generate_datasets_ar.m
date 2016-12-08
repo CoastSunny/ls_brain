@@ -27,7 +27,7 @@ EEG_M = length(sa.EEG_clab_electrodes);
 [b_high a_high] = butter(3, 0.1/fs*2, 'high');
 
 % bandpass filter coefficients
-for i=1:numel(options.bandpass)
+for i=1:options.sourcepairs
     [tmp_b tmp_a] = butter(3, options.bandpass{i}/fs*2);
     b_band{i}=tmp_b;
     a_band{i}=tmp_a;
@@ -46,7 +46,7 @@ for idata = 1:ndatasets
     end
     
     %% spatial structure definition
-    % sample source rois    
+    % sample source rois
     in_ = randperm(8);
     truth.in_roi = in_(1:(options.sourcepairs*2));
     
@@ -57,7 +57,7 @@ for idata = 1:ndatasets
     
     % sample source centers within rois
     for i=1:(options.sourcepairs*2)
-        truth.in_centers(i) = inds_roi_inner_2K{truth.in_roi(i)}(ceil(length(inds_roi_inner_2K{truth.in_roi(i)})*rand(1)));        
+        truth.in_centers(i) = inds_roi_inner_2K{truth.in_roi(i)}(ceil(length(inds_roi_inner_2K{truth.in_roi(i)})*rand(1)));
     end
     truth.centers = sa.cortex75K.vc(sa.cortex2K.in_from_cortex75K(truth.in_centers), :);
     
@@ -73,29 +73,31 @@ for idata = 1:ndatasets
     % set activity outside of source octant to zero
     for i=1:(options.sourcepairs*2)
         truth.source_amp(setdiff(1:size(truth.source_amp, 1), inds_roi_outer_2K{truth.in_roi(i)}), i) = 0;
-    end   
+    end
     % normalize amplitude distributions
     for i=1:(options.sourcepairs*2)
-        truth.source_amp(:, i) = truth.source_amp(:, i) ./ norm(truth.source_amp(:, i));
-    end    
+        truth.source_amp(:, i) = truth.source_amp(:, i) / norm(truth.source_amp(:, i));
+    end
     % calculate field spread assuming perpendicular source orientations
     for i=1:(options.sourcepairs*2)
         truth.EEG_field_pat(:, i) = sa.cortex75K.EEG_V_fem_normal(:, sa.cortex2K.in_from_cortex75K)*truth.source_amp(:, i);
-    end         
-
+    end
+    
     for i=1:(options.sourcepairs)
-        truth.interaction(i)=rand(1)>0.5;        
-    end         
+        truth.interaction(i)=rand(1)>0.5;
+    end
     
     %% time series generation
     for i=1:(options.sourcepairs)
         [sources_int, sources_nonint, P_ar] = generate_sources_ar(fs, truth.len, options.bandpass{i});
-        truth.sources_int(1+2*(i-1):1+2*(i-1)+1,:)=sources_int;
-        truth.sources_nonint(1+2*(i-1):1+2*(i-1)+1,:)=sources_nonint;
+        truth.sources_int(2*i-1:2*i,:)=sources_int;
+        truth.sources_nonint(2*i-1:2*i,:)=sources_nonint;
     end
-    for i=1:(2*options.sourcepairs)        
-        truth.sources_int(i,:)=truth.sources_int(i,:)/norm(truth.sources_int(i,:));
-        truth.sources_nonint(i,:)=truth.sources_nonint(i,:)/norm(truth.sources_nonint(i,:));
+    if options.normalise_sources==1
+        for i=1:(2*options.sourcepairs)
+            truth.sources_int(i,:)=truth.sources_int(i,:)/norm(truth.sources_int(i,:));
+            truth.sources_nonint(i,:)=truth.sources_nonint(i,:)/norm(truth.sources_nonint(i,:));
+        end
     end
     % sample noise source locations
     noise_inds = ceil(size(sa.cortex75K.EEG_V_fem_normal, 2)*rand(n_noise_sources, 1));
@@ -106,7 +108,6 @@ for idata = 1:ndatasets
             no_signal  = no_signal  + truth.source_amp(:,2*i-[1 0])*truth.sources_int(2*i-[1 0],:);
             EEG_signal = EEG_signal + truth.EEG_field_pat(:,2*i-[1 0])*truth.sources_int(2*i-[1 0],:);
         else
-            % generate pseudo-EEG with non-interacting sources
             no_signal  = no_signal  + truth.source_amp(:,2*i-[1 0])*truth.sources_nonint(2*i-[1 0],:);
             EEG_signal = EEG_signal + truth.EEG_field_pat(:,2*i-[1 0])*truth.sources_nonint(2*i-[1 0],:);
         end
@@ -134,32 +135,32 @@ for idata = 1:ndatasets
     
     EEG_brain_signal_noise = truth.snr*EEG_signal + (1-truth.snr)*EEG_brain_noise;
     EEG_brain_signal_noise = EEG_brain_signal_noise ./ norm(EEG_brain_signal_noise, 'fro');
-     
+    
     % white sensor noise
     EEG_sensor_noise = randn(EEG_M, N);
     EEG_sensor_noise = EEG_sensor_noise ./ norm(EEG_sensor_noise, 'fro');
- 
+    
     % overall noise is dominated by biological noise
-    sensor_noise=0.1;
+    sensor_noise=options.sensor_noise;
     EEG_data = (1-sensor_noise)*EEG_brain_signal_noise + sensor_noise*EEG_sensor_noise;
     
     % apply high-pass
-    EEG_data = filtfilt(b_high, a_high, EEG_data')';        
+    EEG_data = filtfilt(b_high, a_high, EEG_data')';
     
     %% generate pseudo-baseline EEG/MEG without sources
     % everything as above except that no signal is added at all
     pn = mkpinknoise(N, n_noise_sources)';
     EEG_brain_noise = sa.cortex75K.EEG_V_fem_normal(:, noise_inds)*pn;
-    EEG_brain_noise = EEG_brain_noise ./ norm(EEG_brain_noise, 'fro');    
+    EEG_brain_noise = EEG_brain_noise ./ norm(EEG_brain_noise, 'fro');
     
     % white sensor noise
     EEG_sensor_noise = randn(EEG_M, N);
-    EEG_sensor_noise = EEG_sensor_noise ./ norm(EEG_sensor_noise, 'fro');    
+    EEG_sensor_noise = EEG_sensor_noise ./ norm(EEG_sensor_noise, 'fro');
     
     EEG_baseline_data = (1-sensor_noise)*EEG_brain_noise + sensor_noise*EEG_sensor_noise;
     EEG_baseline_data = filtfilt(b_high, a_high, EEG_baseline_data')';
-       
-    %% some renaming  
+    
+    %% some renaming
     truth.sensor_noise=sensor_noise;
     % save data
     save([home '/Documents/bb/data/' dataset_string '/EEG/dataset_' num2str(idata) '/data'], 'EEG_data', 'EEG_baseline_data', 'fs');

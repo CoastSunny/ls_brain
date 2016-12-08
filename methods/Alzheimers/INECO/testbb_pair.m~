@@ -15,9 +15,9 @@ end
 OUT=[];OUT_b=[];PC=[];A=[];B=[];
 locs=sa.cortex75K.EEG_V_fem_normal(:, sa.cortex2K.in_from_cortex75K);
 roindcs=inds_roi_outer_2K;
-for i=1:100
-    d1='/Documents/bb/data/test2pair0noise1snrYN/EEG/dataset_';
-    d2='/Documents/bb/data/test2pair0noise1snrYN/truth/dataset_';
+for i=2
+    d1='/Documents/bb/data/test1pair0noise/EEG/dataset_';
+    d2='/Documents/bb/data/test1pair0noise/truth/dataset_';
     load([home d1 num2str(i) '/data']),
     load([home d2 num2str(i) '/truth']),
     truth
@@ -50,7 +50,7 @@ for i=1:100
     end
     cfg             = [];
     
-    cfg.reref       = 'no';
+    cfg.reref       = 'yes';
     cfg.refchannel  = 'all'; % average reference
     cfg.lpfilter    = 'no';
     cfg.lpfreq      = 40;
@@ -61,7 +61,7 @@ for i=1:100
     
     cfg             = [];
     cfg.method      = 'mtmfft';
-    freqs=1:2:40;
+    freqs=1:1:40;
     cfg.foi         = freqs;
     cfg.tapsmofrq   = 1;
     cfg.taper       = 'hanning';
@@ -71,7 +71,7 @@ for i=1:100
     
     Y=permute(freqc.fourierspctrm,[2 1 3]);
     Y_b=permute(freqc_b.fourierspctrm,[2 1 3]);
-    nsource=4;
+    nsource=2;
     ncomps=4;
     xch=[truth.EEG_field_pat truth.EEG_noise_pat];
     Xch{i}=xch;
@@ -99,8 +99,7 @@ for i=1:100
         end
     end
     [l m]=max(abs(PC(:,:,i)));
-PC
-continue
+
 Cx=0;
 out=triu(mean(out(:,:,[8:13]),3));
 [tmp itmp]=sort(out(:));

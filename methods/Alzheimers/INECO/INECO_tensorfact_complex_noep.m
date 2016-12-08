@@ -10,7 +10,7 @@ fidx_controls=find(gc_idx(:,1)==0);
 
 % Options=0.00001;Options(4)=2;
 Options=[];
-Options(1)=10^-2;
+Options(1)=10^-3;
 Options(3)=2;
 Options(5)=1;
 Er=[];W=[];Fp=[];Rpen=[];FT=[];
@@ -27,19 +27,7 @@ for a=1:numel(Alpha)
     for q = 1:length(freqc)
         G=[];Y=[];err=[];
         X=(freqc{q}.fourierspctrm);
-        
-        dis_pen=0;
-        temp=AA;temp(33:end,33:end)=0;
-        temp([33:end],[1:32])=dis_pen;temp([1:32],[33:end])=dis_pen;temp(eye(128)==1)=0;G{1}=temp;
-        temp=AA;temp([1:32 65:end],[1:32 65:end])=0;
-        temp([1:32 65:end],[33:64])=dis_pen;temp([33:64],[1:32 65:end])=dis_pen;temp(eye(128)==1)=0;G{2}=temp;
-        temp=AA;temp([1:64 97:end],[1:64 97:end])=0;
-        temp([1:64 97:end],[65:96])=dis_pen;temp([65:96],[1:64 97:end])=dis_pen;temp(eye(128)==1)=0;G{3}=temp;
-        temp=AA;temp([1:96],[1:96])=0;
-        temp([1:96],[97:end])=dis_pen;temp([97:end],[1:96])=dis_pen;temp(eye(128)==1)=0;G{4}=temp;
-        temp=zeros(size(AA));temp([1:32],[65:96])=1;temp([65:96],[1:32])=1;
-        temp([65:96], [33:end])=dis_pen;temp([33:end],[65:96])=dis_pen;temp(eye(128)==1)=0;G{5}=temp;
-        
+              
         Y=permute(X,[3 2 1]);
         Ys{q}=Y;
         ntrials=size(Y,3);

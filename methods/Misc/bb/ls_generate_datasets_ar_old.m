@@ -76,7 +76,7 @@ for idata = 1:ndatasets
     end   
     % normalize amplitude distributions
     for i=1:(options.sourcepairs*2)
-        truth.source_amp(:, i) = truth.source_amp(:, i) / norm(truth.source_amp(:, i));
+        truth.source_amp(:, i) = truth.source_amp(:, i) ./ norm(truth.source_amp(:, i));
     end    
     % calculate field spread assuming perpendicular source orientations
     for i=1:(options.sourcepairs*2)
@@ -90,8 +90,8 @@ for idata = 1:ndatasets
     %% time series generation
     for i=1:(options.sourcepairs)
         [sources_int, sources_nonint, P_ar] = generate_sources_ar(fs, truth.len, options.bandpass{i});
-        truth.sources_int(2*i-1:2*i,:)=sources_int;
-        truth.sources_nonint(2*i-1:2*i,:)=sources_nonint;
+        truth.sources_int(1+2*(i-1):1+2*(i-1)+1,:)=sources_int;
+        truth.sources_nonint(1+2*(i-1):1+2*(i-1)+1,:)=sources_nonint;
     end
     for i=1:(2*options.sourcepairs)        
         truth.sources_int(i,:)=truth.sources_int(i,:)/norm(truth.sources_int(i,:));
