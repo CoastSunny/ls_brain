@@ -1,10 +1,14 @@
-function out = tensor_connectivity2(p,h)
+function out = tensor_connectivity2(p,h,band)
 
 tr=size(p{1},1);
 fr=size(p,2);
+if nargin<3
+    band=1:fr;
+end
 nelems=size(p{1},2);
+out=zeros(nelems,nelems,fr);
 
-for k=1:fr
+parfor k=band
     for i=1:nelems
         for j=1:nelems
             X=p{k}*h;

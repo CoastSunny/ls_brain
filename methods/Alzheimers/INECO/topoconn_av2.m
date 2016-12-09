@@ -31,27 +31,29 @@ for i=1:nsource
 end
 
 for i=1:numel(r)   
-        tmpr=sign(max(FT{1,subj}{1}(:,r(i))));
-        tmpc=sign(max(FT{1,subj}{1}(:,c(i))));
+%         tmpr=sign(max(FT{1,subj}{1}(:,r(i))));
+%         tmpc=sign(max(FT{1,subj}{1}(:,c(i))));
         
-        Xi=tmpr*FT{1,subj}{1}(:,r(i))+min(tmpr*FT{1,subj}{1}(:,r(i)));
-        Xj=tmpc*FT{1,subj}{1}(:,c(i))+min(tmpc*FT{1,subj}{1}(:,c(i)));
+%         Xi=tmpr*FT{1,subj}{1}(:,r(i))+min(tmpr*FT{1,subj}{1}(:,r(i)));
+%         Xj=tmpc*FT{1,subj}{1}(:,c(i))+min(tmpc*FT{1,subj}{1}(:,c(i)));
+        Xi=FT{1,subj}{1}(:,r(i));
+        Xj=FT{1,subj}{1}(:,c(i));
         Xij=abs(Xi*Xj');%Xij=Xij/max(max(Xij));
 %         Sij=single(and(sign(Xi)==1,sign(Xj)==1))*single(and(sign(Xi)==1,sign(Xj)==1)');
         Xji=abs(Xj*Xi');%Xji=Xji/max(max(Xji));
 %         Sji=single(and(sign(Xj)==1,sign(Xi)==1))*single(and(sign(Xj)==1,sign(Xi)==1)');
-        fXi=1;%norm(FT{1,subj}{1}(band,r(i)));
-        fXj=1;%norm(FT{1,subj}{1}(band,c(i)));
+        fXi=sum(abs(FT{1,subj}{3}(band,r(i))))/sum(abs(FT{1,subj}{3}(:,r(i))));
+        fXj=sum(abs(FT{1,subj}{3}(band,c(i))))/sum(abs(FT{1,subj}{3}(:,c(i))));
         %             Cx=Cx+abs(out(i,j)*Xi*Xj');
 %         Xij=Xij.*Sij;
 %         Xji=Xji.*Sji;
     if only==0 
-        cx=Xij*fXi*fXj+Xji*fXi*fXj;
-        cx=cx/max(max(cx));
+        cx=Xij+Xji;
+        cx=cx/max(max(cx))*fXi*fXj;
         Cx=Cx+out(r(i),c(i))*cx;
     elseif only==1 && nsource==i
-        cx=Xij*fXi*fXj+Xji*fXi*fXj;
-        cx=cx/max(max(cx));
+        cx=Xij*+Xji;
+        cx=cx/max(max(cx))*fXi*fXj;
         Cx=Cx+out(r(i),c(i))*cx;
     end
     
