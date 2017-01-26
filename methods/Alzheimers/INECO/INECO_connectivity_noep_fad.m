@@ -62,7 +62,7 @@ for q =1:length(names)
     cfg.complex     = 'imag';
     parameter       = 'cohspctrm';
     
-             cfg.bandwidth   = 1;
+   cfg.bandwidth   = 1;
    ntrials_window=2;    
         for idx_trials=1:ntrials-ntrials_window
             cfg.trials      = idx_trials:idx_trials+ntrials_window-1;

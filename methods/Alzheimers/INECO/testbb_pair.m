@@ -12,12 +12,12 @@ if ~exist('inds_roi_outer_2K')
         load([home '/Documents/bb/data/miscdata'])
 end
 
-OUT=[];OUT_b=[];PC=[];A=[];B=[];
+OUT=[];OUT_b=[];PC=[];A=[];B=[];EV=[];INT=[];L=[];
 locs=sa.cortex75K.EEG_V_fem_normal(:, sa.cortex2K.in_from_cortex75K);
 roindcs=inds_roi_outer_2K;
-for i=1:100
-    d1='/Documents/bb/data/test2pair0noise1snrYN/EEG/dataset_';
-    d2='/Documents/bb/data/test2pair0noise1snrYN/truth/dataset_';
+for i=1:15
+    d1='/Documents/bb/data/test/EEG/dataset_';
+    d2='/Documents/bb/data/test/truth/dataset_';
     load([home d1 num2str(i) '/data']),
     load([home d2 num2str(i) '/truth']),
     truth
@@ -61,9 +61,10 @@ for i=1:100
     
     cfg             = [];
     cfg.method      = 'mtmfft';
-    freqs=1:2:40;
+    freqs=1:1:40;
     cfg.foi         = freqs;
     cfg.tapsmofrq   = 1;
+%     cfg.pad         = 5;
     cfg.taper       = 'hanning';
     cfg.output      = 'fourier';
     freqc      = ft_freqanalysis(cfg, data);
@@ -77,17 +78,18 @@ for i=1:100
     Xch{i}=xch;
 
     Options=[];
-    Options(1)=10^-3;
-    Options(3)=2;
+    Options(1)=10^-1;
+    Options(3)=0;
     Options(5)=0;
-    [T{1} T{2} T{3} T{4} T{5}]=parafac2(Y,ncomps,[4 4],Options);
-    [T_b{1} T_b{2} T_b{3} T_b{4} T_b{5}]=parafac2(Y_b,ncomps,[4 4],Options);
+    [T{1} T{2} T{3} T{4} T{5} ev]=parafac2(Y,ncomps,[4 5],Options);
+%     [T_b{1} T_b{2} T_b{3} T_b{4} T_b{5} tev]=parafac2(Y_b,ncomps,[4 4],Options);
     out=tensor_connectivity2(T{4},T{2});
     out_b=tensor_connectivity2(T_b{4},T_b{2});
     OUT{i}=out;
     OUT_b{i}=out_b;
     Tt{i}{1}=T;Tt{i}{2}=T_b;
-    
+    EV(i,:)=[ev tev];
+
     for jj=1:ncomps
         for ii=1:nsource
             
@@ -99,19 +101,25 @@ for i=1:100
         end
     end
     [l m]=max(abs(PC(:,:,i)));
-PC
-continue
+% PC
+L(i,:)=l;
 Cx=0;
-out=triu(mean(out(:,:,[8:13]),3));
-[tmp itmp]=sort(out(:));
+out1=triu(mean(out(:,:,[8:13]),3));
+[tmp itmp]=sort(out1(:));
 tmp=flipud(itmp);
-[tmpr tmpc]=ind2sub(size(out),tmp(1));
-r=tmpr;
-c=tmpc;    
+[tmpr tmpc]=ind2sub(size(out2),tmp(1));
+r1=tmpr;
+c1=tmpc;   
+out2=triu(mean(out(:,:,[14:20]),3));
+[tmp itmp]=sort(out2(:));
+tmp=flipud(itmp);
+[tmpr tmpc]=ind2sub(size(out2),tmp(2));
+r2=tmpr;
+c2=tmpc;    
 
 for jj=1:size(locs,2)
-    tempr=corrcoef(T{1}(:,r),locs(:,jj));
-    tempc=corrcoef(T{1}(:,c),locs(:,jj));
+    tempr=corrcoef(T{1}(:,r1),locs(:,jj));
+    tempc=corrcoef(T{1}(:,c1),locs(:,jj));
     scr(jj)=tempr(1,2);
     scc(jj)=tempc(1,2);
 end
@@ -126,6 +134,7 @@ for jj=1:8
 
 end
 
+continue
 
 for jj=1:size(locs,2)
     tempr=corrcoef(xch(:,1),locs(:,jj));

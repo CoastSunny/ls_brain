@@ -12,12 +12,12 @@ if ~exist('inds_roi_outer_2K')
         load([home '/Documents/bb/data/miscdata'])
 end
 
-OUT=[];OUT_b=[];PC=[];A=[];B=[];
+OUT=[];OUT_b=[];PC=[];A=[];B=[];EV=[];
 locs=sa.cortex75K.EEG_V_fem_normal(:, sa.cortex2K.in_from_cortex75K);
 roindcs=inds_roi_outer_2K;
-for i=2
-    d1='/Documents/bb/data/test1pair0noise/EEG/dataset_';
-    d2='/Documents/bb/data/test1pair0noise/truth/dataset_';
+for i=1:100
+    d1='/Documents/bb/data/te/EEG/dataset_';
+    d2='/Documents/bb/data/Pair2SNR1Noise0NotNorm/truth/dataset_';
     load([home d1 num2str(i) '/data']),
     load([home d2 num2str(i) '/truth']),
     truth
@@ -50,7 +50,7 @@ for i=2
     end
     cfg             = [];
     
-    cfg.reref       = 'yes';
+    cfg.reref       = 'no';
     cfg.refchannel  = 'all'; % average reference
     cfg.lpfilter    = 'no';
     cfg.lpfreq      = 40;
@@ -61,7 +61,7 @@ for i=2
     
     cfg             = [];
     cfg.method      = 'mtmfft';
-    freqs=1:1:40;
+    freqs=1:2:40;
     cfg.foi         = freqs;
     cfg.tapsmofrq   = 1;
     cfg.taper       = 'hanning';
@@ -72,7 +72,7 @@ for i=2
     Y=permute(freqc.fourierspctrm,[2 1 3]);
     Y_b=permute(freqc_b.fourierspctrm,[2 1 3]);
     nsource=2;
-    ncomps=4;
+    ncomps=2;
     xch=[truth.EEG_field_pat truth.EEG_noise_pat];
     Xch{i}=xch;
 
@@ -80,14 +80,15 @@ for i=2
     Options(1)=10^-3;
     Options(3)=2;
     Options(5)=0;
-    [T{1} T{2} T{3} T{4} T{5}]=parafac2(Y,ncomps,[4 4],Options);
-    [T_b{1} T_b{2} T_b{3} T_b{4} T_b{5}]=parafac2(Y_b,ncomps,[4 4],Options);
+    [T{1} T{2} T{3} T{4} T{5} ev]=parafac2(Y,ncomps,[4 4],Options);
+    [T_b{1} T_b{2} T_b{3} T_b{4} T_b{5} tev]=parafac2(Y_b,ncomps,[4 4],Options);
     out=tensor_connectivity2(T{4},T{2});
     out_b=tensor_connectivity2(T_b{4},T_b{2});
     OUT{i}=out;
     OUT_b{i}=out_b;
     Tt{i}{1}=T;Tt{i}{2}=T_b;
-    
+    EV(i,:)=[ev tev];
+
     for jj=1:ncomps
         for ii=1:nsource
             
@@ -99,7 +100,8 @@ for i=2
         end
     end
     [l m]=max(abs(PC(:,:,i)));
-
+% PC
+continue
 Cx=0;
 out=triu(mean(out(:,:,[8:13]),3));
 [tmp itmp]=sort(out(:));
