@@ -788,7 +788,7 @@ while abs((fit-fitold)/fitold)>crit&it<maxit&fit>10*eps
           C(k,:) = (ab*real(diag(Ra'* x(:,(k-1)*J+1:k*J)*conj(B)))).';
           xab = [xab real(diag(Ra'* x(:,(k-1)*J+1:k*J)*(B)))];
        end
-%           C = unimodalcrossproducts(real((Ra'*Ra).*(B'*B)),real(xab),C);
+           C = unimodalcrossproducts(real((Ra'*Ra).*(B'*B)),real(xab),C);
 %           t=1:40;          
 %           C(:,1)=3*exp(-(t-10).^2/2^2);
 %           C(:,2)=3*exp(-(t-10).^2/2^2);

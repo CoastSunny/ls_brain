@@ -6,19 +6,19 @@ else
     home_bci='~';
 end
 if ~exist('sa')
-        load([home '/Documents/bb/data/sa'])     
+    load([home '/Documents/bb/data/sa'])
 end
 if ~exist('inds_roi_outer_2K')
-        load([home '/Documents/bb/data/miscdata'])
+    load([home '/Documents/bb/data/miscdata'])
 end
 
 OUT=[];OUT_b=[];PC=[];A=[];B=[];
 locs=sa.cortex75K.EEG_V_fem_normal(:, sa.cortex2K.in_from_cortex75K);
 roindcs=inds_roi_outer_2K;
 for i=1:100
-%     d1='/Documents/bb/data/Pair1SNRrandNoise01Norm/EEG/dataset_';
-    d1='/Documents/bb/data/Pair1SNRrandNoise01Norm/EEG/dataset_';
-    d2='/Documents/bb/data/Pair1SNRrandNoise01Norm/truth/dataset_';
+    %     d1='/Documents/bb/data/Pair1SNRrandNoise01Norm/EEG/dataset_';
+    d1='/Documents/bb/data/Pair1SNR09Noise0NotNorm/EEG/dataset_';
+    d2='/Documents/bb/data/Pair1SNR09Noise0NotNorm/truth/dataset_';
     load([home d1 num2str(i) '/data']),
     load([home d2 num2str(i) '/truth']),
     truth
@@ -55,8 +55,8 @@ for i=1:100
     cfg.refchannel  = 'all'; % average reference
     cfg.lpfilter    = 'no';
     cfg.lpfreq      = 40;
-    cfg.preproc.demean='no';
-    cfg.preproc.detrend='no';
+    cfg.preproc.demean='yes';
+    cfg.preproc.detrend='yes';
     data            = ft_preprocessing(cfg,data);
     data_b          = ft_preprocessing(cfg,data_b);
     
@@ -73,16 +73,16 @@ for i=1:100
     Y=permute(freqc.fourierspctrm,[2 1 3]);
     Y_b=permute(freqc_b.fourierspctrm,[2 1 3]);
     nsource=2;
-    ncomps=2;
+    ncomps=10;
     xch=[truth.EEG_field_pat truth.EEG_noise_pat];
     Xch{i}=xch;
-
+    
     Options=[];
     Options(1)=10^-1;
-    Options(3)=2;
+    Options(3)=0;
     Options(5)=0;
     [T{1} T{2} T{3} T{4} T{5} ev]=parafac2(Y,ncomps,[4 4],Options);
-%     [T_b{1} T_b{2} T_b{3} T_b{4} T_b{5} tev]=parafac2(Y_b,ncomps,[4 4],Options);
+    [T_b{1} T_b{2} T_b{3} T_b{4} T_b{5} tev]=parafac2(Y_b,ncomps,[4 4],Options);
     out=tensor_connectivity2(T{4},T{2});
     out_b=tensor_connectivity2(T_b{4},T_b{2});
     OUT{i}=out;
@@ -92,72 +92,77 @@ for i=1:100
     
     Options=[];
     Options(1)=10^-3;
-%     [Fp{i},Yest,Ip(i),Exp(i),e]=parafac_reg(Y,2,[],[],Options,[9 0 0]);       
-
+    %     [Fp{i},Yest,Ip(i),Exp(i),e]=parafac_reg(Y,2,[],[],Options,[9 0 0]);
+    
     for jj=1:ncomps
         for ii=1:nsource
             
             x=(T{1}(:,jj));
             y=(xch(:,ii));
             temp=corrcoef(x,y);
-            PC(jj,ii,i)=temp(1,2);
+            PCc(jj,ii,i)=temp(1,2);
+            x=(T{1}(:,jj))/norm(T{1}(:,jj));
+            y=(xch(:,ii))/norm((xch(:,ii)));
+            
+            PCn(jj,ii,i)=norm(x-y);
             
         end
     end
-    [l m]=max(abs(PC(:,:,i)));
-
-Cx=0;
-out=triu(mean(out(:,:,[4 5 6]),3));
-[tmp itmp]=sort(out(:));
-tmp=flipud(itmp);
-[tmpr tmpc]=ind2sub(size(out),tmp(1));
-r=tmpr;
-c=tmpc;    
-
-for jj=1:size(locs,2)
-    tempr=corrcoef(T{1}(:,r),locs(:,jj));
-    tempc=corrcoef(T{1}(:,c),locs(:,jj));
-    scr(jj)=tempr(1,2);
-    scc(jj)=tempc(1,2);
-end
-
-[q Mr]=max(abs(scr));
-[q Mc]=max(abs(scc));
-
-for jj=1:8
-
-    Rr(jj)=isempty(find(roindcs{jj}==Mr));
-    Rc(jj)=isempty(find(roindcs{jj}==Mc));
-
-end
-
-
-for jj=1:size(locs,2)
-    tempr=corrcoef(xch(:,1),locs(:,jj));
-    tempc=corrcoef(xch(:,2),locs(:,jj));
-    scr(jj)=tempr(1,2);
-    scc(jj)=tempc(1,2);
-end
-
-[q Mr]=max(abs(scr));
-[q Mc]=max(abs(scc));
-
-for jj=1:8
-
-    RrT(jj)=isempty(find(roindcs{jj}==Mr));
-    RcT(jj)=isempty(find(roindcs{jj}==Mc));
-
-end
-% figure,subplot(3,2,1),plot(xch(:,1)/norm(xch(:,1))),subplot(3,2,2),plot(xch(:,2)/norm(xch(:,2)))
-% subplot(3,2,3),plot(T{1}(:,r)/norm(T{1}(:,r))),subplot(3,2,4),plot(T{1}(:,c)/norm(T{1}(:,c)))
-% subplot(3,2,5),plot(-T{1}(:,r)/norm(T{1}(:,r))),subplot(3,2,6),plot(-T{1}(:,c)/norm(T{1}(:,c)))
-% 
-% figure,subplot(1,3,1),plot(xch(:,1)),subplot(1,3,2),plot(T{1}(:,m(1))),subplot(1,3,3),plot(-T{1}(:,m(1)))
-% figure,subplot(1,3,1),plot(xch(:,2)),subplot(1,3,2),plot(T{1}(:,m(2))),subplot(1,3,3),plot(-T{1}(:,m(2)))
-
-A(:,:,i)=[find(Rr==0) find(Rc==0);truth.in_roi;find(RrT==0) find(RcT==0)];
-B(:,i)=[INT(i) SNR(i)...
-    max(max(OUT{i}(:,:,5))) max(max(OUT_b{i}(:,:,5))) max(max(max(OUT{i}))) max(max(max(OUT_b{i})))];
-% A,B
-dummy=1;
+    [lc mc]=max(abs(PCc(:,:,i)));
+    [ln mn]=max(abs(PCn(:,:,i)));
+    L(i,:)=lc;
+    Cx=0;
+    out=triu(mean(out(:,:,[8:13]),3));
+    [tmp itmp]=sort(out(:));
+    tmp=flipud(itmp);
+    [tmpr tmpc]=ind2sub(size(out),tmp(1));
+    r=tmpr;
+    c=tmpc;
+    
+    for jj=1:size(locs,2)
+        tempr=corrcoef(T{1}(:,r),locs(:,jj));
+        tempc=corrcoef(T{1}(:,c),locs(:,jj));
+        scr(jj)=tempr(1,2);
+        scc(jj)=tempc(1,2);
+    end
+    
+    [q Mr]=max(abs(scr));
+    [q Mc]=max(abs(scc));
+    
+    for jj=1:8
+        
+        Rr(jj)=isempty(find(roindcs{jj}==Mr));
+        Rc(jj)=isempty(find(roindcs{jj}==Mc));
+        
+    end
+    
+    
+    for jj=1:size(locs,2)
+        tempr=corrcoef(xch(:,1),locs(:,jj));
+        tempc=corrcoef(xch(:,2),locs(:,jj));
+        scr(jj)=tempr(1,2);
+        scc(jj)=tempc(1,2);
+    end
+    
+    [q Mr]=max(abs(scr));
+    [q Mc]=max(abs(scc));
+    
+    for jj=1:8
+        
+        RrT(jj)=isempty(find(roindcs{jj}==Mr));
+        RcT(jj)=isempty(find(roindcs{jj}==Mc));
+        
+    end
+    % figure,subplot(3,2,1),plot(xch(:,1)/norm(xch(:,1))),subplot(3,2,2),plot(xch(:,2)/norm(xch(:,2)))
+    % subplot(3,2,3),plot(T{1}(:,r)/norm(T{1}(:,r))),subplot(3,2,4),plot(T{1}(:,c)/norm(T{1}(:,c)))
+    % subplot(3,2,5),plot(-T{1}(:,r)/norm(T{1}(:,r))),subplot(3,2,6),plot(-T{1}(:,c)/norm(T{1}(:,c)))
+    %
+    % figure,subplot(1,3,1),plot(xch(:,1)),subplot(1,3,2),plot(T{1}(:,m(1))),subplot(1,3,3),plot(-T{1}(:,m(1)))
+    % figure,subplot(1,3,1),plot(xch(:,2)),subplot(1,3,2),plot(T{1}(:,m(2))),subplot(1,3,3),plot(-T{1}(:,m(2)))
+    
+    A(:,:,i)=[find(Rr==0) find(Rc==0);truth.in_roi;find(RrT==0) find(RcT==0)];
+    B(:,i)=[INT(i) SNR(i)...
+        max(max(OUT{i}(:,:,5))) max(max(OUT_b{i}(:,:,5))) max(max(max(OUT{i}))) max(max(max(OUT_b{i})))];
+    % A,B
+    dummy=1;
 end

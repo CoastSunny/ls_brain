@@ -15,7 +15,7 @@ end
 OUT=[];OUT_b=[];PC=[];A=[];B=[];EV=[];INT=[];L=[];
 locs=sa.cortex75K.EEG_V_fem_normal(:, sa.cortex2K.in_from_cortex75K);
 roindcs=inds_roi_outer_2K;
-for i=1:15
+for i=1
     d1='/Documents/bb/data/test/EEG/dataset_';
     d2='/Documents/bb/data/test/truth/dataset_';
     load([home d1 num2str(i) '/data']),
@@ -81,7 +81,7 @@ for i=1:15
     Options(1)=10^-1;
     Options(3)=0;
     Options(5)=0;
-    [T{1} T{2} T{3} T{4} T{5} ev]=parafac2(Y,ncomps,[4 5],Options);
+    [T{1} T{2} T{3} T{4} T{5} ev]=parafac2(Y,ncomps,[4 4],Options);
 %     [T_b{1} T_b{2} T_b{3} T_b{4} T_b{5} tev]=parafac2(Y_b,ncomps,[4 4],Options);
     out=tensor_connectivity2(T{4},T{2});
     out_b=tensor_connectivity2(T_b{4},T_b{2});
@@ -93,14 +93,17 @@ for i=1:15
     for jj=1:ncomps
         for ii=1:nsource
             
-            x=(T{1}(:,jj));
-            y=(xch(:,ii));
-            temp=corrcoef(x,y);
-            PC(jj,ii,i)=temp(1,2);
+%             x=(T{1}(:,jj));
+%             y=(xch(:,ii));
+            x=(T{1}(:,jj))/norm(T{1}(:,jj));
+            y=(xch(:,ii))/norm((xch(:,ii)));
+%             temp=corrcoef(x,y);
+%             PC(jj,ii,i)=temp(1,2);
+            PC(jj,ii,i)=norm(x-y);
             
         end
     end
-    [l m]=max(abs(PC(:,:,i)));
+    [l m]=min(abs(PC(:,:,i)));
 % PC
 L(i,:)=l;
 Cx=0;
