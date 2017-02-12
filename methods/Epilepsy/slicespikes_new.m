@@ -193,7 +193,9 @@ rtst_examples=ridx2:size(rsEEG,3);
 
 fs=200;
 pp=1;
+a=tic;
 fsEEG=spectrogram(sEEG,2,'fs',fs,'width_ms',width_ms,'overlap',overlap);
+b(ci)=toc(tic);
 frsEEG=spectrogram(rsEEG,2,'fs',fs,'width_ms',width_ms,'overlap',overlap);
 fiEEG=spectrogram(iEEG,2,'fs',fs,'width_ms',width_ms,'overlap',overlap).^pp;
 friEEG=spectrogram(riEEG,2,'fs',fs,'width_ms',width_ms,'overlap',overlap).^pp;

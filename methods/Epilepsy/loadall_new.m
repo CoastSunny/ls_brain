@@ -12,7 +12,7 @@ subj={ 'B_G' 'BR_R'  'C_B' 'C_C' 'C_D' 'C_R' 'D_J' 'D_L'...
 %aaa=[11 17 18 9 10 13 8 14 12 15 7 3 4 5 20 23 24 26];
 R=[];
 data=[];
-Itest=6%:numel(subj)
+Itest=1:numel(subj)
 for ci=Itest
     fprintf(num2str(ci))
     try cd D:\Raw\Epilepsy

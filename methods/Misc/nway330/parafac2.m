@@ -532,7 +532,7 @@ while abs(fit-oldfit)>oldfit*ConvCrit & it<MaxIt & fit>1000*eps
     
     % Update A,H,C using PARAFAC-ALS
     [A,H,C,ff]=parafac(reshape(Y,I,F*K),[I F K],F,1e-4,[Constraints(1) ConstB Constraints(2)],A,H,C,5);
-    [fit,X,M] = pf2fit(X,A,H,C,P,K,MissingElements,MissingOnes);
+    [fit,X,M]=pf2fit(X,A,H,C,P,K,MissingElements,MissingOnes);
       
     % Print interim result
     if rem(it,10)==0|it == 1
@@ -827,7 +827,7 @@ end
 %    B        = B(:,ID);
 % end
 % C        = C(:,ID);
-% % NORMALIZE A AND C (variance in B)
+% NORMALIZE A AND C (variance in B)
 % if ConstB ~= 10 % Then B is eye
 %    for f=1:Fac,normC(f) = norm(C(:,f));end
 %    for f=1:Fac,normA(f) = norm(A(:,f));end
@@ -835,7 +835,7 @@ end
 %    A        = A*diag(normA.^(-1));
 %    C        = C*diag(normC.^(-1));
 %    
-%    % APPLY SIGN CONVENTION
+%    APPLY SIGN CONVENTION
 %    SignA = sign(sum(sign(A))+eps);
 %    SignC = sign(sum(sign(C))+eps);
 %    A = A*diag(SignA);

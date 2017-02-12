@@ -1,4 +1,4 @@
-riQ=B;
+Q=B;
 W=A;
 z1=Q(1,:)==1;
 b1=Q(:,z1);
@@ -23,5 +23,5 @@ end
 %     CON(i)=mean(tmp{i});
 % end
     
-plot(res)
+plot(thr,res)
 figure,hold on,scatter(b1(2,:),b1(3,:)),scatter(b0(2,:),b0(3,:),'r')

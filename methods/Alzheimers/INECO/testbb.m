@@ -12,13 +12,13 @@ if ~exist('inds_roi_outer_2K')
     load([home '/Documents/bb/data/miscdata'])
 end
 
-OUT=[];OUT_b=[];PC=[];A=[];B=[];
+OUT=[];OUT_b=[];PC=[];A=[];B=[];PCc=[];PCn=[];L=[];EV=[];
 locs=sa.cortex75K.EEG_V_fem_normal(:, sa.cortex2K.in_from_cortex75K);
 roindcs=inds_roi_outer_2K;
 for i=1:100
     %     d1='/Documents/bb/data/Pair1SNRrandNoise01Norm/EEG/dataset_';
-    d1='/Documents/bb/data/Pair1SNR09Noise0NotNorm/EEG/dataset_';
-    d2='/Documents/bb/data/Pair1SNR09Noise0NotNorm/truth/dataset_';
+    d1='/Documents/bb/data/Pair1SNR09Noise01Norm/EEG/dataset_';
+    d2='/Documents/bb/data/Pair1SNR09Noise01Norm/truth/dataset_';
     load([home d1 num2str(i) '/data']),
     load([home d2 num2str(i) '/truth']),
     truth
@@ -73,7 +73,7 @@ for i=1:100
     Y=permute(freqc.fourierspctrm,[2 1 3]);
     Y_b=permute(freqc_b.fourierspctrm,[2 1 3]);
     nsource=2;
-    ncomps=10;
+    ncomps=2;
     xch=[truth.EEG_field_pat truth.EEG_noise_pat];
     Xch{i}=xch;
     
@@ -82,11 +82,11 @@ for i=1:100
     Options(3)=0;
     Options(5)=0;
     [T{1} T{2} T{3} T{4} T{5} ev]=parafac2(Y,ncomps,[4 4],Options);
-    [T_b{1} T_b{2} T_b{3} T_b{4} T_b{5} tev]=parafac2(Y_b,ncomps,[4 4],Options);
+%       [T_b{1} T_b{2} T_b{3} T_b{4} T_b{5} tev]=parafac2(Y_b,ncomps,[4 4],Options);
     out=tensor_connectivity2(T{4},T{2});
-    out_b=tensor_connectivity2(T_b{4},T_b{2});
+%       out_b=tensor_connectivity2(T_b{4},T_b{2});
     OUT{i}=out;
-    OUT_b{i}=out_b;
+     OUT_b{i}=out_b;
     Tt{i}{1}=T;Tt{i}{2}=T_b;
     EV(i,:)=[ev tev];
     
@@ -162,7 +162,7 @@ for i=1:100
     
     A(:,:,i)=[find(Rr==0) find(Rc==0);truth.in_roi;find(RrT==0) find(RcT==0)];
     B(:,i)=[INT(i) SNR(i)...
-        max(max(OUT{i}(:,:,5))) max(max(OUT_b{i}(:,:,5))) max(max(max(OUT{i}))) max(max(max(OUT_b{i})))];
+        max(max(max(OUT{i}(:,:,8:12)))) max(max(max(OUT_b{i}(:,:,8:12)))) max(max(max(OUT{i}))) max(max(max(OUT_b{i})))];
     % A,B
     dummy=1;
 end
