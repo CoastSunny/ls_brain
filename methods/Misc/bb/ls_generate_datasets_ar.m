@@ -84,7 +84,7 @@ for idata = 1:ndatasets
     end
     
     for i=1:(options.sourcepairs)
-        truth.interaction(i)=rand(1)>0.5;
+        truth.interaction(i)=1;rand(1)>0.5;
     end
     
     %% time series generation

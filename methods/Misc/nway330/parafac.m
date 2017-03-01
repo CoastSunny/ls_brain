@@ -1,4 +1,4 @@
-function [Factors,it,PercentExpl,err,corcondia]=parafac(X,Fac,Options,const,OldLoad,FixMode,Weights);
+function [Factors,Xest,it,PercentExpl,err,corcondia]=parafac(X,Fac,Options,const,OldLoad,FixMode,Weights);
 
 % PARAFAC multiway parafac model
 %
@@ -1006,6 +1006,7 @@ while (((f>crit) | (norm(connew-conold)/norm(conold)>MissConvCrit) | Constraints
         id1 = id2;
     end
     model=nmodel(ff);
+    Xest=model;
     model = reshape(model,DimX(1),prod(DimX(2:end)));
     if MissMeth  % Missing values present
         connew=model(id);

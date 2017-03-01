@@ -486,9 +486,9 @@ if nargin<5
       if Options(5)==0
          disp(' Random initialization')
       end
-      A = rand(I,F);
-      C = rand(K,F);
-%       H = randn(F)+j*randn(F);
+      A = randn(I,F);
+      C = randn(K,F);
+%        H = randn(F)+j*randn(F);
       H = eye(F);
    else
       error(' Options(2) wrongly specified')
@@ -689,11 +689,11 @@ while abs((fit-fitold)/fitold)>crit&it<maxit&fit>10*eps
    it=it+1;
    fitold=fit;
 
-   % Do line-search
+%   Do line-search
    if rem(it+2,2)==-1
       [A,B,C,Delta]=linesrch(X,DimX,A,B,C,Ao,Bo,Co,Delta);
    end
-   
+%    
    Ao=A;Bo=B;Co=C;
    % Update A
    Xbc=0;
@@ -716,7 +716,10 @@ while abs((fit-fitold)/fitold)>crit&it<maxit&fit>10*eps
    elseif ConstA == 3 % Unimodality
       A = unimodalcrossproducts((B'*B).*(C'*C),Xbc',A);
    elseif ConstA == 4 % Real from Complex
-      A = real(Xbc)*pinv(real((B'*B).*(C'*C))).';
+%       A = real(Xbc)*pinv(real((B'*B).*(C'*C)));
+      A = [real(Xbc) imag(Xbc)]*pinv([real((B'*B).*(C'*C)) imag((B'*B).*(C'*C))]);
+%       A = [real(Xbc) imag(Xbc)].'\([real((B'*B).*(C'*C)); imag((B'*B).*(C'*C))]);
+
    end
 
    % Project X down on orth(A) - saves time if first mode is large
@@ -744,6 +747,12 @@ while abs((fit-fitold)/fitold)>crit&it<maxit&fit>10*eps
          end
       end
    end
+%    for i=1:size(B,2)
+%    
+%        tmp=norm(B(:,i));
+%        B(:,i)=B(:,i)/tmp;
+%        
+%    end
   
     % Update C
     if ConstC == 0 % Unconstrained
@@ -777,16 +786,22 @@ while abs((fit-fitold)/fitold)>crit&it<maxit&fit>10*eps
        end
        C = unimodalcrossproducts((Ra'*Ra).*(B'*B),xab,C);
     elseif ConstC == 4 % Real from Complex
-       ab=pinv(real((Ra'*Ra).*(B'*B)));
+%        ab=pinv(real((Ra'*Ra).*(B'*B)));
+       ab=pinv([real((Ra'*Ra).*(B'*B)) imag((Ra'*Ra).*(B'*B))]).';
        for k=1:K 
-          C(k,:) = (ab*real(diag(Ra'* x(:,(k-1)*J+1:k*J)*conj(B)))).';
+%           C(k,:) = (ab*real(diag(Ra'* x(:,(k-1)*J+1:k*J)*conj(B)))).';
+            C(k,:) = (ab*[real(diag(Ra'*x(:,(k-1)*J+1:k*J)*conj(B)));...
+                imag(diag(Ra'*x(:,(k-1)*J+1:k*J)*conj(B)))]);
+%             D(k,:)=[real(diag(Ra'*x(:,(k-1)*J+1:k*J)*conj(B)));...
+%                 imag(diag(Ra'*x(:,(k-1)*J+1:k*J)*conj(B)))].';
        end
+%        louk=1;
     elseif ConstC == 5 % Real from Complex, unimodal
        ab=pinv(real((Ra'*Ra).*(B'*B)));
        xab = [];
        for k=1:K 
-          C(k,:) = (ab*real(diag(Ra'* x(:,(k-1)*J+1:k*J)*conj(B)))).';
-          xab = [xab real(diag(Ra'* x(:,(k-1)*J+1:k*J)*(B)))];
+          C(k,:) = (ab*real(diag(Ra'*x(:,(k-1)*J+1:k*J)*conj(B)))).';
+          xab = [xab real(diag(Ra'*x(:,(k-1)*J+1:k*J)*(B)))];
        end
            C = unimodalcrossproducts(real((Ra'*Ra).*(B'*B)),real(xab),C);
 %           t=1:40;          

@@ -28,7 +28,7 @@ end
 
 W=permute(W,[3 4 2 1]);
 
-for q = 1:length(Conn_full)
+for q =1:2;% 1:length(Conn_full)
     
     Y=W(:,:,:,q);    
     [Fp{q},Yest{q},Ip(q),Exp(q),e,conc(q)]=parafac(Y,4,Options,[2 2 2]);

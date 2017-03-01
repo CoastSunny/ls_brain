@@ -15,8 +15,8 @@ parfor k=band
             
             if (i~=j)
                 
-%                 out(i,j,k)=abs(mean(sign(imag(conj(X(:,i)).*X(:,j)))));
-                  out(i,j,k)=abs(mean(sign(angle(X(:,i)-angle(X(:,j))))));
+                out(i,j,k)=abs(mean(sign(imag(conj(X(:,i)).*X(:,j)))));
+%                   out(i,j,k)=abs(mean(sign(angle(X(:,i)-angle(X(:,j))))));
 
             end
             

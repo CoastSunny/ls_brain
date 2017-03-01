@@ -17,8 +17,8 @@ locs=sa.cortex75K.EEG_V_fem_normal(:, sa.cortex2K.in_from_cortex75K);
 roindcs=inds_roi_outer_2K;
 for i=1:100
     %     d1='/Documents/bb/data/Pair1SNRrandNoise01Norm/EEG/dataset_';
-     d1='/Documents/bb/data/Pair1SNR02Noise01Norm/EEG/dataset_';
-     d2='/Documents/bb/data/Pair1SNR02Noise01Norm/truth/dataset_';
+     d1='/Documents/bb/data/Pair1SNR09Noise01Norm/EEG/dataset_';
+     d2='/Documents/bb/data/Pair1SNR09Noise01Norm/truth/dataset_';
     load([home d1 num2str(i) '/data']),
     load([home d2 num2str(i) '/truth']),
     truth
@@ -51,7 +51,7 @@ for i=1:100
     end
     cfg             = [];
     
-    cfg.reref       = 'yes';
+    cfg.reref       = 'no';
     cfg.refchannel  = 'all'; % average reference
     cfg.lpfilter    = 'no';
     cfg.lpfreq      = 40;
@@ -67,18 +67,18 @@ for i=1:100
     cfg.tapsmofrq   = 1;
     cfg.taper       = 'hanning';
     cfg.output      = 'fourier';
-    freqc           = ft_freqanalysis(cfg, data);
-    freqc_b         = ft_freqanalysis(cfg, data_b);
+    freqc      = ft_freqanalysis(cfg, data);
+    freqc_b    = ft_freqanalysis(cfg, data_b);
     
     Y=permute(freqc.fourierspctrm,[2 1 3]);
     Y_b=permute(freqc_b.fourierspctrm,[2 1 3]);
     nsource=2;
-    ncomps=2;
+     ncomps=2;
     xch=[truth.EEG_field_pat truth.EEG_noise_pat];
     Xch{i}=xch;
     
     Options=[];
-    Options(1)=10^-1;
+    Options(1)=10^-6;
     Options(3)=0;
     Options(5)=0;
     [T{1} T{2} T{3} T{4} T{5} ev]=parafac2(Y,ncomps,[4 4],Options);
@@ -91,7 +91,7 @@ for i=1:100
     EV(i,:)=[ev tev];
     
     Options=[];
-    Options(1)=10^-1;
+    Options(1)=10^-3;
     %     [Fp{i},Yest,Ip(i),Exp(i),e]=parafac_reg(Y,2,[],[],Options,[9 0 0]);
     
     for jj=1:ncomps
