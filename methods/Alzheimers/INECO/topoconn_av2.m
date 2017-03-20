@@ -57,6 +57,7 @@ for i=1:numel(r)
     if only==0 
         cx=Xij+Xji;
         cx=cx/max(max(cx))*((fXi+fXj)*(Pi+Pj));
+%         cx=cx*((fXi+fXj)*(Pi+Pj));
         Cx=Cx+out(r(i),c(i))*cx;
     elseif only==1 && nsource==i
         cx=Xij+Xji;

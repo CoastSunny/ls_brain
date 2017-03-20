@@ -1,4 +1,4 @@
-function out = tensor_connectivity2(p,h,band)
+function out = tensor_connectivity3(p,h,d,band)
 
 tr=size(p{1},1);
 fr=size(p,2);
@@ -15,7 +15,7 @@ for k=band
             
             if (i~=j)
                 
-                out(i,j,k)=abs(mean(sign(imag(conj(X(:,i)).*(X(:,j))))));
+                out(i,j,k)=abs(mean(sign(imag(conj(d(k,i).*X(:,i)).*(d(k,j).*X(:,j))))));
 %                   out(i,j,k)=abs(mean(sign(angle(X(:,i)-angle(X(:,j))))));
 
             end

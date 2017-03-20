@@ -487,7 +487,7 @@ if nargin<5
          disp(' Random initialization')
       end
       A = randn(I,F);
-      C = randn(K,F);
+      C = randn(K,F);%+j*randn(K,F);
 %        H = randn(F)+j*randn(F);
       H = eye(F);
    else
@@ -529,7 +529,7 @@ while abs(fit-oldfit)>oldfit*ConvCrit & it<MaxIt & fit>1000*eps
       %  [u,s,v]  = svd(Qk.');P{k}  = v(:,1:F)*u(:,1:F)';
       Y(:,:,k) = X{k}*P{k};
     end
-    
+    ConstB=0;
     % Update A,H,C using PARAFAC-ALS
     [A,H,C,ff]=parafac(reshape(Y,I,F*K),[I F K],F,1e-4,[Constraints(1) ConstB Constraints(2)],A,H,C,5);
     [fit,X,M]=pf2fit(X,A,H,C,P,K,MissingElements,MissingOnes);
@@ -716,11 +716,13 @@ while abs((fit-fitold)/fitold)>crit&it<maxit&fit>10*eps
    elseif ConstA == 3 % Unimodality
       A = unimodalcrossproducts((B'*B).*(C'*C),Xbc',A);
    elseif ConstA == 4 % Real from Complex
-%       A = real(Xbc)*pinv(real((B'*B).*(C'*C)));
-      A = [real(Xbc) imag(Xbc)]*pinv([real((B'*B).*(C'*C)) imag((B'*B).*(C'*C))]);
+       A = real(Xbc)*pinv(real((B'*B).*(C'*C)));
+%      A = [real(Xbc) imag(Xbc)]*pinv([real((B'*B).*(C'*C)) imag((B'*B).*(C'*C))]);
 %       A = [real(Xbc) imag(Xbc)].'\([real((B'*B).*(C'*C)); imag((B'*B).*(C'*C))]);
-
    end
+%    for i=1:J   
+%        A(:,i)=A(:,i)/norm(A(:,i));       
+%    end
 
    % Project X down on orth(A) - saves time if first mode is large
    [Qa,Ra]=qr(A,0);
@@ -728,14 +730,25 @@ while abs((fit-fitold)/fitold)>crit&it<maxit&fit>10*eps
 
    % Update B
    if ConstB == 10 % Procrustes
-      B = eye(Fac);
-   else
+      B = eye(Fac);   B(1,2)=1;B(2,1)=1;% B(3,4)=1;B(4,3)=1; 
       Xac=0;
       for k=1:K
+         Xac = Xac + x(:,(k-1)*J+1:k*J).'*conj(Ra*diag(C(k,:)));          
+      end      
+%       bB = [real(Xac) imag(Xac)]*pinv([real((Ra'*Ra).*(C'*C)) imag((Ra'*Ra).*(C'*C))]);
+      bB = Xac*pinv((Ra'*Ra).*(C'*C)).'; 
+      B = B.*bB;
+      B(eye(size(B))==1)=1;
+      %     B = ones(Fac);
+   else
+      Xac=0;
+%       Xac2=0;
+      for k=1:K
          Xac = Xac + x(:,(k-1)*J+1:k*J).'*conj(Ra*diag(C(k,:)));
+%          Xac2 = Xac2 + X(:,(k-1)*J+1:k*J).'*conj(A*diag(C(k,:)));
       end
-      if ConstB == 0 % Unconstrained
-         B = Xac*pinv((Ra'*Ra).*(C'*C)).';
+      if ConstB == 0 % Un constrained
+         B = Xac*pinv((Ra'*Ra).*(C'*C)).';         
       elseif ConstB == 1 % Nonnegativity, requires reals
          Bold = B;
          for j = 1:J
@@ -745,6 +758,10 @@ while abs((fit-fitold)/fitold)>crit&it<maxit&fit>10*eps
          if any(sum(B)<100*eps*J)
             B = .99*Bold+.01*B; % To prevent a matrix with zero columns
          end
+      elseif ConstB == 2
+          B = [real(Xac) imag(Xac)]*pinv([real((Ra'*Ra).*(C'*C)) imag((Ra'*Ra).*(C'*C))]);
+%           B = [real(Xac2) imag(Xac2)]*pinv([real((A'*A).*(C'*C)) imag((A'*A).*(C'*C))]);
+
       end
    end
 %    for i=1:size(B,2)
@@ -757,8 +774,10 @@ while abs((fit-fitold)/fitold)>crit&it<maxit&fit>10*eps
     % Update C
     if ConstC == 0 % Unconstrained
        ab=pinv((Ra'*Ra).*(B'*B));
+%        ab=pinv((A'*A).*(B'*B));
        for k=1:K 
           C(k,:) = (ab*diag(Ra'* x(:,(k-1)*J+1:k*J)*conj(B))).';
+%           C(k,:) = (ab*diag(A'* X(:,(k-1)*J+1:k*J)*conj(B))).';
        end
     elseif ConstC == 1  % Nonnegativity, requires reals
        Cold = C;
@@ -786,12 +805,12 @@ while abs((fit-fitold)/fitold)>crit&it<maxit&fit>10*eps
        end
        C = unimodalcrossproducts((Ra'*Ra).*(B'*B),xab,C);
     elseif ConstC == 4 % Real from Complex
-%        ab=pinv(real((Ra'*Ra).*(B'*B)));
-       ab=pinv([real((Ra'*Ra).*(B'*B)) imag((Ra'*Ra).*(B'*B))]).';
+       ab=pinv(real((Ra'*Ra).*(B'*B)));
+%        ab=pinv([real((Ra'*Ra).*(B'*B)) imag((Ra'*Ra).*(B'*B))]).';
        for k=1:K 
-%           C(k,:) = (ab*real(diag(Ra'* x(:,(k-1)*J+1:k*J)*conj(B)))).';
-            C(k,:) = (ab*[real(diag(Ra'*x(:,(k-1)*J+1:k*J)*conj(B)));...
-                imag(diag(Ra'*x(:,(k-1)*J+1:k*J)*conj(B)))]);
+           C(k,:) = (ab*real(diag(Ra'* x(:,(k-1)*J+1:k*J)*conj(B)))).';
+%            C(k,:) = (ab*[real(diag(Ra'*x(:,(k-1)*J+1:k*J)*conj(B)));...
+%                imag(diag(Ra'*x(:,(k-1)*J+1:k*J)*conj(B)))]);
 %             D(k,:)=[real(diag(Ra'*x(:,(k-1)*J+1:k*J)*conj(B)));...
 %                 imag(diag(Ra'*x(:,(k-1)*J+1:k*J)*conj(B)))].';
        end
@@ -822,13 +841,16 @@ while abs((fit-fitold)/fitold)>crit&it<maxit&fit>10*eps
           C(k,:) = ab*yy;
        end
     end
-      
+%     for i=1:J   
+%        C(:,i)=C(:,i)/norm(C(:,i));       
+%     end
+%       A,B,C
     % Calculating fit. Using orthogonalization instead
    %fit=0;for k=1:K,residual=X(:,(k-1)*J+1:k*J)-A*diag(C(k,:))*B.';fit=fit+sum(sum((abs(residual).^2)));end
    [Qb,Rb]=qr(B,0);
    [Z,Rc]=qr(C,0);
    fit=SumSqX-sum(sum(abs(Ra*ppp(Rb,Rc).').^2));
-   
+  
    if rem(it,showfit)==0
       fprintf(' %12.10f       %g        %3.4f \n',fit,it,100*(1-fit/fit0));
    end

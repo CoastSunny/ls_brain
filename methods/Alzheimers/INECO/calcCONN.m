@@ -7,7 +7,7 @@ b0=Q(:,z0);
 count=0;
 tmp=[];
 CON=[];
-thr=0:0.01:0.5;
+thr=0:0.01:1;
 res=[];
 
 for th=1:numel(thr)

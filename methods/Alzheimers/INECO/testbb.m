@@ -12,13 +12,13 @@ if ~exist('inds_roi_outer_2K')
     load([home '/Documents/bb/data/miscdata'])
 end
 
-OUT=[];OUT_b=[];PC=[];A=[];B=[];PCc=[];PCn=[];L=[];EV=[];
+OUT=[];OUT_b=[];PC=[];A=[];B=[];PCc=[];PCn=[];L=[];EV=[];INT=[];SNR=[];
 locs=sa.cortex75K.EEG_V_fem_normal(:, sa.cortex2K.in_from_cortex75K);
 roindcs=inds_roi_outer_2K;
 for i=1:100
     %     d1='/Documents/bb/data/Pair1SNRrandNoise01Norm/EEG/dataset_';
-     d1='/Documents/bb/data/Pair1SNR02Noise01Norm/EEG/dataset_';
-     d2='/Documents/bb/data/Pair1SNR02Noise01Norm/truth/dataset_';
+%      d1='/Documents/bb/data/Pair1SNR05Noise01Norm/EEG/dataset_';
+%      d2='/Documents/bb/data/Pair1SNR05Noise01Norm/truth/dataset_';
     load([home d1 num2str(i) '/data']),
     load([home d2 num2str(i) '/truth']),
     truth
@@ -58,6 +58,7 @@ for i=1:100
     cfg.preproc.demean='yes';
     cfg.preproc.detrend='yes';
     data            = ft_preprocessing(cfg,data);
+    
     data_b          = ft_preprocessing(cfg,data_b);
     
     cfg             = [];
@@ -78,7 +79,7 @@ for i=1:100
     Xch{i}=xch;
     
     Options=[];
-    Options(1)=10^-1;
+    Options(1)=10^-3;
     Options(3)=0;
     Options(5)=0;
     [T{1} T{2} T{3} T{4} T{5} ev]=parafac2(Y,ncomps,[4 4],Options);
@@ -86,7 +87,7 @@ for i=1:100
     out=tensor_connectivity2(T{4},T{2});
 %       out_b=tensor_connectivity2(T_b{4},T_b{2});
     OUT{i}=out;
-     OUT_b{i}=out_b;
+    OUT_b{i}=out_b;
     Tt{i}{1}=T;Tt{i}{2}=T_b;
     EV(i,:)=[ev tev];
     

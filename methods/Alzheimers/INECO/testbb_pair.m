@@ -15,7 +15,7 @@ end
 OUT=[];OUT_b=[];PC=[];A=[];B=[];EV=[];INT=[];L=[];
 locs=sa.cortex75K.EEG_V_fem_normal(:, sa.cortex2K.in_from_cortex75K);
 roindcs=inds_roi_outer_2K;
-for i=1:30
+for i=2
     d1='/Documents/bb/data/test/EEG/dataset_';
     d2='/Documents/bb/data/test/truth/dataset_';
     load([home d1 num2str(i) '/data']),
@@ -54,8 +54,8 @@ for i=1:30
     cfg.refchannel  = 'all'; % average reference
     cfg.lpfilter    = 'no';
     cfg.lpfreq      = 40;
-    cfg.preproc.demean='yes';
-    cfg.preproc.detrend='yes';
+    cfg.preproc.demean='no';
+    cfg.preproc.detrend='no';
     data            = ft_preprocessing(cfg,data);
     data_b          = ft_preprocessing(cfg,data_b);
     
@@ -63,7 +63,7 @@ for i=1:30
     cfg.method      = 'mtmfft';
     freqs=1:1:40;
     cfg.foi         = freqs;
-    cfg.tapsmofrq   = 4;
+    cfg.tapsmofrq   = 1;
 %     cfg.pad         = 5;
     cfg.taper       = 'hanning';
     cfg.output      = 'fourier';
@@ -78,12 +78,12 @@ for i=1:30
     Xch{i}=xch;
 
     Options=[];
-    Options(1)=10^-1;
+    Options(1)=10^-2;
     Options(3)=0;
     Options(5)=0;
-    [T{1} T{2} T{3} T{4} T{5} ev]=parafac2(Y,ncomps,[4 4],Options);
-    [T_b{1} T_b{2} T_b{3} T_b{4} T_b{5} tev]=parafac2(Y_b,ncomps,[4 4],Options);
-    out=tensor_connectivity2(T{4},T{2});
+    [T{1} T{2} T{3} T{4} T{5} ev]=parafac2(Y,ncomps,[4 0],Options);
+    [T_b{1} T_b{2} T_b{3} T_b{4} T_b{5} tev]=parafac2(Y_b,ncomps,[4 0],Options);
+    out=tensor_connectivity2(T{4},T{2},T{3});
     out_b=tensor_connectivity2(T_b{4},T_b{2});
     OUT{i}=out;
     OUT_b{i}=out_b;
@@ -107,13 +107,13 @@ for i=1:30
 % PC
 L(i,:)=l;
 Cx=0;
-out1=triu(mean(out(:,:,[8:12]),3));
+out1=triu(mean(out(:,:,[8:13]),3));
 [tmp itmp]=sort(out1(:));
 tmp=flipud(itmp);
 [tmpr tmpc]=ind2sub(size(out1),tmp(1));
 r1=tmpr;
 c1=tmpc;   
-out2=triu(mean(out(:,:,[13:20]),3));
+out2=triu(mean(out(:,:,[14:20]),3));
 [tmp itmp]=sort(out2(:));
 tmp=flipud(itmp);
 [tmpr tmpc]=ind2sub(size(out2),tmp(2));
@@ -156,24 +156,24 @@ for jj=1:8
 end
 
 
-% 
-% 
-% for jj=1:size(locs,2)
-%     tempr=corrcoef(xch(:,1),locs(:,jj));
-%     tempc=corrcoef(xch(:,2),locs(:,jj));
-%     scr(jj)=tempr(1,2);
-%     scc(jj)=tempc(1,2);
-% end
-% 
-% [q Mr]=max(abs(scr));
-% [q Mc]=max(abs(scc));
-% 
-% for jj=1:8
-% 
-%     RrT(jj)=isempty(find(roindcs{jj}==Mr));
-%     RcT(jj)=isempty(find(roindcs{jj}==Mc));
-% 
-% end
+
+
+for jj=1:size(locs,2)
+    tempr=corrcoef(xch(:,1),locs(:,jj));
+    tempc=corrcoef(xch(:,2),locs(:,jj));
+    scr(jj)=tempr(1,2);
+    scc(jj)=tempc(1,2);
+end
+
+[q Mr]=max(abs(scr));
+[q Mc]=max(abs(scc));
+
+for jj=1:8
+
+    RrT(jj)=isempty(find(roindcs{jj}==Mr));
+    RcT(jj)=isempty(find(roindcs{jj}==Mc));
+
+end
 % figure,subplot(3,2,1),plot(xch(:,1)/norm(xch(:,1))),subplot(3,2,2),plot(xch(:,2)/norm(xch(:,2)))
 % subplot(3,2,3),plot(T{1}(:,r)/norm(T{1}(:,r))),subplot(3,2,4),plot(T{1}(:,c)/norm(T{1}(:,c)))
 % subplot(3,2,5),plot(-T{1}(:,r)/norm(T{1}(:,r))),subplot(3,2,6),plot(-T{1}(:,c)/norm(T{1}(:,c)))
@@ -182,8 +182,8 @@ end
 % figure,subplot(1,3,1),plot(xch(:,2)),subplot(1,3,2),plot(T{1}(:,m(2))),subplot(1,3,3),plot(-T{1}(:,m(2)))
 
 A(:,:,i)=[find(Rr1==0) find(Rc1==0) find(Rr2==0) find(Rc2==0);truth.in_roi];
-B(:,i)=[INT(i) SNR(i)...
-    max(max(OUT{i}(:,:,5))) max(max(OUT_b{i}(:,:,5))) max(max(max(OUT{i}))) max(max(max(OUT_b{i})))];
+B(:,i)=[INT(i,1) INT(i,2)  SNR(i)...
+    max(max(OUT{i}(:,:,10))) max(max(OUT_b{i}(:,:,10))) max(max(max(OUT{i}))) max(max(max(OUT_b{i})))];
 % A,B
 dummy=1;
 end
