@@ -1,4 +1,4 @@
-band=14:20;
+band=14:20
 Cpli=[];Cx=[];O=[];
 for i=1:numel(FT)
     out=tensor_connectivity2(FT{1,i}{4},FT{1,i}{2},band);
@@ -11,7 +11,7 @@ end
 
 Cb=[1:19];
 Cs=[20:38];
-Pb=[39:51];
+Pb=[39:50];
 Ps=[52:64];
 
 cc='auto'; 

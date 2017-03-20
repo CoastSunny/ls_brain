@@ -716,8 +716,8 @@ while abs((fit-fitold)/fitold)>crit&it<maxit&fit>10*eps
    elseif ConstA == 3 % Unimodality
       A = unimodalcrossproducts((B'*B).*(C'*C),Xbc',A);
    elseif ConstA == 4 % Real from Complex
-       A = real(Xbc)*pinv(real((B'*B).*(C'*C)));
-%      A = [real(Xbc) imag(Xbc)]*pinv([real((B'*B).*(C'*C)) imag((B'*B).*(C'*C))]);
+%        A = real(Xbc)*pinv(real((B'*B).*(C'*C)));
+     A = [real(Xbc) imag(Xbc)]*pinv([real((B'*B).*(C'*C)) imag((B'*B).*(C'*C))]);
 %       A = [real(Xbc) imag(Xbc)].'\([real((B'*B).*(C'*C)); imag((B'*B).*(C'*C))]);
    end
 %    for i=1:J   
@@ -805,12 +805,12 @@ while abs((fit-fitold)/fitold)>crit&it<maxit&fit>10*eps
        end
        C = unimodalcrossproducts((Ra'*Ra).*(B'*B),xab,C);
     elseif ConstC == 4 % Real from Complex
-       ab=pinv(real((Ra'*Ra).*(B'*B)));
-%        ab=pinv([real((Ra'*Ra).*(B'*B)) imag((Ra'*Ra).*(B'*B))]).';
+%        ab=pinv(real((Ra'*Ra).*(B'*B)));
+       ab=pinv([real((Ra'*Ra).*(B'*B)) imag((Ra'*Ra).*(B'*B))]).';
        for k=1:K 
-           C(k,:) = (ab*real(diag(Ra'* x(:,(k-1)*J+1:k*J)*conj(B)))).';
-%            C(k,:) = (ab*[real(diag(Ra'*x(:,(k-1)*J+1:k*J)*conj(B)));...
-%                imag(diag(Ra'*x(:,(k-1)*J+1:k*J)*conj(B)))]);
+%            C(k,:) = (ab*real(diag(Ra'* x(:,(k-1)*J+1:k*J)*conj(B)))).';
+           C(k,:) = (ab*[real(diag(Ra'*x(:,(k-1)*J+1:k*J)*conj(B)));...
+               imag(diag(Ra'*x(:,(k-1)*J+1:k*J)*conj(B)))]);
 %             D(k,:)=[real(diag(Ra'*x(:,(k-1)*J+1:k*J)*conj(B)));...
 %                 imag(diag(Ra'*x(:,(k-1)*J+1:k*J)*conj(B)))].';
        end

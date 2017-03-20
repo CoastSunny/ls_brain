@@ -3,7 +3,8 @@ if isunix==0
     save_folder='D:\Extracted\Alzheimer\noep\';
 else
 %     data_folder='/home/engbiome/INECO/INECO_fieldtrip/';
-    data_folder='/home/lspyrou/Documents/results/INECO/';
+    data_folder='/run/user/1739413/gvfs/smb-share:server=csce.datastore.ed.ac.uk,share=csce/eng/users/lspyrou/INECO_fieldtrip/MCI_NOEP/';
+%     data_folder='/home/lspyrou/Documents/results/INECO/';
     save_folder='/home/lspyrou/Documents/results/INECO/';
 end
 %% Connectivity Analysiss

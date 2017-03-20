@@ -41,9 +41,9 @@ for a=1
         %Ytst=randn(10,10,10)+randn(10,10,10)*i;
         %[Fp{q},Ip(q),Exp(q),e,Concp(q)]=parafac_reg(Y,8,G,Options,[0 0 0 0]);
         %         [Fp{a,q},Yest,Ip(q),Exp(q,a),e,Rpen{a,q}]=parafac_reg(Y,35,G,Alpha(a),Options,[9 9 0]);
-        ncomps=10;
+        ncomps=25;
         Y=permute(Y,[2 3 1]);
-        [FT{count,q}{1} FT{count,q}{2} FT{count,q}{3} FT{count,q}{4} FT{count,q}{5} EV(count,q)]=parafac2(Y,ncomps,[4 4],Options);
+        [FT{count,q}{1} FT{count,q}{2} FT{count,q}{3} FT{count,q}{4} FT{count,q}{5} EV(count,q)]=parafac2(Y,ncomps,[0 0],Options);
         
         %         end
         %         [tmp]=parafac(Ytst,22,Options,[0 0 0 0]);
