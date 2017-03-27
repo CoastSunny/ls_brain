@@ -15,8 +15,8 @@ kkfad={'front' 'central' 'back'};
 fadperm=[41:60 21:40 1:20];
 kkfad={ 'back' 'central' 'front' };
 cc='auto'; 
-ccmci=[0 60];
-ccfad=[0 60];
+ccmci=[0 80];
+ccfad=[0 80];
 figure,
 subplot(2,4,1),imagesc(squeeze(mean(CxAmci(:,:,Pbmci),3))),%title('MCI binding'),
 caxis(ccmci)
@@ -68,3 +68,31 @@ set(gca,'Xtick',llfad),set(gca,'Xticklabels',kkfad),set(gca,'Ytick',llfad),set(g
 subplot(2,4,8),imagesc(squeeze(mean(CxBfad(fadperm,fadperm,Csfad),3))),%title('MCI-FAD shape'),
 caxis(ccfad),
 set(gca,'Xtick',llfad),set(gca,'Xticklabels',kkfad),set(gca,'Ytick',llfad),set(gca,'Yticklabels',kkfad)
+ccmci=[0 50];
+ccfad=[0 50];
+figure,
+subplot(2,4,1),imagesc(squeeze(mean(CxDmci(:,:,Pbmci),3))),%title('MCI binding'),
+caxis(ccmci)
+set(gca,'Xtick',llmci),set(gca,'Xticklabels',kkmci),set(gca,'Ytick',llmci),set(gca,'Yticklabels',kkmci)
+subplot(2,4,5),imagesc(squeeze(mean(CxDmci(:,:,Psmci),3))),%title('MCI shape'),
+caxis(ccmci),
+set(gca,'Xtick',llmci),set(gca,'Xticklabels',kkmci),set(gca,'Ytick',llmci),set(gca,'Yticklabels',kkmci)
+subplot(2,4,2),imagesc(squeeze(mean(CxDmci(:,:,Cbmci),3))),%title('Control binding'),
+caxis(ccmci)
+set(gca,'Xtick',llmci),set(gca,'Xticklabels',kkmci),set(gca,'Ytick',llmci),set(gca,'Yticklabels',kkmci)
+subplot(2,4,6),imagesc(squeeze(mean(CxDmci(:,:,Csmci),3))),%title('Control shape'),
+caxis(ccmci),
+set(gca,'Xtick',llmci),set(gca,'Xticklabels',kkmci),set(gca,'Ytick',llmci),set(gca,'Yticklabels',kkmci)
+subplot(2,4,3),imagesc(squeeze(mean(CxDfad(fadperm,fadperm,Pbfad),3))),%title('MCI-FAD binding'),
+caxis(ccfad),
+set(gca,'Xtick',llfad),set(gca,'Xticklabels',kkfad),set(gca,'Ytick',llfad),set(gca,'Yticklabels',kkfad)
+subplot(2,4,7),imagesc(squeeze(mean(CxDfad(fadperm,fadperm,Psfad),3))),%title('MCI-FAD shape'),
+caxis(ccfad),
+set(gca,'Xtick',llfad),set(gca,'Xticklabels',kkfad),set(gca,'Ytick',llfad),set(gca,'Yticklabels',kkfad)
+subplot(2,4,4),imagesc(squeeze(mean(CxDfad(fadperm,fadperm,Cbfad),3))),%title('MCI-FAD binding'),
+caxis(ccfad),
+set(gca,'Xtick',llfad),set(gca,'Xticklabels',kkfad),set(gca,'Ytick',llfad),set(gca,'Yticklabels',kkfad)
+subplot(2,4,8),imagesc(squeeze(mean(CxDfad(fadperm,fadperm,Csfad),3))),%title('MCI-FAD shape'),
+caxis(ccfad),
+set(gca,'Xtick',llfad),set(gca,'Xticklabels',kkfad),set(gca,'Ytick',llfad),set(gca,'Yticklabels',kkfad)
+

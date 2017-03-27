@@ -11,13 +11,10 @@ out=zeros(nelems,nelems,fr);
 for k=band
     for i=1:nelems
         for j=1:nelems
-            X=p{k}*h;
-            
-            if (i~=j)
-                
+            X=p{k}*h;            
+            if (i~=j)                
                 out(i,j,k)=abs(mean(sign(imag(conj(d(k,i).*X(:,i)).*(d(k,j).*X(:,j))))));
-%                   out(i,j,k)=abs(mean(sign(angle(X(:,i)-angle(X(:,j))))));
-
+%                   out(i,j,k)=abs(mean(sign(angle(d(k,i)*X(:,i))-angle(d(k,j)*X(:,j)))));
             end
             
         end

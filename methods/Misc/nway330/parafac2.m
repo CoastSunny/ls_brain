@@ -247,8 +247,8 @@ if ~(length(size(X))==3|iscell(X))
    error(' X must be a three-way array or a cell array')
 end
 %set random number generators
-randn('state',sum(100*clock));
-rand('state',sum(100*clock));
+% randn('state',sum(100*clock));
+% rand('state',sum(100*clock));
 
 if nargin < 4
   Options = zeros(1,5);
@@ -447,7 +447,7 @@ if nargin<5
          disp(' initially fitted models')
       end
       Opt = Options;
-      Opt = Options(1)/20;
+      Opt = Options(1);%/20;
       Opt(2) = NumItInRep; % Max NumItInRep iterations
       Opt(3) = 2;  % Init with SVD
       Opt(4) = 0;
@@ -506,7 +506,7 @@ fit    = sum(diag(XtX));
 
 oldfit = fit*2;
 fit0   = fit;
-it     = 0;
+it     = 0; 
 Delta = 1;
 
 if Options(5)==0
@@ -531,7 +531,7 @@ while abs(fit-oldfit)>oldfit*ConvCrit & it<MaxIt & fit>1000*eps
     end
     ConstB=0;
     % Update A,H,C using PARAFAC-ALS
-    [A,H,C,ff]=parafac(reshape(Y,I,F*K),[I F K],F,1e-4,[Constraints(1) ConstB Constraints(2)],A,H,C,5);
+    [A,H,C,ff]=parafac(reshape(Y,I,F*K),[I F K],F,1e-4,[Constraints(1) ConstB Constraints(2)],A,H,C,1);
     [fit,X,M]=pf2fit(X,A,H,C,P,K,MissingElements,MissingOnes);
       
     % Print interim result
@@ -855,6 +855,7 @@ while abs((fit-fitold)/fitold)>crit&it<maxit&fit>10*eps
       fprintf(' %12.10f       %g        %3.4f \n',fit,it,100*(1-fit/fit0));
    end
 end
+
 % 
 % % ORDER ACCORDING TO VARIANCE
 % Tuck     = diag((A'*A).*(B'*B).*(C'*C));

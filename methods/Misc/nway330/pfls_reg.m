@@ -138,8 +138,8 @@ if ~DoWeight
 %             load(:,i)=load(:,i)/norm(load(:,i));
         end
     elseif cons==9        
-        load=(pinv(real(ZtZ))*real(ZtX)).';
-%          load=real((pinv(([ZtZ; conj(ZtZ)]))*([ZtX; conj(ZtX)]))).';
+%         load=(pinv(real(ZtZ))*real(ZtX)).';
+        load=((pinv(([real(ZtZ); imag(ZtZ)]))*([real(ZtX); imag(ZtX)]))).';
         
     elseif cons==10
         

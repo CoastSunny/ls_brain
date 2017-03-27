@@ -15,7 +15,7 @@ end
 OUT=[];OUT_b=[];PC=[];A=[];B=[];EV=[];INT=[];L=[];
 locs=sa.cortex75K.EEG_V_fem_normal(:, sa.cortex2K.in_from_cortex75K);
 roindcs=inds_roi_outer_2K;
-for i=2
+for i=1:20
     d1='/Documents/bb/data/test/EEG/dataset_';
     d2='/Documents/bb/data/test/truth/dataset_';
     load([home d1 num2str(i) '/data']),
@@ -50,7 +50,7 @@ for i=2
     end
     cfg             = [];
     
-    cfg.reref       = 'yes';
+    cfg.reref       = 'no';
     cfg.refchannel  = 'all'; % average reference
     cfg.lpfilter    = 'no';
     cfg.lpfreq      = 40;
@@ -72,22 +72,24 @@ for i=2
     
     Y=permute(freqc.fourierspctrm,[2 1 3]);
     Y_b=permute(freqc_b.fourierspctrm,[2 1 3]);
-    nsource=4;
-    ncomps=4;
+    nsource=8;
+    ncomps=8;
     xch=[truth.EEG_field_pat truth.EEG_noise_pat];
     Xch{i}=xch;
 
     Options=[];
-    Options(1)=10^-2;
+    Options(1)=10^-1;
     Options(3)=0;
     Options(5)=0;
-    [T{1} T{2} T{3} T{4} T{5} ev]=parafac2(Y,ncomps,[4 0],Options);
-    [T_b{1} T_b{2} T_b{3} T_b{4} T_b{5} tev]=parafac2(Y_b,ncomps,[4 0],Options);
-    out=tensor_connectivity2(T{4},T{2},T{3});
-    out_b=tensor_connectivity2(T_b{4},T_b{2});
+    [T{1} T{2} T{3} T{4} T{5} ev]=parafac2(Y,ncomps,[0 0],Options);
+%     [T_b{1} T_b{2} T_b{3} T_b{4} T_b{5} tev]=parafac2(Y_b,ncomps,[0 0],Options);
+    out=tensor_connectivity3(T{4},T{2},T{3});
+%     out_b=tensor_connectivity3(T_b{4},T_b{2},T{3});    
     OUT{i}=out;
     OUT_b{i}=out_b;
     Tt{i}{1}=T;Tt{i}{2}=T_b;
+%     T{1}=abs(T{1});
+%     T_b{1}=abs(T_b{1});
     EV(i,:)=[ev tev];
 
     for jj=1:ncomps
@@ -95,17 +97,17 @@ for i=2
             
 %             x=(T{1}(:,jj));
 %             y=(xch(:,ii));
-            x=(T{1}(:,jj))/norm(T{1}(:,jj));
-            y=(xch(:,ii))/norm((xch(:,ii)));
+             x=(T{1}(:,jj))/norm(T{1}(:,jj));
+             y=(xch(:,ii))/norm((xch(:,ii)));
              temp=corrcoef(x,y);
              PC(jj,ii,i)=temp(1,2);
 %            PC(jj,ii,i)=norm(x-y);
             
         end
     end
-    [l m]=max(abs(PC(:,:,i)));
+    [l m]=max(abs(PC(:,:,i)))
 % PC
-L(i,:)=l;
+L(i,:)=l
 Cx=0;
 out1=triu(mean(out(:,:,[8:13]),3));
 [tmp itmp]=sort(out1(:));
@@ -113,10 +115,11 @@ tmp=flipud(itmp);
 [tmpr tmpc]=ind2sub(size(out1),tmp(1));
 r1=tmpr;
 c1=tmpc;   
-out2=triu(mean(out(:,:,[14:20]),3));
+out2=triu(mean(out(:,:,[8:13]),3));
+out2(r1,:)=0;out2(:,r1)=0;out2(c1,:)=0;out2(:,c1)=0;
 [tmp itmp]=sort(out2(:));
 tmp=flipud(itmp);
-[tmpr tmpc]=ind2sub(size(out2),tmp(2));
+[tmpr tmpc]=ind2sub(size(out2),tmp(1));
 r2=tmpr;
 c2=tmpc;    
 
@@ -181,9 +184,11 @@ end
 % figure,subplot(1,3,1),plot(xch(:,1)),subplot(1,3,2),plot(T{1}(:,m(1))),subplot(1,3,3),plot(-T{1}(:,m(1)))
 % figure,subplot(1,3,1),plot(xch(:,2)),subplot(1,3,2),plot(T{1}(:,m(2))),subplot(1,3,3),plot(-T{1}(:,m(2)))
 
-A(:,:,i)=[find(Rr1==0) find(Rc1==0) find(Rr2==0) find(Rc2==0);truth.in_roi];
+A(:,:,i)=[find(Rr1==0) find(Rc1==0) find(Rr2==0) find(Rc2==0) 666 truth.in_roi]
 B(:,i)=[INT(i,1) INT(i,2)  SNR(i)...
-    max(max(OUT{i}(:,:,10))) max(max(OUT_b{i}(:,:,10))) max(max(max(OUT{i}))) max(max(max(OUT_b{i})))];
+     max(max(max(OUT{i}(:,:,8:13))))  max(max(max(OUT_b{i}(:,:,8:13))))...
+     max(max(max(OUT{i}(:,:,14:20))))  max(max(max(OUT_b{i}(:,:,14:20))))...
+     max(max(max(OUT{i}))) max(max(max(OUT_b{i})))]
 % A,B
 dummy=1;
 end

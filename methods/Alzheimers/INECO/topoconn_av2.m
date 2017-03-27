@@ -36,8 +36,8 @@ for i=1:numel(r)
         
 %         Xi=tmpr*FT{1,subj}{1}(:,r(i))+min(tmpr*FT{1,subj}{1}(:,r(i)));
 %         Xj=tmpc*FT{1,subj}{1}(:,c(i))+min(tmpc*FT{1,subj}{1}(:,c(i)));
-        Xi=FT{1,subj}{1}(:,r(i));
-        Xj=FT{1,subj}{1}(:,c(i));
+        Xi=abs(FT{1,subj}{1}(:,r(i)));
+        Xj=abs(FT{1,subj}{1}(:,c(i)));
         Xij=abs(Xi*Xj');%Xij=Xij/max(max(Xij));
 %         Sij=single(and(sign(Xi)==1,sign(Xj)==1))*single(and(sign(Xi)==1,sign(Xj)==1)');
         Xji=abs(Xj*Xi');%Xji=Xji/max(max(Xji));
