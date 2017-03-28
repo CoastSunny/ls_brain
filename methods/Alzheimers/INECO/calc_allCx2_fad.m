@@ -1,4 +1,4 @@
-band=4:7;
+band=13:20;
 Cpli=[];Cx=[];O=[];
 for i=1:numel(FT)
     out=tensor_connectivity3(FT{1,i}{4},FT{1,i}{2},FT{1,i}{3},band);
@@ -15,7 +15,7 @@ Cs=[11:20];
 Pb=[21:30];
 Ps=[31:40];
 cc='auto'; 
-cc=[0 50];
+cc=[0 30];
 ll=[10 30 50];
 kk={'front' 'central' 'back'};
 

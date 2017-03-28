@@ -15,7 +15,7 @@ for i=1:numel(FT)
     [tmpr tmpc]=ind2sub(size(out),tmp(1));
     r=tmpr;
     c=tmpc;
-    [powr,pow,snr]=ls_pf2fit(FT{count,q}{1},FT{count,q}{2},FT{count,q}{3},FT{count,q}{4},40,[r c]);
+    [powr,pow,snr]=ls_pf2fit(FT{1,i}{1},FT{1,i}{2},FT{1,i}{3},FT{1,i}{4},40,[r c]);
 %     [powc,pow,snr]=ls_pf2fit(y,FT{count,q}{1},FT{count,q}{2},FT{count,q}{3},FT{count,q}{4},40,c);
     SNR(i)=snr;
 %     Cpli(:,:,i)=ls_pli(Ys{i},band,0);
@@ -27,8 +27,8 @@ Pb=[39:51];
 Ps=[52:64];
 
 cc='auto'; 
-cc=[0 2*10^-3];
-cc=[0 80];
+% cc=[0 2*10^-3];
+cc=[0 20];
 ll=[16 48 80 112];
 kk={'back' 'right' 'front' 'left'};
 figure,

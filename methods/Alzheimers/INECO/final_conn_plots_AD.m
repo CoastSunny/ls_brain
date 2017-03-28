@@ -1,6 +1,6 @@
 
-Cbmci=[1:19];
-Csmci=[20:38];
+Cbmci=[2:6 8:10 12:15 18:19];
+Csmci=Cbmci+19;
 Pbmci=[39:51];
 Psmci=[52:64];
 llmci=[16 48 80 112];
