@@ -10,21 +10,23 @@ fr=size(X,1);
 ch=size(X,2);
 
 for i=1:tr
-    for j=1:fr
+    count=1;
+    for j=band
 
-        x=X(j,:,i);
-        csd(j,:,:,i)=x'*x;
-    
+        x=X(count,:,i);
+        csd(count,:,:,i)=x'*x;
+        count=count+1; 
     end
 
 end
+count=1;
+for i=band
 
-for i=1:fr
-
-    pli(i,:,:)=abs(mean(sign(imag((csd(i,:,:,:)))),4));    
+    pli(count,:,:)=abs(mean(sign(imag((csd(count,:,:,:)))),4));  
+    count=count+1;
     
 end
-pli=mean(pli(band,:,:),1);
+pli=mean(pli,1);
 if vis==1
     figure,imagesc(squeeze(pli)),title('pli')
     set(gca,'Xtick',[16 48 80 112])

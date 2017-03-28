@@ -18,7 +18,7 @@ kkfad={'front' 'central' 'back'};
 fadperm=[41:60 21:40 1:20];
 kkfad={ 'back' 'central' 'front' };
 %%Alpha
-% idcs=[O2 O3 O4];
+ idcs=[O4 O5];
 PbAmci=squeeze(mean(mean(CxAmci(idcs,idcs,Pbmci))));
 PsAmci=squeeze(mean(mean(CxAmci(idcs,idcs,Psmci))));
 CbAmci=squeeze(mean(mean(CxAmci(idcs,idcs,Cbmci))));
@@ -46,9 +46,9 @@ y=[PbAmci' PbBmci' PbDmci'  PsAmci' PsBmci' PsDmci'...
 [G3{78+(1:14)}]=deal('Alpha');[G3{78+(15:28)}]=deal('Beta');[G3{78+(29:42)}]=deal('Delta');
 [G3{78+ 42+(1:14) }]=deal('Alpha');[G3{78+42+(15:28)}]=deal('Beta');[G3{78+42+(29:42)}]=deal('Delta');
 G4=repmat(1:13,1,6);G4=[G4 repmat(13+(1:14),1,6)];
-[P,~,stats]=anovan(y,{G1 G2 G3},'model','full',...
-    'varnames',{'condition','task','band'},'sstype',3);...
-%     'random', [2 4],'nested', [0 0 0 0; 0 0 0 0; 0 0 0 0; 1 0 0 0]);
+[P,~,stats]=anovan(y,{G1 G2 G3 G4},'model','full',...
+    'varnames',{'condition','task','band' 'subj'},'sstype',3,...
+    'random', [4],'nested', [0 0 0 0; 0 0 0 0; 0 0 0 0; 1 0 0 0]);
 figure,results = multcompare(stats,'Dimension',[1 2 3 ],...
     'ctype','tukey-kramer dunn-sidak bonferroni scheffe');
 % hB=[];pB=[];

@@ -3,8 +3,8 @@ if isunix==0
     save_folder='D:\Extracted\Alzheimer\noep\FAD\';
 else
 %     data_folder='/home/engbiome/INECO/INECO_fieldtrip/';
-    data_folder='/home/lspyrou/Documents/results/INECO/FAD/';
-    save_folder='/home/lspyrou/Documents/results/INECO/FAD/';
+    data_folder='/run/user/1739413/gvfs/smb-share:server=csce.datastore.ed.ac.uk,share=csce/eng/users/lspyrou/INECO_fieldtrip/FAD_NOEP/';
+    save_folder='/home/lspyrou/Documents/results/INECO/';
 end
 %% Connectivity Analysiss
 PSI=[];PSI_full=[];Conn=[];conn=[];conn_full=[];Conn_full=[];freqc=[];freq=[];Freq=[];

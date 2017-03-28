@@ -1,6 +1,7 @@
-band=13:20;
+band=4:7;
 Cpli=[];Cx=[];O=[];SNR=[];
 for i=1:numel(FT)
+    fprintf(num2str(i))
     out=tensor_connectivity3(FT{1,i}{4},FT{1,i}{2},FT{1,i}{3},band);
 %     out=tensor_connectivity2(FT{1,i}{4},FT{1,i}{2},band);
 %     out=mean(out,3);
@@ -13,12 +14,12 @@ for i=1:numel(FT)
     [tmpr tmpc]=ind2sub(size(out),tmp(1));
     r=tmpr;
     c=tmpc;
-    [powr,pow,snr]=ls_pf2fit(FT{1,i}{1},FT{1,i}{2},FT{1,i}{3},FT{1,i}{4},30,[r c]);
-    [powr2,pow2,snr2]=ls_pf2fit(FT{1,i}{1},FT{1,i}{2},FT{1,i}{3},FT{1,i}{4},30,setdiff(1:8,[r c]));
+    [powr,pow,snr]=ls_pf2fit(FT{1,i}{5},FT{1,i}{1},FT{1,i}{2},FT{1,i}{3},FT{1,i}{4},30,[r c]);
+    [powr2,pow2,snr2]=ls_pf2fit(FT{1,i}{5},FT{1,i}{1},FT{1,i}{2},FT{1,i}{3},FT{1,i}{4},30,setdiff(1:8,[r c]));
 
 %     [powc,pow,snr]=ls_pf2fit(y,FT{count,q}{1},FT{count,q}{2},FT{count,q}{3},FT{count,q}{4},40,c);
     SNR(i)=powr/(powr+powr2);
-%     Cpli(:,:,i)=ls_pli(Ys{i},band,0);
+%     Cpli(:,:,i)=ls_pli(permute(Ys{i},[2 1 3]),band,0);
 end
 
 Cb=[1:10];
@@ -26,7 +27,7 @@ Cs=[11:20];
 Pb=[21:30];
 Ps=[31:40];
 cc='auto'; 
-cc=[0 30];
+cc=[0 1];
 ll=[10 30 50];
 kk={'front' 'central' 'back'};
 

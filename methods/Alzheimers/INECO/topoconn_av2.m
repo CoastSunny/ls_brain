@@ -42,26 +42,26 @@ for i=1:numel(r)
 %         Sij=single(and(sign(Xi)==1,sign(Xj)==1))*single(and(sign(Xi)==1,sign(Xj)==1)');
         Xji=abs(Xj*Xi');%Xji=Xji/max(max(Xji));
 %         Sji=single(and(sign(Xj)==1,sign(Xi)==1))*single(and(sign(Xj)==1,sign(Xi)==1)');
-        fXi=sum(abs(FT{1,subj}{3}(band,r(i))));%/sum(abs(FT{1,subj}{3}(:,r(i)).^2));
-        fXj=sum(abs(FT{1,subj}{3}(band,c(i))));%/sum(abs(FT{1,subj}{3}(:,c(i)).^2));
+        fXi=mean(abs(FT{1,subj}{3}(band,r(i))));%/sum(abs(FT{1,subj}{3}(:,r(i)).^2));
+        fXj=mean(abs(FT{1,subj}{3}(band,c(i))));%/sum(abs(FT{1,subj}{3}(:,c(i)).^2));
         %             Cx=Cx+abs(out(i,j)*Xi*Xj');
         for k=1:numel(FT{1,subj}{4})
             
             P(:,:,k)=FT{1,subj}{4}{k}*FT{1,subj}{2};
         
         end
-        Pi=sum(sum(abs(P(:,r(i),band))));%/sum(sum(sum(abs(P(:,:,band)))));
-        Pj=sum(sum(abs(P(:,c(i),band))));%/sum(sum(sum(abs(P(:,:,band)))));
+        Pi=mean(sum(abs(P(:,r(i),band))));%/sum(sum(sum(abs(P(:,:,band)))));
+        Pj=mean(sum(abs(P(:,c(i),band))));%/sum(sum(sum(abs(P(:,:,band)))));
 %         Xij=Xij.*Sij;
 %         Xji=Xji.*Sji;
     if only==0 
         cx=Xij+Xji;
         cx=cx/max(max(cx))*((fXi*Pi+fXj*Pj));
-%         cx=cx*((fXi+fXj)*(Pi+Pj));
+%         cx=cx*((fXi*Pi+fXj*Pj));
         Cx=Cx+out(r(i),c(i))*cx;
     elseif only==1 && nsource==i
         cx=Xij+Xji;
-        cx=cx/max(max(cx))*(fXi*Pi*fXj*Pj);
+        cx=cx/max(max(cx))*(fXi*Pi+fXj*Pj);
         Cx=Cx+out(r(i),c(i))*cx;
     end
     

@@ -12,8 +12,8 @@ Options=[];
 Options(1)=10^-1;
 Options(3)=0;
 Options(5)=0;
-Er=[];W=[];Fp=[];Rpen=[];FT=[];EV=[];
-
+Er=[];W=[];Fp=[];Rpen=[];FT=[];EV=[];conns=[];
+Ys=[];
 clear j
 
 % Alpha=[0 10 50 100 300 500 1000 1500 2000 3000 5000 7000 ];icassp
@@ -29,7 +29,7 @@ for a=1
         X=(freqc{q}.fourierspctrm);
           
         Y=permute(X,[3 2 1]);
-        Ys{q}=Y;
+       
         ntrials=size(Y,3);
         Ytst=Y(:,:,round(ntrials/2)+1:end,:);
         Ytr=Y(:,:,1:round(ntrials/2),:);clear i
@@ -42,8 +42,19 @@ for a=1
         %         [Fp{a,q},Yest,Ip(q),Exp(q,a),e,Rpen{a,q}]=parafac_reg(Y,35,G,Alpha(a),Options,[9 9 0]);
         ncomps=8;
         Y=permute(Y,[2 3 1]);
-        [FT{count,q}{1} FT{count,q}{2} FT{count,q}{3} FT{count,q}{4} FT{count,q}{5} EV(count,q)]=parafac2(Y,ncomps,[0 0],Options);
-        for qwe=1:40;y{qwe}=Y(:,:,qwe);end;
+         Ys{q}=Y;
+        for lm=1:20
+        [tmp1{lm} tmp2{lm} tmp3{lm} tmp4{lm} tmp5{lm} ev(lm)]=parafac2(Y,ncomps,[4 0],Options);  
+        out=tensor_connectivity3(tmp4{lm},tmp2{lm},tmp3{lm});
+        out=mean(out,3);
+        Qq(lm)=max(max(out));
+        end
+        conns(q,:)=Qq;
+        idx=find(Qq==max(Qq));
+        FT{count,q}{1}=tmp1{idx};FT{count,q}{2}=tmp2{idx};FT{count,q}{3}=tmp3{idx};...
+        FT{count,q}{4}=tmp4{idx};FT{count,q}{5}=tmp5{idx};
+        EV(count,q)=ev(lm);
+%         for qwe=1:40;y{qwe}=Y(:,:,qwe);end;
         %         end
         %         [tmp]=parafac(Ytst,22,Options,[0 0 0 0]);
         
