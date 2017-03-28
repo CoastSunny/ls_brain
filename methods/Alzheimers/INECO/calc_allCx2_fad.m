@@ -14,8 +14,10 @@ for i=1:numel(FT)
     r=tmpr;
     c=tmpc;
     [powr,pow,snr]=ls_pf2fit(FT{1,i}{1},FT{1,i}{2},FT{1,i}{3},FT{1,i}{4},30,[r c]);
+    [powr2,pow2,snr2]=ls_pf2fit(FT{1,i}{1},FT{1,i}{2},FT{1,i}{3},FT{1,i}{4},30,setdiff(1:8,[r c]));
+
 %     [powc,pow,snr]=ls_pf2fit(y,FT{count,q}{1},FT{count,q}{2},FT{count,q}{3},FT{count,q}{4},40,c);
-    SNR(i)=snr;
+    SNR(i)=powr/(powr+powr2);
 %     Cpli(:,:,i)=ls_pli(Ys{i},band,0);
 end
 

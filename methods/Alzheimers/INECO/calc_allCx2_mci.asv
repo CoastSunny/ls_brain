@@ -20,7 +20,6 @@ for i=1:length(FT)
 
 %     [powc,pow,snr]=ls_pf2fit(y,FT{count,q}{1},FT{count,q}{2},FT{count,q}{3},FT{count,q}{4},40,c);
     SNR(i)=powr/(pow2+powr);
-    L(i,:)=[r c];
 %     Cpli(:,:,i)=ls_pli(Ys{i},band,0);
 end
 
@@ -53,18 +52,14 @@ subplot(2,2,4),imagesc(squeeze(mean(Cx(:,:,Ps),3))),title('P-s'),caxis(cc),set(g
 % end
 % figure,imagesc(hB),set(gca,'Xtick',ll),set(gca,'Xticklabels',kk),set(gca,'Ytick',ll),set(gca,'Yticklabels',kk),
 
-ci=2;
 cfg=[];
 cfg.layout=[home '\Documents\ls_brain\global\biosemi128.lay'];
 cfg.comment='no';
 cfreq=freq{1};
 cfreq.freq='all';%cfreq=rmfield(cfreq,'cumsumcnt');cfreq=rmfield(cfreq,'cumtapcnt');
 % cfreq.dimord='chan_freq';
-cfreq.powspctrm=abs(FT{1,ci}{1}(:,L(ci,1)));
+cfreq.powspctrm=abs(FT{1,2}{1}(:,r));
 % figure('units','normalized','outerposition',[0 0 1 1]),
-figure,subplot(2,2,1),title('component 1'),ft_topoplotTFR(cfg,cfreq);
-cfreq.powspctrm=abs(FT{1,ci}{1}(:,L(ci,2)));
-subplot(2,2,2),,title('component 2'),ft_topoplotTFR(cfg,cfreq);
-subplot(2,2,3),plot(abs(FT{1,ci}{3}(:,L(ci,1))),'Linewidth',2),ylabel('PSD'),xlabel('freq')
-subplot(2,2,4),plot(abs(FT{1,ci}{3}(:,L(ci,2))),'Linewidth',2),ylabel('PSD'),xlabel('freq')
-
+figure,subplot(1,2,1),ft_topoplotTFR(cfg,cfreq);
+cfreq.powspctrm=abs(FT{1,2}{1}(:,c));
+subplot(1,2,2),ft_topoplotTFR(cfg,cfreq);
