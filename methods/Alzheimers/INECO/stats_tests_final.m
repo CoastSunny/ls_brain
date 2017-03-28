@@ -20,7 +20,7 @@ PbAmci=squeeze(mean(mean(CxAmci(:,:,Pbmci))));
 PsAmci=squeeze(mean(mean(CxAmci(:,:,Psmci))));
 CbAmci=squeeze(mean(mean(CxAmci(:,:,Cbmci))));
 CsAmci=squeeze(mean(mean(CxAmci(:,:,Csmci))));
-y=[PbBmci
+
 PbBmci=squeeze(mean(mean(CxBmci(:,:,Pbmci))));
 PsBmci=squeeze(mean(mean(CxBmci(:,:,Psmci))));
 CbBmci=squeeze(mean(mean(CxBmci(:,:,Cbmci))));
@@ -30,7 +30,18 @@ PbDmci=squeeze(mean(mean(CxDmci(:,:,Pbmci))));
 PsDmci=squeeze(mean(mean(CxDmci(:,:,Psmci))));
 CbDmci=squeeze(mean(mean(CxDmci(:,:,Cbmci))));
 CsDmci=squeeze(mean(mean(CxDmci(:,:,Csmci))));
-
+clear G1 G2 G3;
+y=[PbAmci' PbBmci' PbDmci'  PsAmci' PsBmci' PsDmci'...
+    CbAmci' CbBmci' CsDmci' CsAmci' CsBmci' CbDmci' ];
+[G1{1:78}]=deal('patient');[G1{79:162}]=deal('control');
+[G2{1:39}]=deal('binding');[G2{40:78}]=deal('shape');
+[G2{79:120}]=deal('binding');[G2{121:162}]=deal('shape');
+[G3{1:13}]=deal('Alpha');[G3{14:26}]=deal('Beta');[G3{27:39}]=deal('Delta');
+[G3{ 39+(1:13) }]=deal('Alpha');[G3{39+(14:26)}]=deal('Beta');[G3{39+(27:39)}]=deal('Delta');
+[G3{78+(1:14)}]=deal('Alpha');[G3{78+(15:28)}]=deal('Beta');[G3{78+(29:42)}]=deal('Delta');
+[G3{78+ 42+(1:14) }]=deal('Alpha');[G3{78+42+(15:28)}]=deal('Beta');[G3{78+42+(29:42)}]=deal('Delta');
+[P,~,stats]=anovan(y,{G1 G2 G3},'model','full','varnames',{'condition','task','band'});
+results = multcompare(stats,'Dimension',[2 3]);
 hB=[];pB=[];
  for i=1:size(CxAmci,1)
      for j=1:size(CxAmci,2)
