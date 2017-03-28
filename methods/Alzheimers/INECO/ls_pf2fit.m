@@ -14,8 +14,8 @@ function [powr,pow,snr]=ls_pf2fit(A,H,C,P,K,r)
     
 %      powr = powr + sum(sum(abs ( M(:,:,k) )));
 %      pow = pow + sum(sum(abs (Y(:,:,k) )));
-     powr = powr + norm ( M(:,:,k),'fro' );
-     pow = pow + norm (Y(:,:,k) ,'fro');
+     powr = powr + norm ( M(:,:,k),'fro' )^2;
+     pow = pow + norm (Y(:,:,k) ,'fro')^2;
 
 %    fit = fit + norm(X{k}-M,'fro').^2;
    end

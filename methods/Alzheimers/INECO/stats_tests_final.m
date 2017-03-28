@@ -20,7 +20,7 @@ PbAmci=squeeze(mean(mean(CxAmci(:,:,Pbmci))));
 PsAmci=squeeze(mean(mean(CxAmci(:,:,Psmci))));
 CbAmci=squeeze(mean(mean(CxAmci(:,:,Cbmci))));
 CsAmci=squeeze(mean(mean(CxAmci(:,:,Csmci))));
-
+y=[PbBmci
 PbBmci=squeeze(mean(mean(CxBmci(:,:,Pbmci))));
 PsBmci=squeeze(mean(mean(CxBmci(:,:,Psmci))));
 CbBmci=squeeze(mean(mean(CxBmci(:,:,Cbmci))));

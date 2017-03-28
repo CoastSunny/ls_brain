@@ -1,12 +1,21 @@
 band=13:20;
-Cpli=[];Cx=[];O=[];
+Cpli=[];Cx=[];O=[];SNR=[];
 for i=1:numel(FT)
     out=tensor_connectivity3(FT{1,i}{4},FT{1,i}{2},FT{1,i}{3},band);
 %     out=tensor_connectivity2(FT{1,i}{4},FT{1,i}{2},band);
 %     out=mean(out,3);
     out=mean(out(:,:,band),3);
     O(i)=mean(mean(out));
-    Cx(:,:,i)=topoconn_av2(FT,out,i,1,freq,band,0,0);  
+    Cx(:,:,i)=topoconn_av2(FT,out,i,1,freq,band,0,0); 
+    out=triu(out);
+    [tmp itmp]=sort(out(:));
+    tmp=flipud(itmp);
+    [tmpr tmpc]=ind2sub(size(out),tmp(1));
+    r=tmpr;
+    c=tmpc;
+    [powr,pow,snr]=ls_pf2fit(FT{1,i}{1},FT{1,i}{2},FT{1,i}{3},FT{1,i}{4},30,[r c]);
+%     [powc,pow,snr]=ls_pf2fit(y,FT{count,q}{1},FT{count,q}{2},FT{count,q}{3},FT{count,q}{4},40,c);
+    SNR(i)=snr;
 %     Cpli(:,:,i)=ls_pli(Ys{i},band,0);
 end
 

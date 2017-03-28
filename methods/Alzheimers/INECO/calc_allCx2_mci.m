@@ -1,5 +1,5 @@
 band=4:7;
-Cpli=[];Cx=[];O=[];
+Cpli=[];Cx=[];O=[];SNR=[];
 for i=1:numel(FT)
     out=tensor_connectivity3(FT{1,i}{4},FT{1,i}{2},FT{1,i}{3},band);
 %     out=tensor_connectivity2(FT{1,i}{4},FT{1,i}{2},band);
