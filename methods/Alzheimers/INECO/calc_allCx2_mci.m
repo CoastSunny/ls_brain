@@ -1,5 +1,5 @@
-band=4:7;
-Cpli=[];Cx=[];O=[];SNR=[];
+% band=4:7;
+Cpli=[];Cx=[];O=[];SNR=[];Cxp=[];
 for i=1:length(FT)
     fprintf(num2str(i))
     out=tensor_connectivity3(FT{1,i}{4},FT{1,i}{2},FT{1,i}{3},band);
@@ -8,8 +8,9 @@ for i=1:length(FT)
 %     out=mean(out,3);
     out=mean(out(:,:,band),3);
     O(i)=max(max(out));
-    Cx(:,:,i)=topoconn_av2(FT,out,i,1,freq,band,0,0);  
-    
+    Cx(:,:,i)=topoconn_av2(FT,out,i,1,freq,band,0,1,0);  
+    Cxp(:,:,i)=topoconn_av2(FT,out,i,1,freq,band,0,0,0);  
+
     out=triu(out);
     [tmp itmp]=sort(out(:));
     tmp=flipud(itmp);
@@ -32,7 +33,7 @@ Ps=[52:64];
 
 cc='auto'; 
 % cc=[0 2*10^-3];
-cc=[0 1];
+cc=[0 6];
 ll=[ 12  37 62 87 112];
 kk={'cen' 'back' 'right' 'front' 'left'};
 O1=[1 2 3 32+1 32+3 32+20 64+1 64+2 64+23 96+1 96+15 96+2 96+14 96+15 96+16];

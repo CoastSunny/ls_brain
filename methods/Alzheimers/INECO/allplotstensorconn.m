@@ -17,11 +17,11 @@ for ai=7:9
     count=count+1;    
 end
 ncomps=8;
-count=4;
-for ai=[5:9]
+count=1;
+for ai=[2:9]
     d1=['/Documents/bb/data/Pair1SNR0' num2str(ai) 'Noise01Norm/EEG/dataset_'];
     d2=['/Documents/bb/data/Pair1SNR0' num2str(ai) 'Noise01Norm/truth/dataset_'];   
-    testbb
+    testbb_2
     Res8{count}={EV L A B};
     count=count+1;    
 end

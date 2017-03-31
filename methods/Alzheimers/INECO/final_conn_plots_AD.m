@@ -102,8 +102,8 @@ subplot(2,4,8),imagesc(squeeze(mean(CxDfad(fadperm,fadperm,Csfad),3))),%title('M
 caxis(ccfad),
 set(gca,'Xtick',llfad),set(gca,'Xticklabels',kkfad),set(gca,'Ytick',llfad),set(gca,'Yticklabels',kkfad)
 
-ccmci=[0 0.18];
-ccfad=[0 0.22];
+ccmci=[.17 0.18];
+ccfad=[.17 0.22];
 figure,
 subplot(2,4,1),imagesc(squeeze(mean(CpBmci(idcs,idcs,Pbmci),3))),title('Patient'),
 caxis(ccmci)

@@ -1,8 +1,11 @@
-function Cx = topoconn_av2(FT,out,subj,nsource,freq,band,only,vis)
+function Cx = topoconn_av2(FT,out,subj,nsource,freq,band,only,synch,vis)
 N=numel(out);
 dn=numel(diag(out));
-if nargin<8
+if nargin<9
     vis=1;
+end
+if nargin<8
+    synch=1;
 end
 if isempty(band)
     band=1:size(FT{1,subj}{1},1);
@@ -58,7 +61,12 @@ for i=1:numel(r)
         cx=Xij+Xji;
         cx=cx/max(max(cx))*((fXi*Pi+fXj*Pj));
 %         cx=cx*((fXi*Pi+fXj*Pj));
-        Cx=Cx+out(r(i),c(i))*cx;
+        if synch==1
+            Cx=Cx+out(r(i),c(i))*cx;
+        else
+            Cx=Cx+cx;
+        end
+%         Cx=Cx+cx;
     elseif only==1 && nsource==i
         cx=Xij+Xji;
         cx=cx/max(max(cx))*(fXi*Pi+fXj*Pj);

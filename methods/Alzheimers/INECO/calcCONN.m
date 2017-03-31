@@ -12,8 +12,8 @@ res=[];
 
 for th=1:numel(thr)
     
-    c=(b1(3,:)>=thr(th));
-    d=(b0(3,:)<thr(th));
+    c=(b1(7,:)>=thr(th));
+    d=(b1(8,:)<thr(th));
     e=[c d];
     res(th)=(sum(e==0)*(-2) + sum(e==1)*1)/numel(e);
 
