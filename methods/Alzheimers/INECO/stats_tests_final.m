@@ -88,7 +88,7 @@ y2=[PbAfad' PbBfad' PbDfad'  PsAfad' PsBfad' PsDfad'...
 [G3{60+(1:10)}]=deal('Alpha');[G3{60+(11:20)}]=deal('Beta');[G3{60+(21:30)}]=deal('Delta');
 [G3{90++(1:10) }]=deal('Alpha');[G3{90+(11:20)}]=deal('Beta');[G3{90+(21:30)}]=deal('Delta');
 [P2,~,stats2]=anovan(y2,{G1 G2 G3},'model','full','varnames',{'condition','task','band'},'sstype',3);
-figure,results2 = multcompare(stats2,'Dimension',[ 1 2 3]);
+figure,results2 = multcompare(stats2,'Dimension',[ 1 2 ]);
 % 
 % hB=[];pB=[];
 %  for i=1:size(CxAfad,1)
@@ -191,7 +191,7 @@ clear G1 G2 G3 G4;
 [G4{1:162}]=deal('MCI');[G4{163:282}]=deal('MCI-FAD');
 [P3,~,stats3]=anovan(y3,{G1 G2 G3 G4},'model','full',...
     'varnames',{'condition','task','band','dataset'},'sstype',3);
-figure,results3 = multcompare(stats3,'Dimension',[1 2]);
+figure,results3 = multcompare(stats3,'Dimension',[ 2]);
 
 %%
 clear G1 G2 G3 G4;
