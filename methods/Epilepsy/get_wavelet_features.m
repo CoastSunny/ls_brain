@@ -22,7 +22,7 @@ end
 
 
 out=[MAX MIN MEAN STD];
-
+%%out=c; %%%KOITA EDW
 
 
 end

@@ -1,5 +1,5 @@
 if isunix==0
-    data_folder='D:\Extracted\Alzheimer\INECO_fieldtrip\';
+    data_folder='D:\Extracted\Alzheimer\INECO_fieldtrip\FAD_EP\';
     save_folder='D:\Extracted\Alzheimer\INECO_fieldtrip\';
 else
     data_folder='/home/engbiome/INECO/INECO_fieldtrip/';
@@ -20,7 +20,7 @@ gc_idx=[];
 %numberOfBands = size(freqBands,1);
 %PSI = NaN(16,16,100,5,50);
 % ntrials_window=2;
-freqs=1:1:40;
+freqs=1:1:30;
 periods=5;
 g1={'PATIENTS' 'CONTROLS'};%[1 0]
 g2={'SHAPE' 'BINDING'};
@@ -55,11 +55,11 @@ for q = 1:length(names)
     
     % Applies connectivity measure
     cfg             = [];
-%     cfg.method      = 'wpli_debiased';
-    %    cfg.complex     = 'complex';
-    cfg.method      = 'coh';
-    cfg.complex     = 'imag';
-    parameter       = 'cohspctrm';
+    cfg.method      = 'wpli_debiased';
+    cfg.complex     = 'complex';
+%     cfg.method      = 'coh';
+%     cfg.complex     = 'imag';
+    parameter       = 'wpli_debiasedspctrm';
     
     %          cfg.bandwidth   = 1;
     %     for idx_trials=1:ntrials-ntrials_window

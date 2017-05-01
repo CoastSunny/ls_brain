@@ -139,8 +139,8 @@ if ~DoWeight
         end             
         mtype={'trans'};
         W=v2G(load(:,2));
-        M1={.5*ls_network_metric(W,'trans')};        
-        load(:,2) = G2v(optimise_network_multi(v2G(load(:,2)),mtype,M1'));
+        M1={.9*ls_network_metric(W,'trans')};
+        R1orig = optimise_network_multi(v2G(load(:,2)),mtype,M1');
     end
     
     
