@@ -24,7 +24,7 @@ else
     pen=0;
 end
 if isempty(learn)
-    l=1;
+    l=10;
 else
     l=learn;
 end
@@ -32,11 +32,11 @@ end
 penalty=inf;
 iter=1;
 dW=Inf;
-max_iter=15000;
+max_iter=5000;
 %while penalty>0.001 | iter>10000
 metric={inf};
 check=inf;
-while check>10^-3 && iter<max_iter
+while check>10^-5 && iter<max_iter
     
     %     [penalty,tmp]=network_penalty_wu(W,metric_type,target_value,'modules',modules);
     %     metric(iter)=tmp;

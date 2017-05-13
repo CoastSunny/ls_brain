@@ -132,15 +132,48 @@ if ~DoWeight
     elseif cons==9
         load=real(pinv(ZtZ)*ZtX)';
     elseif cons==10
-        
+        F=size(OldLoad,2);
         load=zeros(size(OldLoad));
         for i=1:dimX
-            load(i,:)=fastnnls(ZtZ,ZtX(:,i))';          
+            load(i,:)=fastnnls(ZtZ,ZtX(:,i))';                
         end             
+        for i=2
         mtype={'trans'};
-        W=v2G(load(:,2));
-        M1={.5*ls_network_metric(W,'trans')};        
-        load(:,2) = G2v(optimise_network_multi(v2G(load(:,2)),mtype,M1'));
+        W=v2G(load(:,i));
+        O1=[1 2 3 32+1 32+3 32+20 64+1 64+2 64+23 96+1 96+15 96+2 96+14 96+15 96+16];
+        O2=setdiff(1:32,O1);
+        O3=setdiff(33:64,O1);
+        O4=setdiff(65:96,O1);
+        O5=setdiff(97:128,O1);
+        O{1}=O1;O{2}=O2;O{3}=O3;O{4}=O4;O{5}=O5;
+        M=ind2mod(O,eye(128));
+%         M1={-0.1+ls_network_metric(W,'modul','modules',M)}; 
+        for met=1:numel(mtype)
+            if met==1
+               M1{met}=2*ls_network_metric(W,mtype{met});    
+            else
+               M1{met}=.8*ls_network_metric(W,mtype{met});    
+            end
+            
+        end
+%         M1={2*ls_network_metric(W,mtype)};        
+        load(:,i) = G2v(optimise_network_multi(v2G(load(:,i)),mtype,M1'));
+%         load(:,2) = G2v(optimise_network_multi(v2G(load(:,2)),mtype,M1','modules',M));
+        end
+%         mtype={'deg'};
+%         W=v2G(load(:,2));
+%         O1=[1 2 3 32+1 32+3 32+20 64+1 64+2 64+23 96+1 96+15 96+2 96+14 96+15 96+16];
+%         O2=setdiff(1:32,O1);
+%         O3=setdiff(33:64,O1);
+%         O4=setdiff(65:96,O1);
+%         O5=setdiff(97:128,O1);
+%         O{1}=O1;O{2}=O2;O{3}=O3;O{4}=O4;O{5}=O5;
+%         M=ind2mod(O,eye(128));
+% %         M1={-0.1+ls_network_metric(W,'modul','modules',M)};  
+%         M1={.5*ls_network_metric(W,mtype)};        
+%         load(:,2) = G2v(optimise_network_multi(v2G(load(:,2)),mtype,M1'));
+% %         load(:,2) = G2v(optimise_network_multi(v2G(load(:,2)),mtype,M1','modules',M));
+
     end
     
     

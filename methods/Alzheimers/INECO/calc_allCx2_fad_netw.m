@@ -1,6 +1,6 @@
 % band=4:7;
 Cpli=[];Cx=[];O=[];SNR=[];Cxp=[];Fx=[];Ex=[];
-ci=2;
+ci=3;
 for i=1:length(Fp)
   
     Cx(:,:,i)=weight_conversion(v2G(Fp{i}{1}(:,ci)),'normalize');
