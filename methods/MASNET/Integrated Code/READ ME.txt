@@ -1,0 +1,11 @@
+Christian Nunez-Alvarez; 31/03/2017
+
+In this folder, there are the functions needed for evaluating the performance of a MASNET network when detecting, demodulating and locating.
+
+The main functions are:
+
+- SNR_generation: Run Monte Carlo simulations of a MASNET network with one target to obtain SNR values. The channel is modeled using the WINNER-II channel package.
+- Pd_VER_Num_sensors_analysis: Using the SNR results calculated in SNR_generation, it analyses the network performance when detecting and demodulating for different number of sensors.
+- Heatmaps_generation: Using the SNR results it generate heatmaps that represent the stronget and weakest spots in a scenario for detecting and demodulating.
+- config file: Is a file where different parameters of the system can be set. This file is loaded when exectuing the other functions.
+- Localization_MASNET: evaluates the performance of the MASNET network when locating.
