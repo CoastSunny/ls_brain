@@ -417,7 +417,7 @@ function SNR_generation()
 
                     % Calculate the SNR
 
-                    SNR = SNR_calculation(cir,distance,lambda,Type_Environment,d_0,sigma,Num_sensors,Time_samples,Pt,NF,n,BW);
+                    [SNR ALL_Pr(indx_x,indx_y,m,:) ALL_Noise(indx_x,indx_y,m)] = SNR_calculation(cir,distance,lambda,Type_Environment,d_0,sigma,Num_sensors,Time_samples,Pt,NF,n,BW);
 
                     ALL_SNR(indx_x,indx_y,m,:) = SNR;   % Store the resulting snr in this target position for this run. No it does not consider more than 1 time sample!
 
@@ -453,6 +453,6 @@ function SNR_generation()
     %% Save results in file
 
     filename3 = ['SNR_TS_' num2str(Type_Scenario) '_TE_' num2str(Type_Environment) '_Num_Sensors_' num2str(Num_sensors) '_SepTar_' num2str(Int_target_x) '_' num2str(Int_target_y) '_Pt_' num2str(Pt) 'dBW_sigma_' num2str(sigma) 'dB.mat'];
-    save(filename3,'ALL_SNR');            
+    save(filename3,'ALL_SNR','ALL_Pr','ALL_Noise');            
     
 end

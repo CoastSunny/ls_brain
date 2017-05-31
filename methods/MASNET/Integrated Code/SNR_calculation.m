@@ -1,4 +1,4 @@
-function [SNR] = SNR_calculation(cir,distance,lambda,Type_Environment,d_0,sigma,Num_sensors,Time_samples,Pt,NF,n,BW)
+function [SNR Pr Noise] = SNR_calculation(cir,distance,lambda,Type_Environment,d_0,sigma,Num_sensors,Time_samples,Pt,NF,n,BW)
 
             % Calculate the large scale path loss for each link (because wim.m is not
             % doing it). 

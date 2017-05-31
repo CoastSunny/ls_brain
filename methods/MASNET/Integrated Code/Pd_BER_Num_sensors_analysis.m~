@@ -296,7 +296,7 @@ for p=P_:dP:P
                       
                       SNR = squeeze(ALL_SNR(indx_x,indx_y,m,1:S_));
                       Pr = squeeze(ALL_Pr(indx_x,indx_y,m,1:S_));
-                      Noise = squeeze(ALL_Noise(indx_x,indx_y,m));
+                      Noise = squeeze(ALL_Noise(indx_x,indx_y,m,1:S_));
 
                       if S_ == 64
                           if mod(S_,Num_sensors) == 0
