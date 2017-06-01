@@ -158,7 +158,7 @@ function SNR_generation()
     % elevation is not supported (so no 3D possible). dipole function returns
     % [V H ? Angle], where V and H are the values of the Vertical and
     % Horizontal values of the pattern at each Angle. 
-    pattern(1,:,1,:)=dipole(Az,Antenna_slant); 
+    pattern(1,:,1,:)=winner2.dipole(Az,Antenna_slant); 
 
     FP = [pattern;pattern];
 
@@ -169,8 +169,8 @@ function SNR_generation()
 
     % Generate an arrays. Apparently it does not provide values of the pattern,
     % just information about the array
-    Arrays(1) = AntennaArray('UCA',1,Dists(1),'FP-ACS',pattern,'Azimuth',Az); %ULA-1 
-    Arrays(2) = AntennaArray('ULA',10,Dists(1),'FP-ACS',pattern,'Azimuth',Az); %ULA-10
+    Arrays(1) = winner2.AntennaArray('UCA',1,Dists(1),'FP-ACS',pattern,'Azimuth',Az); %ULA-1 
+    Arrays(2) = winner2.AntennaArray('ULA',10,Dists(1),'FP-ACS',pattern,'Azimuth',Az); %ULA-10
 
 
 
@@ -264,7 +264,7 @@ function SNR_generation()
     % Define network layout structure for wim function. Careful! the function
     % layoutparset will generate a random 500mX500m cell with random stations
     % position and velocities. Many of the parameters need to be changed.
-    layoutpar = layoutparset(MsAAIdx, BsAAIdxCell, chan_pairing, Arrays);
+    layoutpar = winner2.layoutparset(MsAAIdx, BsAAIdxCell, chan_pairing, Arrays);
 
     % Changing the scenario type. WINNER-II have pre-defined scenarios
     % (indoor/outdoor, offices, street, urban and rural areas, etc)
@@ -411,7 +411,7 @@ function SNR_generation()
                     % if Time_samples=1, then it creates an error. In fact the
                     % error happens as long as Time_samples<20. So, this M has
                     % been changed to M=1 to avoid this error.
-                    [cir,delays,out] = wim(wimpar,layoutpar);
+                    [cir,delays,out] = winner2.wim(wimpar,layoutpar);
 
                     cir = downsampling_cir(cir,delays,Delay_interval,Num_sensors,Time_samples);
 
