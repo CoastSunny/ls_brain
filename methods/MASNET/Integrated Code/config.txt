@@ -70,7 +70,7 @@ Int_target_x;250
 Int_target_y;250
 
 % Number of runs in the Montecarlo simulation
-N_monte;10
+N_monte;20
 
 % SIGMA value for the shadowing model {in dB}. Set 0 for no random shadowing
 sigma;9

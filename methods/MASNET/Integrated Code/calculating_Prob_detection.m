@@ -8,8 +8,7 @@ function [BN_Pd,BN_Pnd,NS_Pnd,OS_Pd,snr,Best_snr,BN_indx,BN_indx2] = calculating
             M = AC_sample*(2*Td+Tc);    % Autocorrelation size
 
             snr = 10.^(SNR./10);
-            
-            
+                        
             rho = (Tc/(Td+Tc)).*(snr./(1+snr)); 
 
 %             Pfa = 0.1;      % Probability of false alarm
