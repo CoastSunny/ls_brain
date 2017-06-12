@@ -82,7 +82,7 @@ n;3
 d_0;200
 
 % Expected power transmitted by the target {in dBW}. Currently this is not taken as input
-Pt;-33
+Pt;-53
 
 % Expected signal bandwidth in Hz
 BW;20e6

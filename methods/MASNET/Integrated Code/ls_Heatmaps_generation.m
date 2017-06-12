@@ -1,133 +1,17 @@
 function Heatmaps_generation()
 
-%     clear all
-%     close all force
-%     clc
+    clc
+    S_=96;      % Caution: This value might change
+                % This number of sensors helps to get the right 
+                % number of sensors positioned later. For 
+                % Separated: Num_sensors=76 if Sep_sensors=100 or
+                % Num_sensors=96 if Sep_sensors=78, for Mixed: 
+                % Num_sensors=64 if Sep_sensors=250.
 
-
-    %% General parameters and load specific parameters from config.txt file
-
-    % Speed of light
+    filename = ['~/Documents/ls_brain/results/masnet/SNR_TS_' num2str(Type_Scenario) '_TE_' num2str(Type_Environment) '_Num_Sensors_' num2str(S_) '_SepTar_' num2str(Int_target_x) '_' num2str(Int_target_y) '_Pt_' num2str(Pt) 'dBW_sigma_' num2str(sigma) 'dB.mat'];
+    load(filename);
+    % Speed of light, wavelength
     c = 3e8;
-
-    % Load data from config.txt file. 1st Column are either comments or index
-    % values of variables. 2nd column are the names of the variables. 3rd
-    % column are the values of these variables
-    A = importdata('config.txt',';');
-
-    % Delete the first 4 lines because they are comments
-    A.textdata(1:3,:) = [];
-
-    % 2nd column data as char. Then we convert the char "matrix" into a string
-    % vector
-    chr = char(A.textdata{:,1});
-    str = cellstr(chr);
-
-    % Now, each input parameter is looked into the str array (by name) to know the index
-    % where the value must be taken in A.data. This way, if more input
-    % parameters are added in the config file, it does not matter where they
-    % are added in the config file, we will find them in their new position and
-    % assign them here
-    index = find(strcmp(str, 'Fc'));    % Carrier Frequency
-    Fc = A.data(index);
-
-    index = find(strcmp(str, 'Type_Scenario'));    % Type of scenario. Separated or mixed enemy and friend zones
-    Type_Scenario = A.data(index);
-
-    index = find(strcmp(str, 'Type_Environment'));  % Type of environment. Urban or rural
-    Type_Environment = A.data(index);
-
-    index = find(strcmp(str, 'Size_Scenario'));     % Size of the scenario
-    Size_Scenario = A.data(index);
-
-    index = find(strcmp(str, 'Size_EZ_x')); % Size of the enemy zone (horizontal)
-    Size_EZ_x = A.data(index);
-
-    index = find(strcmp(str, 'Size_EZ_y')); % Size of the enemy zone (vertical)
-    Size_EZ_y = A.data(index);
-
-    index = find(strcmp(str, 'Size_FZ1_x')); % Size of the friend zone 1 (horizontal)
-    Size_FZ1_x = A.data(index);
-
-    index = find(strcmp(str, 'Size_FZ1_y')); % Size of the friend zone 1 (vertical)
-    Size_FZ1_y = A.data(index);
-
-    index = find(strcmp(str, 'Size_FZ2_x')); % Size of the friend zone 2 (horizontal)
-    Size_FZ2_x = A.data(index);
-
-    index = find(strcmp(str, 'Size_FZ2_y')); % Size of the friend zone 2 (vertical)
-    Size_FZ2_y = A.data(index);
-
-    index = find(strcmp(str, 'Sep_sensors'));   % Distance between sensors
-    Sep_sensors = A.data(index);
-
-    index = find(strcmp(str, 'hs'));    % Sensors height
-    hs = A.data(index);
-
-    index = find(strcmp(str, 'ht'));    % Target height
-    ht = A.data(index);
-
-
-    % Velocity of the sensors not used here yet
-
-
-    % The distance between elements in antenna array not used here yet
-
-    index = find(strcmp(str, 'NAz'));   % 3 degree sampling/resolution
-    NAz=A.data(index);    
-
-    index = find(strcmp(str, 'Antenna_slant'));  % If =0, no shift on the orientation
-    Antenna_slant = A.data(index); 
-
-    index = find(strcmp(str, 'Sample_Density'));    % Density of samples for Doppler effect
-    Sample_Density = A.data(index);
-
-    index = find(strcmp(str, 'Time_samples'));  % Number of time samples to obtain the CIR
-    Time_samples = A.data(index); 
-
-    index = find(strcmp(str, 'Fs'));        % Desired sampling frequency
-    Fs = A.data(index);
-
-    index = find(strcmp(str, 'Int_target_x'));  % Set the distance between each change of target position
-    Int_target_x = A.data(index);        
-
-    index = find(strcmp(str, 'Int_target_y'));
-    Int_target_y = A.data(index);
-
-    index = find(strcmp(str, 'N_monte'));   % Number of runs for the Montecarlo simulation
-    N_monte = A.data(index);
-
-    index = find(strcmp(str, 'sigma'));     % sigma value for the lognormal random shadowing
-    sigma = A.data(index);
-
-    index = find(strcmp(str, 'n'));     % Urban is between 2.7 and 3.5, rural is 2
-    n = A.data(index);              
-
-    index = find(strcmp(str, 'd_0'));  % Outdoor is between 100m to 1km
-    d_0 = A.data(index);          
-
-    index = find(strcmp(str, 'Pt'));   % Target power
-    Pt = A.data(index);
-
-    index = find(strcmp(str, 'BW'));
-    BW = A.data(index);              % Signal bandwidth in Hz. Up to 20MHz.
-
-    index = find(strcmp(str, 'NF'));
-    NF = A.data(index);               % Noise figure of the RF receiver in dB
-
-    index = find(strcmp(str, 'Tc'));
-    Tc = A.data(index);       % # of samples in the cyclic prefix (CP)
-
-    index = find(strcmp(str, 'Td'));
-    Td = A.data(index);      % Number of samples of data in the LTE trace
-
-    index = find(strcmp(str, 'AC_sample'));            
-    AC_sample = A.data(index);
-
-    index = find(strcmp(str, 'Pfa'));
-    Pfa = A.data(index);      % Probability of false alarm
-
-    % Wavelength
     lambda = c/Fc;
 
     
@@ -146,15 +30,7 @@ function Heatmaps_generation()
     
     % We need to set the number of sensors that the SNR was generated with
     
-    S_=96;      % Caution: This value might change
-                % This number of sensors helps to get the right 
-                % number of sensors positioned later. For 
-                % Separated: Num_sensors=76 if Sep_sensors=100 or
-                % Num_sensors=96 if Sep_sensors=78, for Mixed: 
-                % Num_sensors=64 if Sep_sensors=250.
-
-    filename = ['./results/SNR_TS_' num2str(Type_Scenario) '_TE_' num2str(Type_Environment) '_Num_Sensors_' num2str(S_) '_SepTar_' num2str(Int_target_x) '_' num2str(Int_target_y) '_Pt_' num2str(Pt) 'dBW_sigma_' num2str(sigma) 'dB.mat'];
-    load(filename);
+   
 
     %% Calculate the Pd (probability of detection)
     
@@ -278,15 +154,9 @@ function Heatmaps_generation()
                 % straight lines which is not desired.
 
                   if Num_sensors == S_
-                       
-            SNR = squeeze(ALL_SNR(indx_x,indx_y,m,1:S_));
-            Pr = squeeze(ALL_Pr(indx_x,indx_y,m,1:S_));
-            Noise = squeeze(ALL_Noise(indx_x,indx_y,m));
+                      SNR = squeeze(ALL_SNR(indx_x,indx_y,m,1:S_));
                   else
-                   
-            SNR = squeeze(ALL_SNR(indx_x,indx_y,m,1:S_));
-            Pr = squeeze(ALL_Pr(indx_x,indx_y,m,1:S_));
-            Noise = squeeze(ALL_Noise(indx_x,indx_y,m));
+                      SNR = squeeze(ALL_SNR(indx_x,indx_y,m,1:S_));
                       if S_ == 64       % This means it is Mixed Zones
                           if mod(S_,Num_sensors) == 0
                               switch S_/Num_sensors
@@ -321,9 +191,8 @@ function Heatmaps_generation()
                       end
                   end
 
-%                  [bn_pd,bn_pnd,ns_pnd,os_pd,snr,best_snr,BN_indx,BN_indx2] = calculating_Prob_detection(AC_sample,Td,Tc,SNR,Pfa,Num_sensors);
-                [bn_pd,bn_pnd,ns_pnd,os_pd,snr,best_snr,BN_indx,BN_indx2] = ...
-                calculating_Prob_detection_No_CP(SNR,Pr,Noise,Pfa,Num_sensors,Td);
+                [bn_pd,bn_pnd,ns_pnd,os_pd,snr,best_snr,BN_indx,BN_indx2] = calculating_Prob_detection(AC_sample,Td,Tc,SNR,Pfa,Num_sensors);
+
 
                 %% For option 1 Detection
                 BN_Pd(indx_x,indx_y,m) = bn_pd;     % Store the Pd in this Montecarlo run and target position

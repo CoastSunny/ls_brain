@@ -1,137 +1,13 @@
 %% This function runs N_monte times the WINNER-II CHANNEL and calculates the SNR at: Each target position, for each Montecarlo run and each sensor
 
-function SNR_generation()
+function ls_SNR_generation(cfg)
 
-    close all force
-    clear all
-    clc
-
-    %% General parameters and load specific parameters from config.txt file
-
-    % Speed of light
+        %% General parameters and load specific parameters from config.txt file
+    parsecfg
+    
+    % Speed of light, wavelength
     c = 3e8;
-
-    % Load data from config.txt file. 1st Column are either comments or index
-    % values of variables. 2nd column are the names of the variables. 3rd
-    % column are the values of these variables
-    A = importdata('config.txt',';');
-
-    % Delete the first 4 lines because they are comments
-    A.textdata(1:3,:) = [];
-
-    % 2nd column data as char. Then we convert the char "matrix" into a string
-    % vector
-    chr = char(A.textdata{:,1});
-    str = cellstr(chr);
-
-    % Now, each input parameter is looked into the str array (by name) to know the index
-    % where the value must be taken in A.data. This way, if more input
-    % parameters are added in the config file, it does not matter where they
-    % are added in the config file, we will find them in their new position and
-    % assign them here
-    index = find(strcmp(str, 'Fc'));    % Carrier Frequency
-    Fc = A.data(index);
-
-    index = find(strcmp(str, 'Type_Scenario'));    % Type of scenario. Separated or mixed enemy and friend zones
-    Type_Scenario = A.data(index);
-
-    index = find(strcmp(str, 'Type_Environment'));  % Type of environment. Urban or rural
-    Type_Environment = A.data(index);
-
-    index = find(strcmp(str, 'Size_Scenario'));     % Size of the scenario
-    Size_Scenario = A.data(index);
-
-    index = find(strcmp(str, 'Size_EZ_x')); % Size of the enemy zone (horizontal)
-    Size_EZ_x = A.data(index);
-
-    index = find(strcmp(str, 'Size_EZ_y')); % Size of the enemy zone (vertical)
-    Size_EZ_y = A.data(index);
-
-    index = find(strcmp(str, 'Size_FZ1_x')); % Size of the friend zone 1 (horizontal)
-    Size_FZ1_x = A.data(index);
-
-    index = find(strcmp(str, 'Size_FZ1_y')); % Size of the friend zone 1 (vertical)
-    Size_FZ1_y = A.data(index);
-
-    index = find(strcmp(str, 'Size_FZ2_x')); % Size of the friend zone 2 (horizontal)
-    Size_FZ2_x = A.data(index);
-
-    index = find(strcmp(str, 'Size_FZ2_y')); % Size of the friend zone 2 (vertical)
-    Size_FZ2_y = A.data(index);
-
-    index = find(strcmp(str, 'Sep_sensors'));   % Distance between sensors
-    Sep_sensors = A.data(index);
-
-    index = find(strcmp(str, 'hs'));    % Sensors height
-    hs = A.data(index);
-
-    index = find(strcmp(str, 'ht'));    % Target height
-    ht = A.data(index);
-
-
-    % Velocity of the sensors not used here yet
-
-
-    % The distance between elements in antenna array not used here yet
-
-    index = find(strcmp(str, 'NAz'));   % 3 degree sampling/resolution
-    NAz=A.data(index);    
-
-    index = find(strcmp(str, 'Antenna_slant'));  % If =0, no shift on the orientation
-    Antenna_slant = A.data(index); 
-
-    index = find(strcmp(str, 'Sample_Density'));    % Density of samples for Doppler effect
-    Sample_Density = A.data(index);
-
-    index = find(strcmp(str, 'Time_samples'));  % Number of time samples to obtain the CIR
-    Time_samples = A.data(index); 
-
-    index = find(strcmp(str, 'Fs'));        % Desired sampling frequency
-    Fs = A.data(index);
-
-    index = find(strcmp(str, 'Int_target_x'));  % Set the distance between each change of target position
-    Int_target_x = A.data(index);        
-
-    index = find(strcmp(str, 'Int_target_y'));
-    Int_target_y = A.data(index);
-
-    index = find(strcmp(str, 'N_monte'));   % Number of runs for the Montecarlo simulation
-    N_monte = A.data(index);
-
-    index = find(strcmp(str, 'sigma'));     % sigma value for the lognormal random shadowing
-    sigma = A.data(index);
-
-    index = find(strcmp(str, 'n'));     % Urban is between 2.7 and 3.5, rural is 2
-    n = A.data(index);              
-
-    index = find(strcmp(str, 'd_0'));  % Outdoor is between 100m to 1km
-    d_0 = A.data(index);          
-
-    index = find(strcmp(str, 'Pt'));   % Target power
-    Pt = A.data(index);
-
-    index = find(strcmp(str, 'BW'));
-    BW = A.data(index);              % Signal bandwidth in Hz. Up to 20MHz.
-
-    index = find(strcmp(str, 'NF'));
-    NF = A.data(index);               % Noise figure of the RF receiver in dB
-
-    index = find(strcmp(str, 'Tc'));
-    Tc = A.data(index);       % # of samples in the cyclic prefix (CP)
-
-    index = find(strcmp(str, 'Td'));
-    Td = A.data(index);      % Number of samples of data in the LTE trace
-
-    index = find(strcmp(str, 'AC_sample'));            
-    AC_sample = A.data(index);
-
-    index = find(strcmp(str, 'Pfa'));
-    Pfa = .1;%A.data(index);      % Probability of false alarm
-
-    % Wavelength
     lambda = c/Fc;
-
-
 
     %% Antenna and Antenna Array generation for all the sensors and target
 
@@ -158,7 +34,7 @@ function SNR_generation()
     % elevation is not supported (so no 3D possible). dipole function returns
     % [V H ? Angle], where V and H are the values of the Vertical and
     % Horizontal values of the pattern at each Angle. 
-    pattern(1,:,1,:)=winner2.dipole(Az,Antenna_slant); 
+    pattern(1,:,1,:)=dipole(Az,Antenna_slant); 
 
     FP = [pattern;pattern];
 
@@ -169,8 +45,8 @@ function SNR_generation()
 
     % Generate an arrays. Apparently it does not provide values of the pattern,
     % just information about the array
-    Arrays(1) = winner2.AntennaArray('UCA',1,Dists(1),'FP-ACS',pattern,'Azimuth',Az); %ULA-1 
-    Arrays(2) = winner2.AntennaArray('ULA',10,Dists(1),'FP-ACS',pattern,'Azimuth',Az); %ULA-10
+    Arrays(1) = AntennaArray('UCA',1,Dists(1),'FP-ACS',pattern,'Azimuth',Az); %ULA-1 
+    Arrays(2) = AntennaArray('ULA',10,Dists(1),'FP-ACS',pattern,'Azimuth',Az); %ULA-10
 
 
 
@@ -264,7 +140,7 @@ function SNR_generation()
     % Define network layout structure for wim function. Careful! the function
     % layoutparset will generate a random 500mX500m cell with random stations
     % position and velocities. Many of the parameters need to be changed.
-    layoutpar = winner2.layoutparset(MsAAIdx, BsAAIdxCell, chan_pairing, Arrays);
+    layoutpar = layoutparset(MsAAIdx, BsAAIdxCell, chan_pairing, Arrays);
 
     % Changing the scenario type. WINNER-II have pre-defined scenarios
     % (indoor/outdoor, offices, street, urban and rural areas, etc)
@@ -411,13 +287,13 @@ function SNR_generation()
                     % if Time_samples=1, then it creates an error. In fact the
                     % error happens as long as Time_samples<20. So, this M has
                     % been changed to M=1 to avoid this error.
-                    [cir,delays,out] = winner2.wim(wimpar,layoutpar);
+                    [cir,delays,out] = wim(wimpar,layoutpar);
 
                     cir = downsampling_cir(cir,delays,Delay_interval,Num_sensors,Time_samples);
 
                     % Calculate the SNR
 
-                    [SNR ALL_Pr(indx_x,indx_y,m,:) ALL_Noise(indx_x,indx_y,m)] = SNR_calculation(cir,distance,lambda,Type_Environment,d_0,sigma,Num_sensors,Time_samples,Pt,NF,n,BW);
+                    [SNR ALL_Pr(indx_x,indx_y,m,:) ALL_Noise(indx_x,indx_y,m)] = SNR_calculation(cir,distance,lambda,Type_Environment,d_0,sigm,Num_sensors,Time_samples,Pt,NF,n,BW);
 
                     ALL_SNR(indx_x,indx_y,m,:) = SNR;   % Store the resulting snr in this target position for this run. No it does not consider more than 1 time sample!
 
@@ -452,7 +328,7 @@ function SNR_generation()
 
     %% Save results in file
 
-    filename3 = ['./results/SNR_TS_' num2str(Type_Scenario) '_TE_' num2str(Type_Environment) '_Num_Sensors_' num2str(Num_sensors) '_SepTar_' num2str(Int_target_x) '_' num2str(Int_target_y) '_Pt_' num2str(Pt) 'dBW_sigma_' num2str(sigma) 'dB.mat'];
-    save(filename3,'ALL_SNR','ALL_Pr','ALL_Noise');            
+    filename3 = ['~/Documents/ls_brain/results/masnet/SNR_TS_' num2str(Type_Scenario) '_TE_' num2str(Type_Environment) '_Num_Sensors_' num2str(Num_sensors) '_SepTar_' num2str(Int_target_x) '_' num2str(Int_target_y) '_Pt_' num2str(Pt) 'dBW_sigma_' num2str(sigm) 'dB.mat'];
+    save(filename3,'ALL_SNR','ALL_Pr','ALL_Noise','cfg');            
     
 end

@@ -10,7 +10,7 @@ function [BN_Pd,BN_Pnd,NS_Pnd,OS_Pd,snr,Best_snr,BN_indx,BN_indx2] = calculating
             
             ned=inv(chi2cdf(1-Pfa,2)).*pn/2;
             
-            Pd=1-chi2cdf(2*ned./(ps+pn),Td);
+            Pd=1-chi2cdf(2*ned./(ps+pn),2);
 
 
 
