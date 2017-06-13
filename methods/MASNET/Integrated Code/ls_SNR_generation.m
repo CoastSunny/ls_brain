@@ -34,7 +34,10 @@ function ls_SNR_generation(cfg)
     % elevation is not supported (so no 3D possible). dipole function returns
     % [V H ? Angle], where V and H are the values of the Vertical and
     % Horizontal values of the pattern at each Angle. 
-    pattern(1,:,1,:)=dipole(Az,Antenna_slant); 
+    [dummy tmp]=system('hostname');
+    if contains(tmp,'louk-pc')
+        pattern(1,:,1,:)=winner2.dipole(Az,Antenna_slant); 
+    end
 
     FP = [pattern;pattern];
 
@@ -45,9 +48,11 @@ function ls_SNR_generation(cfg)
 
     % Generate an arrays. Apparently it does not provide values of the pattern,
     % just information about the array
-    Arrays(1) = AntennaArray('UCA',1,Dists(1),'FP-ACS',pattern,'Azimuth',Az); %ULA-1 
-    Arrays(2) = AntennaArray('ULA',10,Dists(1),'FP-ACS',pattern,'Azimuth',Az); %ULA-10
-
+    [dummy tmp]=system('hostname');
+    if contains(tmp,'louk-pc')
+        Arrays(1) = winner2.AntennaArray('UCA',1,Dists(1),'FP-ACS',pattern,'Azimuth',Az); %ULA-1 
+        Arrays(2) = winner2.AntennaArray('ULA',10,Dists(1),'FP-ACS',pattern,'Azimuth',Az); %ULA-10
+    end
 
 
 
@@ -140,7 +145,10 @@ function ls_SNR_generation(cfg)
     % Define network layout structure for wim function. Careful! the function
     % layoutparset will generate a random 500mX500m cell with random stations
     % position and velocities. Many of the parameters need to be changed.
-    layoutpar = layoutparset(MsAAIdx, BsAAIdxCell, chan_pairing, Arrays);
+    [dummy tmp]=system('hostname');
+    if contains(tmp,'louk-pc')
+        layoutpar = winner2.layoutparset(MsAAIdx, BsAAIdxCell, chan_pairing, Arrays);
+    end
 
     % Changing the scenario type. WINNER-II have pre-defined scenarios
     % (indoor/outdoor, offices, street, urban and rural areas, etc)
@@ -287,7 +295,10 @@ function ls_SNR_generation(cfg)
                     % if Time_samples=1, then it creates an error. In fact the
                     % error happens as long as Time_samples<20. So, this M has
                     % been changed to M=1 to avoid this error.
-                    [cir,delays,out] = wim(wimpar,layoutpar);
+                    [dummy tmp]=system('hostname');
+                    if contains(tmp,'louk-pc')
+                        [cir,delays,out] = winner2.wim(wimpar,layoutpar);
+                    end
 
                     cir = downsampling_cir(cir,delays,Delay_interval,Num_sensors,Time_samples);
 
@@ -328,7 +339,7 @@ function ls_SNR_generation(cfg)
 
     %% Save results in file
 
-    filename3 = ['~/Documents/ls_brain/results/masnet/SNR_TS_' num2str(Type_Scenario) '_TE_' num2str(Type_Environment) '_Num_Sensors_' num2str(Num_sensors) '_SepTar_' num2str(Int_target_x) '_' num2str(Int_target_y) '_Pt_' num2str(Pt) 'dBW_sigma_' num2str(sigm) 'dB.mat'];
+    filename3 = ['~/Documents/projects/ls_brain/results/SNR_TS_' num2str(Type_Scenario) '_TE_' num2str(Type_Environment) '_Num_Sensors_' num2str(Num_sensors) '_SepTar_' num2str(Int_target_x) '_' num2str(Int_target_y) '_Pt_' num2str(Pt) 'dBW_sigma_' num2str(sigm) 'dB.mat'];
     save(filename3,'ALL_SNR','ALL_Pr','ALL_Noise','cfg');            
     
 end

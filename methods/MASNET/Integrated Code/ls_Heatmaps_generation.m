@@ -8,8 +8,9 @@ function Heatmaps_generation()
                 % Num_sensors=96 if Sep_sensors=78, for Mixed: 
                 % Num_sensors=64 if Sep_sensors=250.
 
-    filename = ['~/Documents/ls_brain/results/masnet/SNR_TS_' num2str(Type_Scenario) '_TE_' num2str(Type_Environment) '_Num_Sensors_' num2str(S_) '_SepTar_' num2str(Int_target_x) '_' num2str(Int_target_y) '_Pt_' num2str(Pt) 'dBW_sigma_' num2str(sigma) 'dB.mat'];
-    load(filename);
+    uiopen;
+    
+    parsecfg
     % Speed of light, wavelength
     c = 3e8;
     lambda = c/Fc;
