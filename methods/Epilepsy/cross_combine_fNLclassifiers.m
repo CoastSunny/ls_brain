@@ -1,7 +1,7 @@
 W=[];
 
 iall=(1:20)'*(ones(1,numel(subj)));
-fpr_target=0.1;
+% fpr_target=0.1;
 itest=Itest;
 dim=4;
 
@@ -37,16 +37,20 @@ for si=itest
             end
             
             f=mean(dv,1)';
+            Fout{si}.f=f;
+            Fout{si}.labels=labels;
             temp=fperf(f,labels);
             r(si,sj)=temp.perf;
             rSS(si,:)=[1-temp.fpr temp.tpr];
-%             out=multitrial_performance(f,labels,'all',1,'sav',1,1,0,0,[]);
-%             fpr_idxs=find(out.fpr.sav<=fpr_target);
-%             bias=out.bias(fpr_idxs(end));
+            out=multitrial_performance(f,labels,'all',1,'sav',1,1,0,0,[]);
+            fpr_idxs=find(out.fpr.sav<=fpr_target);
+            bias=out.bias(fpr_idxs(end));
 %           %  bias=0;
-%             temp=fperf(f+bias,labels);
-%             rf(si,sj)=temp.perf;
-%             rfSS(si,:)=[1-temp.fpr temp.tpr];
+            temp=fperf(f+bias,labels);
+            rf(si,sj)=temp.perf;
+            rfSS(si,:)=[temp.fpr temp.tpr];
+            
+            
         else
             
             eval(['fclsfr=' subj{sj} 'fsclsfr;']);

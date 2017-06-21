@@ -3,9 +3,9 @@ if isunix==0
     save_folder='D:\Extracted\Alzheimer\noep\';
 else
 %     data_folder='/home/engbiome/INECO/INECO_fieldtrip/';
-    data_folder='/run/user/1739413/gvfs/smb-share:server=csce.datastore.ed.ac.uk,share=csce/eng/users/lspyrou/INECO_fieldtrip/MCI_NOEP/';
-%     data_folder='/home/lspyrou/Documents/results/INECO/';
-    save_folder='/home/lspyrou/Documents/results/INECO/';
+%     data_folder='/run/user/1739413/gvfs/smb-share:server=csce.datastore.ed.ac.uk,share=csce/eng/users/lspyrou/INECO_fieldtrip/MCI_NOEP/';
+    data_folder='/media/louk/Storage/Extracted/Alzheimer/INECO_fieldtrip/MCI_NOEP/';
+    save_folder='/media/louk/Storage/Extracted/Alzheimer/INECO_fieldtrip/MCI_NOEP/';
 end
 %% Connectivity Analysiss
 PSI=[];PSI_full=[];Conn=[];conn=[];conn_full=[];Conn_full=[];freqc=[];freq=[];Freq=[];
@@ -43,7 +43,7 @@ for q =1:length(names)
     cfg.method      = 'mtmfft';                                      % Type of analysis
     %     cfg.foi         = freqBands(i,1):0.2:freqBands(i,2);           % Frequency band to analyse
     cfg.foi         = freqs;                                       % Frequency band to analyse
-    cfg.tapsmofrq   = 4;                                            % Or can test other values
+    cfg.tapsmofrq   = 1;                                            % Or can test other values
     cfg.taper       = 'hanning';
     %     cfg.t_ftimwin   = 5;
     %     cfg.toi         = 2.5;

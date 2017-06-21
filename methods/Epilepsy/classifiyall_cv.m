@@ -28,6 +28,8 @@ for ci=Itest
     eval([ subj{ci} 'sclsfr' '=sclsfr;'])
     eval([ subj{ci} 'ficlsfr'  '=ficlsfr;'])
     eval([ subj{ci} 'iclsfr'  '=iclsfr;'])
+    eval([ subj{ci} 'sres' '=sres;'])
+    eval([ subj{ci} 'fsperf' '=fsres;'])
     
     %     eval([ subj{ci} '_F' '=f;';])
     eval([ subj{ci} 'labels=labels;'])

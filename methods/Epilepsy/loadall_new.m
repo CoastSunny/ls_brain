@@ -17,11 +17,11 @@ for ci=Itest
     fprintf(num2str(ci))
     try cd D:\Raw\Epilepsy
     catch err
-        cd([home '/Documents/Epilepsy/'])
+        cd('/media/louk/Storage/Raw/Epilepsy')
     end
     load(subj{ci})
     eval(['X=' subj{ci} ';'])
-    cd([home '/Dropbox/Spikes/'])
+    cd('~/Dropbox/Spikes/')
     load([subj{ci} 'data'])
     eval([subj{ci} '_spikes=spikes;']);
     slicespikes_new

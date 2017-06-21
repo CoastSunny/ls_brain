@@ -2,12 +2,12 @@ if isunix==0
     home='C:\Users\Loukianos';
     home_bci='D:\';
 else
-    home='~';
-    home_bci='~';
+    home='~/Documents/projects';
+    home_bci='/media/louk/Storage';
 end
 
 
-addpath([home '/Documents/ls_brain/global'])
+addpath([home '/ls_brain/global'])
 addpath([home_bci '/BCI_code/toolboxes/jf_bci'])
 addpath([home_bci '/BCI_code/toolboxes/jf_bci/biosemi'])
 addpath([home_bci '/BCI_code/toolboxes/jf_bci/readraw'])

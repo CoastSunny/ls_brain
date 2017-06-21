@@ -7,9 +7,8 @@ function Heatmaps_generation()
                 % Separated: Num_sensors=76 if Sep_sensors=100 or
                 % Num_sensors=96 if Sep_sensors=78, for Mixed: 
                 % Num_sensors=64 if Sep_sensors=250.
-
-    uiopen;
-    
+    cd ~/Documents/projects/ls_brain/results/    
+    uiopen;    
     parsecfg
     % Speed of light, wavelength
     c = 3e8;
@@ -39,7 +38,7 @@ function Heatmaps_generation()
     % for. It needs to be at least 3 sensors or more (needed for the option
     % when the best 3 sensors are taken).
     
-    Num_sensors = 8;   
+    Num_sensors = 96;   
     
     
     % Initialise the matrices to store the probabilities of detection and no

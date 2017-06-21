@@ -1,4 +1,4 @@
-function [SNR Pr Noise] = SNR_calculation(cir,distance,lambda,Type_Environment,d_0,sigma,Num_sensors,Time_samples,Pt,NF,n,BW)
+function [SNR Pr Noise] = SNR_calculation(cir,distance,lambda,Type_Environment,d_0,sigma,Num_sensors,Time_samples,Pt,NF,n,BW,layoutpar)
 
             % Calculate the large scale path loss for each link (because wim.m is not
             % doing it). 
@@ -36,9 +36,20 @@ function [SNR Pr Noise] = SNR_calculation(cir,distance,lambda,Type_Environment,d
             % value of shadowing that follows normal disribution with mean=0
             % and sigma (empirically obtianed, sigma can be between 6 and 12 dB).
 
-%             sigma = 9;
-
-            SHD = normrnd(0,sigma,[Num_sensors 1]);
+            %sigma = 9;
+%             SHD = normrnd(0,sigma,[Num_sensors 1]);
+            d0=1;
+            pos=[layoutpar.Stations.Pos];
+            pos=pos(:,2:end);
+            for i=1:Num_sensors
+                for j=1:Num_sensors
+                    
+                    D(i,j)=norm(pos(:,i)-pos(:,j));
+                    
+                end
+            end
+            
+            SHD=mvnrnd(zeros(1,96),sigma^2*exp(-D/d0)).';
             %SHD = 0;
 
             % Calculate received power of the multipath components for each link at
@@ -120,4 +131,5 @@ function [SNR Pr Noise] = SNR_calculation(cir,distance,lambda,Type_Environment,d
             for ii=1:1:Time_samples
                 SNR(:,ii) = Pr(:,ii) - Noise;
             end
+            Noise=repmat(Noise,size(Pr,1),1);
 end

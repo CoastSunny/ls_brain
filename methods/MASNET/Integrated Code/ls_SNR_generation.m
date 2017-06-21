@@ -304,7 +304,8 @@ function ls_SNR_generation(cfg)
 
                     % Calculate the SNR
 
-                    [SNR ALL_Pr(indx_x,indx_y,m,:) ALL_Noise(indx_x,indx_y,m)] = SNR_calculation(cir,distance,lambda,Type_Environment,d_0,sigm,Num_sensors,Time_samples,Pt,NF,n,BW);
+                    [SNR ALL_Pr(indx_x,indx_y,m,:) ALL_Noise(indx_x,indx_y,m,:)] = ...
+                        SNR_calculation(cir,distance,lambda,Type_Environment,d_0,sigm,Num_sensors,Time_samples,Pt,NF,n,BW,layoutpar);
 
                     ALL_SNR(indx_x,indx_y,m,:) = SNR;   % Store the resulting snr in this target position for this run. No it does not consider more than 1 time sample!
 
@@ -339,7 +340,8 @@ function ls_SNR_generation(cfg)
 
     %% Save results in file
 
-    filename3 = ['~/Documents/projects/ls_brain/results/SNR_TS_' num2str(Type_Scenario) '_TE_' num2str(Type_Environment) '_Num_Sensors_' num2str(Num_sensors) '_SepTar_' num2str(Int_target_x) '_' num2str(Int_target_y) '_Pt_' num2str(Pt) 'dBW_sigma_' num2str(sigm) 'dB.mat'];
+    filename3 = ['~/Documents/projects/ls_brain/results/SNR_CORRSHD_TS_' num2str(Type_Scenario)...
+        '_TE_' num2str(Type_Environment) '_Num_Sensors_' num2str(Num_sensors) '_SepTar_' num2str(Int_target_x) '_' num2str(Int_target_y) '_Pt_' num2str(Pt) 'dBW_sigma_' num2str(sigm) 'dB.mat'];
     save(filename3,'ALL_SNR','ALL_Pr','ALL_Noise','cfg');            
     
 end
