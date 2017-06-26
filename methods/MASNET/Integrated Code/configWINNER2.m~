@@ -4,7 +4,7 @@
 clear all
 
 % Expected power transmitted by the target {in dBW}. Currently this is not taken as input
-cfg.Pt=-53;
+cfg.Pt=--53;
 
 % Number of runs in the Montecarlo simulation
 cfg.N_monte=50;
@@ -73,10 +73,10 @@ cfg.Time_samples=1;
 cfg.Fs=30.72e6;
 
 % Sets how much the target is moved in the horizontal space within the ENEMY zone {in metres}. The smaller this value the smaller the area where a specific value of probability and BER is calculated
-cfg.Int_target_x=500;
+cfg.Int_target_x=50;
 
 % Sets how much the target is moved in the vertical space within the ENEMY zone {in metres}. The smaller this value the smaller the area where a specific value of probability and BER is calculated
-cfg.Int_target_y=500;
+cfg.Int_target_y=50;
 
 % SIGMA value for the shadowing model {in dB}. Set 0 for no random shadowing
 cfg.sigm=9;
