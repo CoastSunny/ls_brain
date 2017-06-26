@@ -18,39 +18,19 @@ figure
 hold on
 plot(sens,psep_d(:,idx))
 plot(sens,pdiv_d(:,idx),'r')
-plot(sens,pbest_d(:,idx),'g')
+plot(sens,pbsens_d(:,idx),'m')
+plot(sens,popt_d(:,idx),'g')
 load Probs_CORRSHD_TS_1_TE_0_Num_Sensors_96_SepTar_500_500_Pt_-33dBW_sigma_9dB.mat
 plot(sens,psep_d(:,idx),'b.-')
 plot(sens,pdiv_d(:,idx),'r.-')
-plot(sens,pbest_d(:,idx),'g.-')
+plot(sens,pbsens_d(:,idx),'m.-')
+plot(sens,popt_d(:,idx),'g.-')
 xlim([1 96])
 set(gca,'Xtick',0:4:97)
 set(gca,'XtickLabel',(0:4:97)*ff)
 xlabel('Number of Sensors'), ylabel('Probability of detection')
 title('Fc:1 - Pt:-33dbW - pfa:0.01')
-legend({'Sep:one' 'Sep:real' 'Sep:best' 'Mix:one' 'Mix:real' 'Mix:best'})
-legend boxoff
-
-
-load Probs_CORRSHD_TS_0_TE_0_Num_Sensors_96_SepTar_50_50_Pt_-33dBW_sigma_9dB.mat
-idx=1;
-ff=4;
-sens=(1:96);
-figure
-hold on
-plot(sens,psep_d(:,idx))
-plot(sens,pdiv_d(:,idx),'r')
-plot(sens,pbest_d(:,idx),'g')
-load Probs_CORRSHD_TS_1_TE_0_Num_Sensors_96_SepTar_500_500_Pt_-33dBW_sigma_9dB.mat
-plot(sens,psep_d(:,idx),'b.-')
-plot(sens,pdiv_d(:,idx),'r.-')
-plot(sens,pbest_d(:,idx),'g.-')
-xlim([1 96])
-set(gca,'Xtick',0:4:97)
-set(gca,'XtickLabel',(0:4:97)*ff)
-xlabel('Number of Sensors'), ylabel('Probability of detection')
-title('Fc:4 - Pt:-33dbW - pfa:0.01')
-legend({'Sep:one' 'Sep:real' 'Sep:best' 'Mix:one' 'Mix:real' 'Mix:best'})
+legend({'Sep:agnostic' 'Sep:fusion' 'Sep:best1' 'Sep:optimal' 'Mix:agnostic' 'Mix:fusion' 'Mix:best1' 'Mix:optimal'})
 legend boxoff
 
 load Probs_CORRSHD_TS_0_TE_0_Num_Sensors_96_SepTar_50_50_Pt_-43dBW_sigma_9dB.mat
@@ -61,40 +41,24 @@ figure
 hold on
 plot(sens,psep_d(:,idx))
 plot(sens,pdiv_d(:,idx),'r')
-plot(sens,pbest_d(:,idx),'g')
+plot(sens,pbsens_d(:,idx),'m')
+plot(sens,popt_d(:,idx),'g')
 load Probs_CORRSHD_TS_1_TE_0_Num_Sensors_96_SepTar_500_500_Pt_-43dBW_sigma_9dB.mat
 plot(sens,psep_d(:,idx),'b.-')
 plot(sens,pdiv_d(:,idx),'r.-')
-plot(sens,pbest_d(:,idx),'g.-')
+plot(sens,pbsens_d(:,idx),'m.-')
+plot(sens,popt_d(:,idx),'g.-')
 xlim([1 96])
 set(gca,'Xtick',0:4:97)
 set(gca,'XtickLabel',(0:4:97)*ff)
 xlabel('Number of Sensors'), ylabel('Probability of detection')
 title('Fc:1 - Pt:-43dbW - pfa:0.01')
-legend({'Sep:one' 'Sep:real' 'Sep:best' 'Mix:one' 'Mix:real' 'Mix:best'})
+legend({'Sep:agnostic' 'Sep:fusion' 'Sep:best1' 'Sep:optimal' 'Mix:agnostic' 'Mix:fusion' 'Mix:best1' 'Mix:optimal'})
 legend boxoff
 
 
-load Probs_CORRSHD_TS_0_TE_0_Num_Sensors_96_SepTar_50_50_Pt_-43dBW_sigma_9dB.mat
-idx=10;
-ff=1;
-sens=(1:96);
-figure
-hold on
-plot(sens,psep_d(:,idx))
-plot(sens,pdiv_d(:,idx),'r')
-plot(sens,pbest_d(:,idx),'g')
-load Probs_CORRSHD_TS_1_TE_0_Num_Sensors_96_SepTar_500_500_Pt_-43dBW_sigma_9dB.mat
-plot(sens,psep_d(:,idx),'b.-')
-plot(sens,pdiv_d(:,idx),'r.-')
-plot(sens,pbest_d(:,idx),'g.-')
-xlim([1 96])
-set(gca,'Xtick',0:4:97)
-set(gca,'XtickLabel',(0:4:97)*ff)
-xlabel('Number of Sensors'), ylabel('Probability of detection')
-title('Fc:1 - Pt:-43dbW - pfa:0.1')
-legend({'Sep:one' 'Sep:real' 'Sep:best' 'Mix:one' 'Mix:real' 'Mix:best'})
-legend boxoff
+
+
 
 load Probs_CORRSHD_TS_0_TE_0_Num_Sensors_96_SepTar_50_50_Pt_-33dBW_sigma_9dB.mat
 figure
@@ -105,7 +69,7 @@ end
 xlim([0.01 0.1])
 xlabel('Probability of false alarm')
 ylabel('Probability of detection')
-title('ROC - Pt:-33dbW - Separated - Urban')
+title('fusion - ROC - Pt:-43dbW - Separated - Urban')
 legend({'1 sensor' '2 sensors' '...'},'Location','southeast')
 legend boxoff
 
@@ -148,7 +112,7 @@ set(gca,'Xtick',1:4)
 set(gca,'XtickLabel',{'-23' '-33' '-43' '-53'})
 xlabel('Transmitted power (dBw)')
 ylabel('Probability of detection')
-title('Sensors:10 - pfa:0.01')
+title('fusion - Sensors:10 - pfa:0.01')
 legend({'separated' 'mixed'})
 legend boxoff
 
