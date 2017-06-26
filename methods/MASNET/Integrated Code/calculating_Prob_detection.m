@@ -15,7 +15,7 @@ function [BN_Pd,BN_Pnd,NS_Pnd,OS_Pd,snr,Best_snr,BN_indx,BN_indx2] = calculating
 
             %eta = (1/sqrt(M))*erfcinv(2*Pfa);
 
-            eta = (1/sqrt(M))*(erfc(2*Pfa))^(-1);
+            eta = (1/sqrt(M))*s(erfc(2*Pfa))^(-1);
 
             Pd = (1/2).*erfc(sqrt(M).*((eta-rho)./(1-rho.^2)));
 
