@@ -2,7 +2,7 @@
 
 function ls_SNR_generation(cfg)
 
-        %% General parameters and load specific parameters from config.txt file
+   %% General parameters and load specific parameters from config.txt file
     parsecfg
     
     % Speed of light, wavelength
