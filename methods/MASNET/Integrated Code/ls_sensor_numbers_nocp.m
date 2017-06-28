@@ -61,7 +61,7 @@ for pfa_idx=1:numel(pfa)
     end
 end
 
- filename3 = ['~/Documents/projects/ls_brain/results/Probs_CORRSHD_NOCP_TS_' num2str(Type_Scenario)...
+ filename3 = ['~/Documents/ls_brain/results/Probs_CORRSHD_NOCP_TS_' num2str(Type_Scenario)...
         '_TE_' num2str(Type_Environment) '_Num_Sensors_' num2str(S_) '_SepTar_' num2str(Int_target_x) '_' num2str(Int_target_y) '_Pt_' num2str(Pt) 'dBW_sigma_' num2str(sigm) 'dB.mat'];
  save(filename3,'psep_d','pdiv_d','pbest_d'); 
 
