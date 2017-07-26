@@ -9,15 +9,14 @@
 % xlabel('Probability false alarm')
 % ylabel('Probability of detection')
 % title('Separated - Urban - Pt:-43dBW - SxF:5')
-cd ~/Documents/ls_brain/results/masnet/probs
 
-load Probs_CORRSHD_TS_0_TE_0_Num_Sensors_96_SepTar_50_50_Pt_-33dBW_sigma_9dB.mat
+load Probs_CORRSHD_TS_0_TE_0_Num_Sensors_96_SepTar_50_50_Pt_-23dBW_sigma_9dB.mat
 idx=1;
 ff=1;
 sens=(1:96);
 figure
 hold on
-plot(sens,pall_av(:,idx))
+plot(sens,psep_d(:,idx))
 plot(sens,pdiv_d(:,idx),'r')
 plot(sens,pbsens_d(:,idx),'m')
 plot(sens,popt_d(:,idx),'g')
@@ -33,6 +32,57 @@ xlabel('Number of Sensors'), ylabel('Probability of detection')
 title('Fc:1 - Pt:-33dbW - pfa:0.01')
 legend({'Sep:agnostic' 'Sep:fusion' 'Sep:best1' 'Sep:optimal' 'Mix:agnostic' 'Mix:fusion' 'Mix:best1' 'Mix:optimal'})
 legend boxoff
+
+
+load Probs_CORRSHD_NOCP_TS_0_TE_0_Num_Sensors_96_SepTar_50_50_Pt_-23dBW_sigma_9dB.mat
+idx=1;
+ff=1;
+sens=(1:96);
+figure
+hold on
+plot(sens,psep_d(:,idx))
+plot(sens,pdiv_d(:,idx),'r')
+plot(sens,pbsens_d(:,idx),'m')
+plot(sens,popt_d(:,idx),'g')
+load Probs_CORRSHD_NOCP_TS_1_TE_0_Num_Sensors_96_SepTar_500_500_Pt_-23dBW_sigma_9dB.mat
+plot(sens,psep_d(:,idx),'b.-')
+plot(sens,pdiv_d(:,idx),'r.-')
+plot(sens,pbsens_d(:,idx),'m.-')
+plot(sens,popt_d(:,idx),'g.-')
+xlim([1 96])
+set(gca,'Xtick',0:4:97)
+set(gca,'XtickLabel',(0:4:97)*ff)
+xlabel('Number of Sensors'), ylabel('Probability of detection')
+title('Fc:1 - Pt:-33dbW - pfa:0.01')
+legend({'Sep:agnostic' 'Sep:fusion' 'Sep:best1' 'Sep:optimal' 'Mix:agnostic' 'Mix:fusion' 'Mix:best1' 'Mix:optimal'})
+legend boxoff
+
+load Probs_CORRSHD_TS_0_TE_0_Num_Sensors_96_SepTar_50_50_Pt_-43dBW_sigma_9dB.mat
+idx=1;
+ff=1;
+sens=(1:96);
+figure
+hold on
+plot(sens,psep_d(:,idx))
+plot(sens,pdiv_d(:,idx),'r')
+plot(sens,pbsens_d(:,idx),'m')
+plot(sens,popt_d(:,idx),'g')
+load Probs_CORRSHD_TS_1_TE_0_Num_Sensors_96_SepTar_500_500_Pt_-43dBW_sigma_9dB.mat
+plot(sens,psep_d(:,idx),'b.-')
+plot(sens,pdiv_d(:,idx),'r.-')
+plot(sens,pbsens_d(:,idx),'m.-')
+plot(sens,popt_d(:,idx),'g.-')
+xlim([1 96])
+set(gca,'Xtick',0:4:97)
+set(gca,'XtickLabel',(0:4:97)*ff)
+xlabel('Number of Sensors'), ylabel('Probability of detection')
+title('Fc:1 - Pt:-43dbW - pfa:0.01')
+legend({'Sep:agnostic' 'Sep:fusion' 'Sep:best1' 'Sep:optimal' 'Mix:agnostic' 'Mix:fusion' 'Mix:best1' 'Mix:optimal'})
+legend boxoff
+
+
+
+
 
 load Probs_CORRSHD_TS_0_TE_0_Num_Sensors_96_SepTar_50_50_Pt_-33dBW_sigma_9dB.mat
 figure

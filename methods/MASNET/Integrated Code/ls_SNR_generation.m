@@ -340,7 +340,7 @@ function ls_SNR_generation(cfg)
 
     %% Save results in file
 
-    filename3 = ['~/Documents/projects/ls_brain/results/SNR_CORRSHD_TS_' num2str(Type_Scenario)...
+    filename3 = ['~/Documents/projects/ls_brain/results/masnet/snr/SNR_CORRSHD_TS_' num2str(Type_Scenario)...
         '_TE_' num2str(Type_Environment) '_Num_Sensors_' num2str(Num_sensors) '_SepTar_' num2str(Int_target_x) '_' num2str(Int_target_y) '_Pt_' num2str(Pt) 'dBW_sigma_' num2str(sigm) 'dB.mat'];
     save(filename3,'ALL_SNR','ALL_Pr','ALL_Noise','cfg');            
     

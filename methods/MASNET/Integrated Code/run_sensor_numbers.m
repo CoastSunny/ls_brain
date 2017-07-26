@@ -1,4 +1,4 @@
-cd ~/Documents/ls_brain/results/
+cd ~/Documents/ls_brain/results/masnet/snr
 files=dir('*SNR*');
 
 for i=1:numel(files)
