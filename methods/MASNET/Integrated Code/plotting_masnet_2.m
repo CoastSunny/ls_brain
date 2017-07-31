@@ -18,15 +18,24 @@ sens=(1:96);
 figure
 hold on
 % errorbar(sens,pall_av(:,idx),pall_std(:,idx),'b')
+plot(sens,pall_av(:,idx),'b')
 errorbar(sens,pbsens_av(:,idx),pbsens_std(:,idx),'r')
 errorbar(sens,pmean_av(:,idx),pmean_std(:,idx),'m')
 errorbar(sens,psum_av(:,idx),psum_std(:,idx),'g')
+xlim([1 96])
+set(gca,'Xtick',0:4:97)
+set(gca,'XtickLabel',(0:4:97)*ff)
+xlabel('Number of Sensors'), ylabel('Probability of detection')
+title('Fc:1 - Pt:-43dbW - pfa:0.01')
+legend({'naive' 'best1' 'fusion' 'optimal'},'Location','SouthEast')
+legend boxoff 
+
 figure,
 load Probs_CORRSHD_TS_1_TE_0_Num_Sensors_96_SepTar_500_500_Pt_-23dBW_sigma_9dB.mat
-errorbar(sens,pall_av(:,idx),pall_std(:,idx),'b')
-errorbar(sens,pbsens_av(:,idx),pbsens_std(:,idx),'r')
-errorbar(sens,pmean_av(:,idx),pmean_std(:,idx),'m')
-errorbar(sens,psum_av(:,idx),psum_std(:,idx),'g')
+plot(sens,psep_d(:,idx),'b.-')
+plot(sens,pdiv_d(:,idx),'r.-')
+plot(sens,pbsens_d(:,idx),'m.-')
+plot(sens,popt_d(:,idx),'g.-')
 xlim([1 96])
 set(gca,'Xtick',0:4:97)
 set(gca,'XtickLabel',(0:4:97)*ff)

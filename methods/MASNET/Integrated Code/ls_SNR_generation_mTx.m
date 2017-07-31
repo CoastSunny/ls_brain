@@ -1,6 +1,6 @@
 %% This function runs N_monte times the WINNER-II CHANNEL and calculates the SNR at: Each target position, for each Montecarlo run and each sensor
 
-function ls_SNR_generation(cfg)
+function ls_SNR_generation_mTx(cfg)
 
    %% General parameters and load specific parameters from config.txt file
     parsecfg
@@ -140,12 +140,12 @@ function ls_SNR_generation(cfg)
     % 2];[1];[3 2]} and so on.
     MsAAIdx = ones(Num_sensors,1);    % All sensor the same. 1 element array
     MsAAIdx = MsAAIdx'.*1;
-    BsAAIdxCell = {[1]};                % target/BST also same as sensors
+    BsAAIdxCell = {1 2};                % target/BST also same as sensors
 
     % Define number of channel pair (link between target and each sensor).
     % There are as many as sensors are if there is one target, 2 times as many
     % if there are 2 targets, so on
-    chan_pairing = length(MsAAIdx);
+    chan_pairing = 2*length(MsAAIdx);
 
     % Define network layout structure for wim function. Careful! the function
     % layoutparset will generate a random 500mX500m cell with random stations
@@ -242,7 +242,6 @@ function ls_SNR_generation(cfg)
                 waitbar(process/N_monte,w)
 
                 for m=1:1:N_monte
-
 
                     % Set target position from origin of coordinates in metres. Now, the target
                     % position is set, but later it needs to be changed to all possible

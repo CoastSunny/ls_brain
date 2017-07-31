@@ -4,10 +4,10 @@
 clear all
 
 % Expected power transmitted by the target {in dBW}. Currently this is not taken as input
-cfg.Pt=-53;
+cfg.Pt=-23;
 
 % Number of runs in the Montecarlo simulation
-cfg.N_monte=50;
+cfg.N_monte=5;
 
 % Carrier frequency {in Hz}
 cfg.Fc=2.4e9;
