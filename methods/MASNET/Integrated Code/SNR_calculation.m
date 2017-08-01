@@ -112,7 +112,7 @@ function [SNR Pr Noise] = SNR_calculation(cir,distance,lambda,Type_Environment,d
                 Pr(:,ii) = Pt - PL1 - SHD + MP(:,ii);      % For each sensor and time sample calculates the received power. Here we can choose what path loss model we want by changing PL1 to PL2
 %                Pr(:,ii) = MP(:,1);                          % This option is for when the winner channel function already calculates the pathloss and shadowing so the multipath components are already the power received.
 %                Pr(:,ii) = Pt - PL1;           % This option is to calculate a deterministic Pr. Used for the calibration analysis
-%                  Pr(:,ii) = Pt - PL1 - SHD;     % This option is to calculate a Pr considering only shadowing as a random factor. For the calibration analysis.
+%                Pr(:,ii) = Pt - PL1 - SHD;     % This option is to calculate a Pr considering only shadowing as a random factor. For the calibration analysis.
             end
 
             % Calculate the Noise

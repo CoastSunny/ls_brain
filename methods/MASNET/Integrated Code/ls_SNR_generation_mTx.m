@@ -120,7 +120,7 @@ function ls_SNR_generation_mTx(cfg)
                            % Num_sensors=64 if Sep_sensors=250.
     %Pt = -43;
     %Sep_sensors = floor(sqrt(760000/144));
-     Sep_sensors = 78;
+    Sep_sensors = 78;
     [Sensors,~] = sensor_positioning(Type_Scenario,Size_Scenario,Size_FZ1_x,Size_FZ1_y,Size_FZ2_x,Size_FZ2_y,Sep_sensors,hs);
 
     % Define sensor velocities. For now, all are static. The velocity of the
