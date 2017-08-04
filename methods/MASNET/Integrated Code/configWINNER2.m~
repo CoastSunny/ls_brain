@@ -6,9 +6,6 @@ clear all
 % Expected power transmitted by the target {in dBW}. Currently this is not taken as input
 cfg.Pt=-33;
 
-% Number of samples along the time of observation of the channel
-cfg.Time_samples=10;
-
 % Number of runs in the Montecarlo simulation
 cfg.N_monte=5;
 
@@ -68,6 +65,9 @@ cfg.Antenna_slant=0;
 
 % Defines the oversampling factor when calculating the CIR values. Important to be high to account for the Doppler effect.
 cfg.Sample_Density=64;
+
+% Number of samples along the time of observation of the channel
+cfg.Time_samples=1;
 
 % Desired sampling frequency {in Hz}. Depends on the bandwidth of the expected WIFI or LTE signal
 cfg.Fs=30.72e6;

@@ -1,4 +1,4 @@
-function ls_sensor_numbers(fl)
+function ls_sensor_numbers_LTE(fl)
 
 
 S_=96;      % Caution: This value might change
@@ -32,9 +32,9 @@ for pfa_idx=1:numel(pfa)
         for j=1:96 %number of perms
             
             idx = randperm(S_,i);
-            p_all = calculating_Prob_detection_v2(AC_sample,Td,Tc,ALL_snr(:,:,:,idx,:),pfa(pfa_idx));
-            p_mean = calculating_Prob_detection_v2(AC_sample,Td,Tc,mean(ALL_snr(:,:,:,idx,:),4),pfa(pfa_idx));
-            p_sum= calculating_Prob_detection_v2(AC_sample,Td,Tc,sum(ALL_snr(:,:,:,idx,:),4),pfa(pfa_idx));
+            p_all = calculating_Prob_detection_v2_LTE(AC_sample,Td,Tc,ALL_snr(:,:,:,idx),pfa(pfa_idx));
+            p_mean = calculating_Prob_detection_v2_LTE(AC_sample,Td,Tc,mean(ALL_snr(:,:,:,idx),4),pfa(pfa_idx));
+            p_sum= calculating_Prob_detection_v2_LTE(AC_sample,Td,Tc,sum(ALL_snr(:,:,:,idx),4),pfa(pfa_idx));
 
             % get average performance over all target locations and shadowing
             p_all_s(j,:) = mean(p_all(:)); 
@@ -74,9 +74,8 @@ for pfa_idx=1:numel(pfa)
     end
 end
 
-%  filename3 = ['~/Documents/ls_brain/results/masnet/probs/Probs_CORRSHD_TS_' num2str(Type_Scenario)...
-%         '_TE_' num2str(Type_Environment) '_Num_Sensors_' num2str(S_) '_SepTar_' num2str(Int_target_x) '_' num2str(Int_target_y) '_Pt_' num2str(Pt) 'dBW_sigma_' num2str(sigm) 'dB.mat'];
- filename3 = ['~/Documents/projects/ls_brain/results/masnet/probs/test.mat'];
+ filename3 = ['~/Documents/ls_brain/results/masnet/probs/Probs_CORRSHD_TS_' num2str(Type_Scenario)...
+        '_TE_' num2str(Type_Environment) '_Num_Sensors_' num2str(S_) '_SepTar_' num2str(Int_target_x) '_' num2str(Int_target_y) '_Pt_' num2str(Pt) 'dBW_sigma_' num2str(sigm) 'dB.mat'];
  save(filename3,'pall_av','pall_std','pmean_av','pmean_std','psum_av','psum_std','pbsens_av','pbsens_std'); 
 
 

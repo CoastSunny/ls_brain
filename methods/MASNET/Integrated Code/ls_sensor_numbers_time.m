@@ -25,6 +25,7 @@ ALL_Pr = 10.^(ALL_Pr./10);
 ALL_noise = 10.^(ALL_Noise./10);
 
 pfa=0.01:0.01:0.1;
+tm=5;
 for pfa_idx=1:numel(pfa)
     
     for i=1:1:S_
@@ -32,10 +33,14 @@ for pfa_idx=1:numel(pfa)
         for j=1:96 %number of perms
             
             idx = randperm(S_,i);
-            p_all = calculating_Prob_detection_v2(AC_sample,Td,Tc,ALL_snr(:,:,:,idx,:),pfa(pfa_idx));
-            p_mean = calculating_Prob_detection_v2(AC_sample,Td,Tc,mean(ALL_snr(:,:,:,idx,:),4),pfa(pfa_idx));
-            p_sum= calculating_Prob_detection_v2(AC_sample,Td,Tc,sum(ALL_snr(:,:,:,idx,:),4),pfa(pfa_idx));
-
+            p_all = calculating_Prob_detection_v2(AC_sample,Td,Tc,ALL_snr(:,:,:,idx,1:tm),pfa(pfa_idx));
+            p_mean = calculating_Prob_detection_v2(AC_sample,Td,Tc,mean(ALL_snr(:,:,:,idx,1:tm),4),pfa(pfa_idx));
+            p_sum= calculating_Prob_detection_v2(AC_sample,Td,Tc,sum(ALL_snr(:,:,:,idx,1:tm),4),pfa(pfa_idx));
+            if size(p_all,5)>1
+                p_all=1-prod(1-p_all,5);
+                p_mean=1-prod(1-p_mean,5);
+                p_sum=1-prod(1-p_sum,5);
+            end
             % get average performance over all target locations and shadowing
             p_all_s(j,:) = mean(p_all(:)); 
             s_all_s(j,:) = std(p_all(:));

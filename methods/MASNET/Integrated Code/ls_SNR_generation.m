@@ -222,7 +222,7 @@ function ls_SNR_generation(cfg)
 
     % This matrix will store the snr values of each sensor at each target position for each Montecarlo run
 
-    ALL_SNR = zeros(N_target_pos_x,N_target_pos_y,N_monte,Num_sensors);     
+    ALL_SNR = zeros(N_target_pos_x,N_target_pos_y,N_monte,Num_sensors,Time_samples);     
 
     %% Start the run for each possible position of the target
 
@@ -306,11 +306,9 @@ function ls_SNR_generation(cfg)
 
                     % Calculate the SNR
 
-                    [SNR ALL_Pr(indx_x,indx_y,m,:) ALL_Noise(indx_x,indx_y,m,:)] = ...
+                    [ALL_SNR(indx_x,indx_y,m,:,:) ALL_Pr(indx_x,indx_y,m,:,:) ALL_Noise(indx_x,indx_y,m,:,:)] = ...
                         SNR_calculation(cir,distance,lambda,Type_Environment,d_0,sigm,Num_sensors,Time_samples,Pt,NF,n,BW,layoutpar);
-
-                    ALL_SNR(indx_x,indx_y,m,:) = SNR;   % Store the resulting snr in this target position for this run. No it does not consider more than 1 time sample!
-
+                    
                     process = process + 1;
 
                     waitbar(process/N_monte,w)
@@ -339,8 +337,9 @@ function ls_SNR_generation(cfg)
 
     %% Save results in file
 
-    filename3 = ['~/Documents/projects/ls_brain/results/masnet/snr/SNR_CORRSHD_TS_' num2str(Type_Scenario)...
-        '_TE_' num2str(Type_Environment) '_Num_Sensors_' num2str(Num_sensors) '_SepTar_' num2str(Int_target_x) '_' num2str(Int_target_y) '_Pt_' num2str(Pt) 'dBW_sigma_' num2str(sigm) 'dB.mat'];
+%     filename3 = ['~/Documents/projects/ls_brain/results/masnet/snr/SNR_CORRSHD_TS_' num2str(Type_Scenario)...
+%         '_TE_' num2str(Type_Environment) '_Num_Sensors_' num2str(Num_sensors) '_SepTar_' num2str(Int_target_x) '_' num2str(Int_target_y) '_Pt_' num2str(Pt) 'dBW_sigma_' num2str(sigm) 'dB.mat'];
+    filename3 = ['~/Documents/projects/ls_brain/results/masnet/snr/test.mat'];
     save(filename3,'ALL_SNR','ALL_Pr','ALL_Noise','cfg');            
     
 end
