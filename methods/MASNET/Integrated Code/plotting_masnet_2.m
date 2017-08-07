@@ -12,7 +12,7 @@
 cd ~/Documents/projects/ls_brain/results/masnet/probs
 
 load ~/Documents/projects/ls_brain/results/masnet/probs/test.mat
-idx=10;
+idx=1;
 ff=1;
 sens=(1:96);
 figure
@@ -26,7 +26,27 @@ xlim([1 96])
 set(gca,'Xtick',0:4:97)
 set(gca,'XtickLabel',(0:4:97)*ff)
 xlabel('Number of Sensors'), ylabel('Probability of detection')
-title('Fc:1 - Pt:-23dbW - pfa:0.01')
+title('t:1 - Pt:-43dbW - pfa:0.01')
+legend({'naive' 'best1' 'fusion' 'optimal'},'Location','SouthEast')
+legend boxoff 
+
+
+load ~/Documents/projects/ls_brain/results/masnet/probs/test.mat
+idx=1;
+ff=1;
+sens=(1:96);
+figure
+hold on
+% errorbar(sens,pall_av(:,idx),pall_std(:,idx),'b')
+plot(sens,pall_av(:,idx),'b')
+plot(sens,pbsens_av(:,idx),'r')
+plot(sens,pmean_av(:,idx),'m')
+plot(sens,psum_av(:,idx),'g')
+xlim([1 96])
+set(gca,'Xtick',0:4:97)
+set(gca,'XtickLabel',(0:4:97)*ff)
+xlabel('Number of Sensors'), ylabel('Probability of detection')
+title('t:3 - Pt:-43dbW - pfa:0.01')
 legend({'naive' 'best1' 'fusion' 'optimal'},'Location','SouthEast')
 legend boxoff 
 

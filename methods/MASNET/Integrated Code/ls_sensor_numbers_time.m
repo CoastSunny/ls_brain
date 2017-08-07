@@ -1,4 +1,4 @@
-function ls_sensor_numbers(fl)
+function ls_sensor_numbers_time(fl)
 
 
 S_=96;      % Caution: This value might change
@@ -25,7 +25,7 @@ ALL_Pr = 10.^(ALL_Pr./10);
 ALL_noise = 10.^(ALL_Noise./10);
 
 pfa=0.01:0.01:0.1;
-tm=5;
+tm=3;
 for pfa_idx=1:numel(pfa)
     
     for i=1:1:S_
