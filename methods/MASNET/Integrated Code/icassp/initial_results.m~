@@ -1,4 +1,4 @@
-N=10;
+N=25;
 T=50;
 K=10;
 S=100;
@@ -12,7 +12,7 @@ ND_seq=[];ND_gr=[];ACC_seq=[];ACC_gr=[];TTD_seq=[];TTD_gr=[];CD_seq=[];CD_gr=[];
 g=[1 5 10 20 25];
 k=1:20;
 d=0.1:0.1:1;
-loc_thr=0.5:0.5:2.5;
+loc_thr=0.2:0.2:1;
 for g_idx=1:numel(g)
     for k_idx=1:numel(k)
         for d_idx=1:numel(d)
@@ -32,23 +32,22 @@ for g_idx=1:numel(g)
                 TTD_gr(g_idx,k_idx,d_idx,:)=res.ttd_gr;
                 TTD_rnd(g_idx,k_idx,d_idx,:)=res.ttd_rnd;
             for l_idx=1:numel(loc_thr)               
-                Ploc_seq(g_idx,k_idx,d_idx,l_idx)=sum(res.acc_seq<loc_thr(l_idx))/numel(res.acc_seq);
-                Ploc_gr(g_idx,k_idx,d_idx,l_idx)=sum(res.acc_gr<loc_thr(l_idx))/numel(res.acc_gr);
-                Ploc_rnd(g_idx,k_idx,d_idx,l_idx)=sum(res.acc_rnd<loc_thr(l_idx))/numel(res.acc_rnd);
+                Ploc_seq(g_idx,k_idx,d_idx,l_idx)=sum(res.acc_seq<loc_thr)/numel(res.acc_seq);
+                Ploc_gr(g_idx,k_idx,d_idx,l_idx)=sum(res.acc_gr<loc_thr)/numel(res.acc_gr);
+                Ploc_rnd(g_idx,k_idx,d_idx,l_idx)=sum(res.acc_rnd<loc_thr)/numel(res.acc_rnd);
             end
         end
         
     end
 end
 
-k=10;d=10;l=2;
+k=10;d=10;l=10;
 figure
-plot(TTD_gr(:,k,d,:),Ploc_gr(:,k,d,l),'o-','Linewidth',2)
+plot(TTD_gr(:,k,d,:),Ploc_gr(:,k,d),'o-','Linewidth',2)
 hold on
-plot(TTD_rnd(:,k,d,:),Ploc_rnd(:,k,d,l),'*-','Linewidth',2)
+plot(TTD_rnd(:,k,d,:),Ploc_rnd(:,k,d),'*-','Linewidth',2)
 xlabel('Time slot');ylabel('Probability of localisation');
-ylim([0 1.1])
-title('Time slots to detect all vs Ploc, S=100,-33dbW, N=10,K=10,\theta=1m')
+title('Time slots to detect all vs Ploc, -43dbW N=25,K=10')
 
 dd=10;
 figure

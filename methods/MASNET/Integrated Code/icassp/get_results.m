@@ -4,10 +4,12 @@ pr_hit_seq = D*K/N;
 pr_hit_gr  = D*G*K/N;
 pr_hit_rnd = D*1;
 
-res.acc_seq=acc_av(S,fpr_idx,:);
-res.acc_gr=acc_av(S/G,fpr_idx,:);
-res.acc_rnd=acc_av(S/N,fpr_idx,:);
-
+res.acc_seq=squeeze(acc_av(S,fpr_idx,:));
+res.acc_gr=squeeze(acc_av(S/G,fpr_idx,:));
+res.acc_rnd=squeeze(acc_av(S/N,fpr_idx,:));
+res.acc_seq(isnan(res.acc_seq))=[];
+res.acc_gr(isnan(res.acc_gr))=[];
+res.acc_rnd(isnan(res.acc_rnd))=[];
 for t=1:T
     
     if t==1

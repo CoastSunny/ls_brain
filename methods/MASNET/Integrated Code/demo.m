@@ -22,7 +22,7 @@ function varargout = demo(varargin)
 
 % Edit the above text to modify the response to help demo
 
-% Last Modified by GUIDE v2.5 26-Sep-2017 05:55:03
+% Last Modified by GUIDE v2.5 26-Sep-2017 07:00:23
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -234,22 +234,31 @@ idx=1;
 ff=1;
 nsens=size(pbsens_av,1);
 sens=(1:nsens);
-figure
+axes(handles.axes1)
+cla
 hold on
 % errorbar(sens,pall_av(:,idx),pall_std(:,idx),'b')
 % plot(sens,pall_av(:,idx),'b')
-errorbar(sens,pbsens_av(:,idx),pbsens_std(:,idx),'r')
-errorbar(sens,pmean_av(:,idx),pmean_std(:,idx),'m')
-errorbar(sens,psum_av(:,idx),psum_std(:,idx),'g')
+if handles.errorbars.Value==1
+    errorbar(sens,pbsens_av(:,idx),pbsens_std(:,idx),'r')
+    errorbar(sens,pmean_av(:,idx),pmean_std(:,idx),'m')
+    errorbar(sens,psum_av(:,idx),psum_std(:,idx),'g')
+else
+    plot(sens,pbsens_av(:,idx),'r')
+    plot(sens,pmean_av(:,idx),'m')
+    plot(sens,psum_av(:,idx),'g')
+end
 xlim([1 nsens])
 ylim([0 1.2])
-set(gca,'Xtick',0:4:(nsens+1))
-set(gca,'XtickLabel',(0:4:(nsens+1))*ff)
+set(gca,'Xtick',0:8:(nsens+1))
+set(gca,'XtickLabel',(0:8:(nsens+1))*ff)
 set(gca,'Ytick',0:0.1:1)
 set(gca,'YtickLabel',(0:.1:1))
 xlabel('Number of Sensors'), ylabel('Probability of detection')
-title('Pt:-33dbW - pfa:0.01')
-legend({ 'best1' 'fusion' 'optimal'},'Location','East')
+pt=strfind(FileName,'Pt');pt=FileName(pt+4:pt+5);
+ts=strfind(FileName,'TS');ts=FileName(ts+3);
+title(['Pt:-' num2str(pt) ' dbW - ' 'Scenario: ' num2str(ts) ])
+legend({ 'best1' 'fusion' 'optimal'},'Location','NorthWest')
 legend boxoff 
 
 % --- If Enable == 'on', executes on mouse press in 5 pixel border.
@@ -350,3 +359,21 @@ function shadowing_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes during object creation, after setting all properties.
+function axes1_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to axes1 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: place code in OpeningFcn to populate axes1
+
+
+% --- Executes on button press in errorbars.
+function errorbars_Callback(hObject, eventdata, handles)
+% hObject    handle to errorbars (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of errorbars

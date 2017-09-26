@@ -1,4 +1,4 @@
-function ls_sensor_numbers(fl)
+function ls_sensor_numbers_icassp(fl)
 warning off
 
 S_=100;      % Caution: This value might change
