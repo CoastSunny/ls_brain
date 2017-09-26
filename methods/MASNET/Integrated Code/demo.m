@@ -22,7 +22,7 @@ function varargout = demo(varargin)
 
 % Edit the above text to modify the response to help demo
 
-% Last Modified by GUIDE v2.5 26-Sep-2017 07:00:23
+% Last Modified by GUIDE v2.5 26-Sep-2017 10:01:05
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -107,7 +107,7 @@ cfg.NAz=120;
 cfg.Antenna_slant=0;
 cfg.Sample_Density=64;
 cfg.Fs=30.72e6;
-if cfg.Type_Scenario==0
+if cfg.Type_Scenario==1
     cfg.Int_target_x=500;
     cfg.Int_target_y=500;
 else
@@ -123,12 +123,14 @@ cfg.Td=2048;
 cfg.AC_sample=6;
 cfg.Pfa=0.1;
 
-cfg.snrfolder='~/Documents/projects/ls_brain/results/masnet/snr/';
+cfg.snrfolder='~/Documents/ls_brain/results/masnet/snr/';
 ls_SNR_generation(cfg)
-fl=[cfg.snrfolder cfg.filename '_Time_' num2str(Time_samples)...
-    '_TS_' num2str(Type_Scenario) '_TE_' num2str(Type_Environment)...
-    '_Num_Sensors_' num2str(Num_sensors) '_SepTar_' num2str(Int_target_x)...
-    '_' num2str(Int_target_y) '_Pt_' num2str(Pt) 'dBW_sigma_' num2str(sigm) 'dB.mat'];
+fl=[cfg.snrfolder 'SNR_' cfg.filename '_Time_' num2str(cfg.Time_samples)...
+    '_TS_' num2str(cfg.Type_Scenario)...
+    '_TE_' num2str(cfg.Type_Environment)...
+    '_Num_Sensors_' num2str(cfg.Num_sensors) ...
+    '_Pt_' num2str(cfg.Pt)...
+    'dBW_sigma_' num2str(cfg.sigm) 'dB.mat'];
 ls_sensor_numbers(fl)
 
 function sensors_Callback(hObject, eventdata, handles)
@@ -227,7 +229,7 @@ function pushbutton2_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-snrfolder='~/Documents/projects/ls_brain/results/masnet/probs/';
+snrfolder='~/Documents/ls_brain/results/masnet/probs/';
 [FileName,PathName] = uigetfile([snrfolder '*.mat'],'Select the simulation output file');
 load(fullfile(PathName,FileName))
 idx=1;
@@ -377,3 +379,26 @@ function errorbars_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of errorbars
+
+
+% --- Executes on selection change in plottype.
+function plottype_Callback(hObject, eventdata, handles)
+% hObject    handle to plottype (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns plottype contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from plottype
+
+
+% --- Executes during object creation, after setting all properties.
+function plottype_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to plottype (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: listbox controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end

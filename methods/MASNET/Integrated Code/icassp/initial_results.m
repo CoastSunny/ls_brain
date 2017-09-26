@@ -1,4 +1,4 @@
-N=10;
+N=25;
 T=50;
 K=10;
 S=100;
@@ -41,14 +41,14 @@ for g_idx=1:numel(g)
     end
 end
 
-k=10;d=10;l=2;
+k=10;d=10;l=4;
 figure
 plot(TTD_gr(:,k,d,:),Ploc_gr(:,k,d,l),'o-','Linewidth',2)
 hold on
 plot(TTD_rnd(:,k,d,:),Ploc_rnd(:,k,d,l),'*-','Linewidth',2)
 xlabel('Time slot');ylabel('Probability of localisation');
 ylim([0 1.1])
-title('Time slots to detect all vs Ploc, S=100,-33dbW, N=10,K=10,\theta=1m')
+title('Time slots to detect all vs Ploc, S=100,-33dbW, N=25,K=10,\theta=2m')
 
 dd=10;
 figure

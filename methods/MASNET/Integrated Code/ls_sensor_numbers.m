@@ -1,12 +1,6 @@
 function ls_sensor_numbers(fl)
 
 
-S_=96;      % Caution: This value might change
-% This number of sensors helps to get the right
-% number of sensors positioned later. For
-% Separated: Num_sensors=76 if Sep_sensors=100 or
-% Num_sensors=96 if Sep_sensors=78, for Mixed:
-% Num_sensors=64 if Sep_sensors=250.
 if nargin<1
     cd ~/Documents/projects/ls_brain/results/masnet/snr
     uiopen;
@@ -18,7 +12,7 @@ parsecfg
 % Speed of light, wavelength
 c = 3e8;
 lambda = c/Fc;
-
+S_=cfg.Num_sensors;
 %% Here we calculate the probabilities of detection and BER but focused on the sensors. The idea is to be able to represent heat maps for each sensor position to determine the best placements for sensors
 ALL_snr = 10.^(ALL_SNR./10);
 ALL_Pr = 10.^(ALL_Pr./10);
@@ -29,7 +23,7 @@ for pfa_idx=1:numel(pfa)
     
     for i=1:1:S_
         
-        for j=1:96 %number of perms
+        for j=1:cfg.Num_sensors %number of perms
             
             idx = randperm(S_,i);
             p_all = calculating_Prob_detection_v2(AC_sample,Td,Tc,ALL_snr(:,:,:,idx,:),pfa(pfa_idx));
@@ -74,10 +68,14 @@ for pfa_idx=1:numel(pfa)
     end
 end
 
-  filename3 = ['~/Documents/projects/ls_brain/results/masnet/probs/Probs_CORRSHD_PSS_TS_' num2str(Type_Scenario)...
-         '_TE_' num2str(Type_Environment) '_Num_Sensors_' num2str(S_) '_SepTar_' num2str(Int_target_x) '_' num2str(Int_target_y) '_Pt_' num2str(Pt) 'dBW_sigma_' num2str(sigm) 'dB.mat'];
+filetosave = [ '~/Documents/ls_brain/results/masnet/probs/' 'Pr' filename '_Time_' num2str(Time_samples)...
+        '_TS_' num2str(Type_Scenario)...
+        '_TE_' num2str(Type_Environment)...
+        '_Num_Sensors_' num2str(Num_sensors)...
+        '_Pt_' num2str(Pt)...
+        'dBW_sigma_' num2str(sigm) 'dB.mat'];
  %filename3 = ['~/Documents/projects/ls_brain/results/masnet/probs/test.mat'];
- save(filename3,'pall_av','pall_std','pmean_av','pmean_std','psum_av','psum_std','pbsens_av','pbsens_std'); 
+ save(filetosave,'pall_av','pall_std','pmean_av','pmean_std','psum_av','psum_std','pbsens_av','pbsens_std'); 
 
 
 end

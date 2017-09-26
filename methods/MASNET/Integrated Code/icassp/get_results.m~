@@ -10,15 +10,14 @@ res.acc_rnd=squeeze(acc_av(S/N,fpr_idx,:));
 res.acc_seq(isnan(res.acc_seq))=[];
 res.acc_gr(isnan(res.acc_gr))=[];
 res.acc_rnd(isnan(res.acc_rnd))=[];
-pd_seq=pbsens_av(S,fpr_idx);
-pd_gr=pbsens_av(S/G,fpr_idx);
-pd_rnd=pbsens_av(S/N,fpr_idx);
 
 for t=1:T
     
-    if t==1        
-        nd_seq(t) = pr_hit_seq * pd_seq;         
-        nd_gr(t) = pr_hit_gr * pbsens_av(S/G,fpr_idx);        
+    if t==1
+        pd_seq=pbsens_ac(S,fpr_idx);
+        nd_seq(t) = pr_hit_seq * pd_seq; 
+        snd_seq(t) = t * pr_hit_seq * (1 - pr_hit_seq) * pd_seq^2;
+        nd_gr(t) = pr_hit_gr * pbsens_av(S/G,fpr_idx);
         nd_rnd(t) = pr_hit_rnd * pbsens_av(S/N,fpr_idx); 
         cum_dis_seq(t) = mean(acc_av(S,fpr_idx,:));
         cum_dis_gr(t) = mean(acc_av(S/G,fpr_idx,:));
@@ -30,10 +29,8 @@ for t=1:T
         cum_dis_seq(t) = cum_dis_seq(t-1) + mean(acc_av(S,fpr_idx,:));
         cum_dis_gr(t) = cum_dis_gr(t-1) + mean(acc_av(S/G,fpr_idx,:));
         cum_dis_rnd(t) = cum_dis_rnd(t-1) + mean(acc_av(S/N,fpr_idx,:));
-    end 
-    snd_seq(t) = t * pr_hit_seq * (1 - pr_hit_seq) * pd_seq^2;
-    snd_gr(t) = t * pr_hit_gr * (1 - pr_hit_gr) * pd_gr^2;
-    snd_rnd(t) = t * pr_hit_rnd * (1 - pr_hit_rnd) * pd_rnd^2;
+    end    
+
 end     
 res.nd_seq=nd_seq;
 res.nd_gr=nd_gr;

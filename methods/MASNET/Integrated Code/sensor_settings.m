@@ -11,7 +11,7 @@ function [layoutpar,distance] = sensor_settings(layoutpar,Sensors,Num_sensors,Ty
 
                     % Calculate the 2D distance between target and sensor i
                     %distance(i) = sqrt((Sensors(i,1,1)-Pos_target(1))^2+(Pos_target(2)-Sensors(i,2,1))^2);
-                    distance(i) = norm(Sensors(i,:)-Pos_target);
+                    distance(i) = norm(Sensors(i,:)-Pos_target');
                     % Check what environment is the scenario (Urban or rural) and then
                     % calculate the corresponding probability of the sensor i being in NLOS
                     % or LOS
