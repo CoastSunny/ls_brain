@@ -3,14 +3,26 @@
 
 clear all
 
+%
+cfg.snrfolder='~/Documents/projects/ls_brain/results/masnet/snr/';
+cfg.probsfolder='~/Documents/projects/ls_brain/results/masnet/probs/';
+%
+cfg.filename='_icassp_';
+
+% Number of sensors
+cfg.Num_sensors=100;
+
 % Expected power transmitted by the target {in dBW}. Currently this is not taken as input
 cfg.Pt=-43;
 
 % Number of samples along the time of observation of the channel
-cfg.Time_samples=10;
+cfg.Time_samples=1;
 
 % Number of runs in the Montecarlo simulation
-cfg.N_monte=5;
+cfg.N_monte=50;
+
+% The rate of false alarm where a sensor says it detected by it did not
+cfg.Pfa=0.1;
 
 % Carrier frequency {in Hz}
 cfg.Fc=2.4e9;
@@ -102,8 +114,6 @@ cfg.Td=2048;
 % Autocorrelation sample coefficient. It indicates how many LTE traces have been taken. The bigger it is the more samples are taken for the autocorrelation.
 cfg.AC_sample=6;
 
-% The rate of false alarm where a sensor says it detected by it did not
-cfg.Pfa=0.1;
 
 
 

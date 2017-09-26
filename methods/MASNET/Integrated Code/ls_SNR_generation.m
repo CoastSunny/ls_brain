@@ -113,15 +113,15 @@ function ls_SNR_generation(cfg)
 
     %% Scenario and network generation
 
-    Num_sensors = 96;      % This number of sensors helps to get the right 
+    %Num_sensors = 192;      % This number of sensors helps to get the right 
                            % number of sensors positioned later. For 
                            % Separated: Num_sensors=76 if Sep_sensors=100 or
                            % Num_sensors=96 if Sep_sensors=78, for Mixed: 
                            % Num_sensors=64 if Sep_sensors=250.
     %Pt = -43;
     %Sep_sensors = floor(sqrt(760000/144));
-     Sep_sensors = 78;
-    [Sensors,~] = sensor_positioning(Type_Scenario,Size_Scenario,Size_FZ1_x,Size_FZ1_y,Size_FZ2_x,Size_FZ2_y,Sep_sensors,hs);
+    
+    [Sensors,~] = sensor_positioning(Type_Scenario,Size_Scenario,Size_FZ1_x,Size_FZ1_y,Size_FZ2_x,Size_FZ2_y,Num_sensors,hs);
 
     % Define sensor velocities. For now, all are static. The velocity of the
     % sensors cannot be zero, therefore, if we want to analyse static sensors,
@@ -260,7 +260,7 @@ function ls_SNR_generation(cfg)
                     % This has to be done here everytime we change the position of the target.
 
                     [layoutpar,distance] = sensor_settings(layoutpar,Sensors,Num_sensors,Type_Environment,Pos_target,Vel_sensors);
-
+                    cfg.layoutpar=layoutpar;
                     % This is for setting the fixed propaagation condition and the
                     % distances where the first obstacles are located. Assummed
                     % here, there is a wall at coordinate x=(0 to some point in the x coordinate) and y=500 that obstruct the
@@ -304,11 +304,12 @@ function ls_SNR_generation(cfg)
 
                     cir = downsampling_cir(cir,delays,Delay_interval,Num_sensors,Time_samples);
 
-                    % Calculate the SNR
-
+                    % Calculate the SNR                 
                     [ALL_SNR(indx_x,indx_y,m,:,:) ALL_Pr(indx_x,indx_y,m,:,:) ALL_Noise(indx_x,indx_y,m,:,:)] = ...
                         SNR_calculation(cir,distance,lambda,Type_Environment,d_0,sigm,Num_sensors,Time_samples,Pt,NF,n,BW,layoutpar);
-                    
+                    if any(ALL_SNR==Inf)
+                        keyboard
+                    end
                     process = process + 1;
 
                     waitbar(process/N_monte,w)
@@ -337,9 +338,13 @@ function ls_SNR_generation(cfg)
 
     %% Save results in file
 
-%     filename3 = ['~/Documents/projects/ls_brain/results/masnet/snr/SNR_CORRSHD_TS_' num2str(Type_Scenario)...
-%         '_TE_' num2str(Type_Environment) '_Num_Sensors_' num2str(Num_sensors) '_SepTar_' num2str(Int_target_x) '_' num2str(Int_target_y) '_Pt_' num2str(Pt) 'dBW_sigma_' num2str(sigm) 'dB.mat'];
-    filename3 = ['~/Documents/projects/ls_brain/results/masnet/snr/test.mat'];
-    save(filename3,'ALL_SNR','ALL_Pr','ALL_Noise','cfg');            
+    filetosave = [ snrfolder 'SNR' filename '_Time_' num2str(Time_samples)...
+        '_TS_' num2str(Type_Scenario)...
+        '_TE_' num2str(Type_Environment)...
+        '_Num_Sensors_' num2str(Num_sensors)...
+        '_Pt_' num2str(Pt)...
+        'dBW_sigma_' num2str(sigm) 'dB.mat'];
+   % filename3 = ['~/Documents/projects/ls_brain/results/masnet/snr/test.mat'];
+    save(filetosave,'ALL_SNR','ALL_Pr','ALL_Noise','cfg');            
     
 end

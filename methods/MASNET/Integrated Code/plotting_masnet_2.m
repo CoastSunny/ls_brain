@@ -10,24 +10,27 @@
 % ylabel('Probability of detection')
 % title('Separated - Urban - Pt:-43dBW - SxF:5')
 cd ~/Documents/projects/ls_brain/results/masnet/probs
-
-load ~/Documents/projects/ls_brain/results/masnet/probs/test.mat
+Pr_icassp__Time_1_TS_1_TE_0_Num_Sensors_100_Pt_-43dBW_sigma_9dB
+load ~/Documents/projects/ls_brain/results/masnet/probs/Probs_CORRSHD_TS_0_TE_0_Num_Sensors_96_SepTar_50_50_Pt_-33dBW_sigma_9dB
 idx=1;
 ff=1;
 sens=(1:96);
 figure
 hold on
 % errorbar(sens,pall_av(:,idx),pall_std(:,idx),'b')
-plot(sens,pall_av(:,idx),'b')
+% plot(sens,pall_av(:,idx),'b')
 errorbar(sens,pbsens_av(:,idx),pbsens_std(:,idx),'r')
 errorbar(sens,pmean_av(:,idx),pmean_std(:,idx),'m')
 errorbar(sens,psum_av(:,idx),psum_std(:,idx),'g')
 xlim([1 96])
+ylim([0 1.2])
 set(gca,'Xtick',0:4:97)
 set(gca,'XtickLabel',(0:4:97)*ff)
+set(gca,'Ytick',0:0.1:1)
+set(gca,'YtickLabel',(0:.1:1))
 xlabel('Number of Sensors'), ylabel('Probability of detection')
-title('t:1 - Pt:-43dbW - pfa:0.01')
-legend({'naive' 'best1' 'fusion' 'optimal'},'Location','SouthEast')
+title('Pt:-33dbW - pfa:0.01')
+legend({ 'best1' 'fusion' 'optimal'},'Location','SouthEast')
 legend boxoff 
 
 

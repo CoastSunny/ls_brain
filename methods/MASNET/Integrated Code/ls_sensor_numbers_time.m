@@ -8,7 +8,7 @@ S_=96;      % Caution: This value might change
 % Num_sensors=96 if Sep_sensors=78, for Mixed:
 % Num_sensors=64 if Sep_sensors=250.
 if nargin<1
-    cd ~/Documents/ls_brain/results/masnet/snr
+    cd ~/Documents/projects/ls_brain/results/masnet/snr
     uiopen;
 else
    load(fl) 
@@ -25,17 +25,17 @@ ALL_Pr = 10.^(ALL_Pr./10);
 ALL_noise = 10.^(ALL_Noise./10);
 
 pfa=0.01:0.01:0.1;
-tm=3;
+tm=10;
 for pfa_idx=1:numel(pfa)
     
     for i=1:1:S_
         
         for j=1:96 %number of perms
-            
+            pp=1-(1-pfa(pfa_idx))^(1/tm);
             idx = randperm(S_,i);
-            p_all = calculating_Prob_detection_v2(AC_sample,Td,Tc,ALL_snr(:,:,:,idx,1:tm),pfa(pfa_idx));
-            p_mean = calculating_Prob_detection_v2(AC_sample,Td,Tc,mean(ALL_snr(:,:,:,idx,1:tm),4),pfa(pfa_idx));
-            p_sum= calculating_Prob_detection_v2(AC_sample,Td,Tc,sum(ALL_snr(:,:,:,idx,1:tm),4),pfa(pfa_idx));
+            p_all = calculating_Prob_detection_v2(AC_sample,Td,Tc,ALL_snr(:,:,:,idx,1:tm),pp);
+            p_mean = calculating_Prob_detection_v2(AC_sample,Td,Tc,mean(ALL_snr(:,:,:,idx,1:tm),4),pp);
+            p_sum= calculating_Prob_detection_v2(AC_sample,Td,Tc,sum(ALL_snr(:,:,:,idx,1:tm),4),pp);
             if size(p_all,5)>1
                 p_all=1-prod(1-p_all,5);
                 p_mean=1-prod(1-p_mean,5);
@@ -79,9 +79,9 @@ for pfa_idx=1:numel(pfa)
     end
 end
 
-%  filename3 = ['~/Documents/ls_brain/results/masnet/probs/Probs_CORRSHD_TS_' num2str(Type_Scenario)...
-%         '_TE_' num2str(Type_Environment) '_Num_Sensors_' num2str(S_) '_SepTar_' num2str(Int_target_x) '_' num2str(Int_target_y) '_Pt_' num2str(Pt) 'dBW_sigma_' num2str(sigm) 'dB.mat'];
- filename3 = ['~/Documents/projects/ls_brain/results/masnet/probs/test.mat'];
+  filename3 = ['~/Documents/projects/ls_brain/results/masnet/probs/Probs_CORRSHD_Time_' num2str(tm) '_TS_' num2str(Type_Scenario)...
+         '_TE_' num2str(Type_Environment) '_Num_Sensors_' num2str(S_) '_SepTar_' num2str(Int_target_x) '_' num2str(Int_target_y) '_Pt_' num2str(Pt) 'dBW_sigma_' num2str(sigm) 'dB.mat'];
+
  save(filename3,'pall_av','pall_std','pmean_av','pmean_std','psum_av','psum_std','pbsens_av','pbsens_std'); 
 
 

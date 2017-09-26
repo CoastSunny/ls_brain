@@ -1,4 +1,4 @@
-function [Sensors,Num_sensors] = sensor_positioning(Type_Scenario,Size_Scenario,Size_FZ1_x,Size_FZ1_y,Size_FZ2_x,Size_FZ2_y,Sep_sensors,hs)
+function [Sensors,Num_sensors] = sensor_positioning(Type_Scenario,Size_Scenario,Size_FZ1_x,Size_FZ1_y,Size_FZ2_x,Size_FZ2_y,Num_sensors,hs)
 
     if Type_Scenario == 0
 
@@ -82,14 +82,16 @@ function [Sensors,Num_sensors] = sensor_positioning(Type_Scenario,Size_Scenario,
         % cover all the scenario area
 
         Area_FZ = Size_Scenario*Size_Scenario;
-
-        Num_sensors = floor(Area_FZ/(Sep_sensors)^2);
+        side=Size_Scenario;
+        ceilpower=ceil(sqrt(Num_sensors));
+        Sep_sensors_x = side/(ceilpower);
+        Sep_sensors_y = side/(ceilpower);
 
         Sensors = zeros(Num_sensors,3);
 
         indx = 0;
-        for p_x=0+Sep_sensors/2:Sep_sensors:Size_Scenario-Sep_sensors/2
-            for p_y=0+Sep_sensors/2:Sep_sensors:Size_Scenario-Sep_sensors/2
+        for p_x=Sep_sensors_x:Sep_sensors_x:Size_Scenario
+            for p_y=Sep_sensors_y:Sep_sensors_x:Size_Scenario
         %         ind_pos_x = p_x/Sep_sensors + 1;
         %         ind_pos_y = p_y/Sep_sensors + 1;
                 indx = indx + 1;
@@ -98,6 +100,7 @@ function [Sensors,Num_sensors] = sensor_positioning(Type_Scenario,Size_Scenario,
                 Sensors(indx,:)=[round(p_x);round(p_y);hs];
             end
         end
-
+        rand_perm=randperm(ceilpower^2);
+        Sensors(rand_perm(1:(ceilpower^2-Num_sensors)),:,:)=[];
     end
 end

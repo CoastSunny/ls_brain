@@ -8,7 +8,7 @@ S_=96;      % Caution: This value might change
 % Num_sensors=96 if Sep_sensors=78, for Mixed:
 % Num_sensors=64 if Sep_sensors=250.
 if nargin<1
-    cd ~/Documents/ls_brain/results/masnet/snr
+    cd ~/Documents/projects/ls_brain/results/masnet/snr
     uiopen;
 else
    load(fl) 
@@ -74,9 +74,9 @@ for pfa_idx=1:numel(pfa)
     end
 end
 
-%  filename3 = ['~/Documents/ls_brain/results/masnet/probs/Probs_CORRSHD_TS_' num2str(Type_Scenario)...
-%         '_TE_' num2str(Type_Environment) '_Num_Sensors_' num2str(S_) '_SepTar_' num2str(Int_target_x) '_' num2str(Int_target_y) '_Pt_' num2str(Pt) 'dBW_sigma_' num2str(sigm) 'dB.mat'];
- filename3 = ['~/Documents/projects/ls_brain/results/masnet/probs/test.mat'];
+  filename3 = ['~/Documents/projects/ls_brain/results/masnet/probs/Probs_CORRSHD_PSS_TS_' num2str(Type_Scenario)...
+         '_TE_' num2str(Type_Environment) '_Num_Sensors_' num2str(S_) '_SepTar_' num2str(Int_target_x) '_' num2str(Int_target_y) '_Pt_' num2str(Pt) 'dBW_sigma_' num2str(sigm) 'dB.mat'];
+ %filename3 = ['~/Documents/projects/ls_brain/results/masnet/probs/test.mat'];
  save(filename3,'pall_av','pall_std','pmean_av','pmean_std','psum_av','psum_std','pbsens_av','pbsens_std'); 
 
 

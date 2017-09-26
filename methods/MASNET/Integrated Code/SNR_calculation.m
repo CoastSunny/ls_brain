@@ -49,7 +49,7 @@ function [SNR Pr Noise] = SNR_calculation(cir,distance,lambda,Type_Environment,d
                 end
             end
             
-            SHD=mvnrnd(zeros(1,96),sigma^2*exp(-D/d0)).';
+            SHD=mvnrnd(zeros(1,Num_sensors),sigma^2*exp(-D/d0)).';
             %SHD = 0;
 
             % Calculate received power of the multipath components for each link at
