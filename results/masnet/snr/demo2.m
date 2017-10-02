@@ -1,35 +1,35 @@
-function varargout = demo(varargin)
-% DEMO MATLAB code for demo.fig
-%      DEMO, by itself, creates a new DEMO or raises the existing
+function varargout = demo2(varargin)
+% DEMO2 MATLAB code for demo2.fig
+%      DEMO2, by itself, creates a new DEMO2 or raises the existing
 %      singleton*.
 %
-%      H = DEMO returns the handle to a new DEMO or the handle to
+%      H = DEMO2 returns the handle to a new DEMO2 or the handle to
 %      the existing singleton*.
 %
-%      DEMO('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in DEMO.M with the given input arguments.
+%      DEMO2('CALLBACK',hObject,eventData,handles,...) calls the local
+%      function named CALLBACK in DEMO2.M with the given input arguments.
 %
-%      DEMO('Property','Value',...) creates a new DEMO or raises the
+%      DEMO2('Property','Value',...) creates a new DEMO2 or raises the
 %      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before demo_OpeningFcn gets called.  An
+%      applied to the GUI before demo2_OpeningFcn gets called.  An
 %      unrecognized property name or invalid value makes property application
-%      stop.  All inputs are passed to demo_OpeningFcn via varargin.
+%      stop.  All inputs are passed to demo2_OpeningFcn via varargin.
 %
 %      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
 %      instance to run (singleton)".
 %
 % See also: GUIDE, GUIDATA, GUIHANDLES
 
-% Edit the above text to modify the response to help demo
+% Edit the above text to modify the response to help demo2
 
-% Last Modified by GUIDE v2.5 02-Oct-2017 01:04:25
+% Last Modified by GUIDE v2.5 02-Oct-2017 01:24:40
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
                    'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @demo_OpeningFcn, ...
-                   'gui_OutputFcn',  @demo_OutputFcn, ...
+                   'gui_OpeningFcn', @demo2_OpeningFcn, ...
+                   'gui_OutputFcn',  @demo2_OutputFcn, ...
                    'gui_LayoutFcn',  [] , ...
                    'gui_Callback',   []);
 if nargin && ischar(varargin{1})
@@ -44,26 +44,26 @@ end
 % End initialization code - DO NOT EDIT
 
 
-% --- Executes just before demo is made visible.
-function demo_OpeningFcn(hObject, eventdata, handles, varargin)
+% --- Executes just before demo2 is made visible.
+function demo2_OpeningFcn(hObject, eventdata, handles, varargin)
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% varargin   command line arguments to demo (see VARARGIN)
+% varargin   command line arguments to demo2 (see VARARGIN)
 
-% Choose default command line output for demo
+% Choose default command line output for demo2
 handles.output = hObject;
 
 % Update handles structure
 guidata(hObject, handles);
 
-% UIWAIT makes demo wait for user response (see UIRESUME)
+% UIWAIT makes demo2 wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
 
 
 % --- Outputs from this function are returned to the command line.
-function varargout = demo_OutputFcn(hObject, eventdata, handles) 
+function varargout = demo2_OutputFcn(hObject, eventdata, handles) 
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -83,7 +83,7 @@ cfg.Pt=str2num(handles.txpower.String);
 cfg.Num_sensors=str2num(handles.sensors.String)
 cfg.N_monte=str2num(handles.monte.String);
 cfg.filename=handles.filename.String;
-cfg.Type_Scenario=str2num(handles.scenario.String);
+cfg.Type_Scenario=1;%str2num(handles.scenario.String);
 cfg.Type_Environment=str2num(handles.env.String);
 cfg.NF=str2num(handles.nf.String);
 cfg.sigm=str2num(handles.shadowing.String);
@@ -131,7 +131,11 @@ fl=[cfg.snrfolder 'SNR_' cfg.filename '_Time_' num2str(cfg.Time_samples)...
     '_Num_Sensors_' num2str(cfg.Num_sensors) ...
     '_Pt_' num2str(cfg.Pt)...
     'dBW_sigma_' num2str(cfg.sigm) 'dB.mat'];
-ls_sensor_numbers(fl)
+if handles.protocol.Value==1
+    ls_sensor_numbers(fl)
+elseif handles.protocol.Value==2
+    ls_sensor_numbers_nocp_new(fl)
+end
 
 function sensors_Callback(hObject, eventdata, handles)
 % hObject    handle to sensors (see GCBO)
@@ -460,4 +464,80 @@ function slider1_CreateFcn(hObject, eventdata, handles)
 % Hint: slider controls usually have a light gray background.
 if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on slider movement.
+function slider2_Callback(hObject, eventdata, handles)
+% hObject    handle to slider2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function slider2_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on slider movement.
+function slider3_Callback(hObject, eventdata, handles)
+% hObject    handle to slider3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'Value') returns position of slider
+%        get(hObject,'Min') and get(hObject,'Max') to determine range of slider
+
+
+% --- Executes during object creation, after setting all properties.
+function slider3_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to slider3 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: slider controls usually have a light gray background.
+if isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor',[.9 .9 .9]);
+end
+
+
+% --- Executes on button press in togglebutton2.
+function togglebutton2_Callback(hObject, eventdata, handles)
+% hObject    handle to togglebutton2 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of togglebutton2
+
+
+% --- Executes on selection change in protocol.
+function protocol_Callback(hObject, eventdata, handles)
+% hObject    handle to protocol (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns protocol contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from protocol
+
+
+% --- Executes during object creation, after setting all properties.
+function protocol_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to protocol (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
 end

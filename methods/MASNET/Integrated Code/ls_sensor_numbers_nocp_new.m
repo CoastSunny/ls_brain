@@ -26,9 +26,9 @@ for pfa_idx=1:numel(pfa)
         for j=1:cfg.Num_sensors %number of perms
             
             idx = randperm(S_,i);
-            p_all = calculating_Prob_detection_v2(AC_sample,Td,Tc,ALL_snr(:,:,:,idx,:),pfa(pfa_idx));
-            p_mean = calculating_Prob_detection_v2(AC_sample,Td,Tc,mean(ALL_snr(:,:,:,idx,:),4),pfa(pfa_idx));
-            p_sum= calculating_Prob_detection_v2(AC_sample,Td,Tc,sum(ALL_snr(:,:,:,idx,:),4),pfa(pfa_idx));
+            p_all = calculating_Prob_detection_No_CP(AC_sample,Td,Tc,ALL_snr(:,:,:,idx,:),pfa(pfa_idx));
+            p_mean = calculating_Prob_detection_No_CP(AC_sample,Td,Tc,mean(ALL_snr(:,:,:,idx,:),4),pfa(pfa_idx));
+            p_sum= calculating_Prob_detection_No_CP(AC_sample,Td,Tc,sum(ALL_snr(:,:,:,idx,:),4),pfa(pfa_idx));
 
             % get average performance over all target locations and shadowing
             p_all_s(j,:) = mean(p_all(:)); 
@@ -68,7 +68,7 @@ for pfa_idx=1:numel(pfa)
     end
 end
 
-filetosave = [ '~/Documents/projects/ls_brain/results/masnet/probs/' 'Pr_ofdm' filename '_Time_' num2str(Time_samples)...
+filetosave = [ '~/Documents/projects/ls_brain/results/masnet/probs/' 'Pr_nocp' filename '_Time_' num2str(Time_samples)...
         '_TS_' num2str(Type_Scenario)...
         '_TE_' num2str(Type_Environment)...
         '_Num_Sensors_' num2str(Num_sensors)...
