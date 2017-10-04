@@ -1,6 +1,6 @@
 N=25;
-T=50;
-K=10;
+T=25;
+K=15;
 S=100;
 G=4;
 D=1;
@@ -10,7 +10,7 @@ thr=0.1;
 ND_seq=[];ND_gr=[];ACC_seq=[];ACC_gr=[];TTD_seq=[];TTD_gr=[];CD_seq=[];CD_gr=[];
 
 g=[1 5 10 20 25];
-k=1:20;
+k=1:K;
 d=0.1:0.1:1;
 loc_thr=0.5:0.5:2.5;
 for g_idx=1:numel(g)
@@ -25,9 +25,12 @@ for g_idx=1:numel(g)
                 ND_rnd(g_idx,k_idx,ND_rnd(g_idx,k_idx,:,:)>=k(k_idx))=k(k_idx);
                 CD_seq(g_idx,k_idx,d_idx,:)=res.cum_dis_seq;
                 CD_gr(g_idx,k_idx,d_idx,:)=res.cum_dis_gr;
-                ACC_seq(g_idx,k_idx,d_idx,:)=k(k_idx)*mean(res.acc_seq(:));
-                ACC_gr(g_idx,k_idx,d_idx,:)=k(k_idx)*mean(res.acc_gr(:));
-                ACC_rnd(g_idx,k_idx,d_idx,:)=k(k_idx)*mean(res.acc_rnd(:));
+%                 ACC_seq(g_idx,k_idx,d_idx,:)=k(k_idx)*mean(res.acc_seq(:));
+%                 ACC_gr(g_idx,k_idx,d_idx,:)=k(k_idx)*mean(res.acc_gr(:));
+%                 ACC_rnd(g_idx,k_idx,d_idx,:)=k(k_idx)*mean(res.acc_rnd(:));
+                ACC_seq(g_idx,k_idx,d_idx,:)=mean(res.acc_seq(:));
+                ACC_gr(g_idx,k_idx,d_idx,:)=mean(res.acc_gr(:));
+                ACC_rnd(g_idx,k_idx,d_idx,:)=mean(res.acc_rnd(:));
                 TTD_seq(g_idx,k_idx,d_idx,:)=res.ttd_seq;
                 TTD_gr(g_idx,k_idx,d_idx,:)=res.ttd_gr;
                 TTD_rnd(g_idx,k_idx,d_idx,:)=res.ttd_rnd;
@@ -41,62 +44,3 @@ for g_idx=1:numel(g)
     end
 end
 
-k=10;d=10;l=4;
-figure
-plot(TTD_gr(:,k,d,:),Ploc_gr(:,k,d,l),'o-','Linewidth',2)
-hold on
-plot(TTD_rnd(:,k,d,:),Ploc_rnd(:,k,d,l),'*-','Linewidth',2)
-xlabel('Time slot');ylabel('Probability of localisation');
-ylim([0 1.1])
-title('Time slots to detect all vs Ploc, S=100,-33dbW, N=25,K=10,\theta=2m')
-
-dd=10;
-figure
-imagesc(g,k,ACC_gr(:,:,dd)),xlim([g(1) g(end)]),ylim([k(1) k(end)])
-xlabel('Number of Groups'),ylabel('Number of Targets')
-title(['Cumulative CRLB for ' num2str(N) ' channels'])
-
-kk=24;
-figure, hold on
-plot(squeeze(ND_gr(:,kk,d_idx,:))'),
-plot(squeeze(ND_rnd(1,kk,d_idx,:))','.-'),
-xlim([1 T]),ylim([1 kk+1])
-legend({'G=1' 'G=2' 'G=4' 'G=8' 'G=16' 'G=32' 'rnd'},'Location','southeast')
-xlabel('time slot'),ylabel('number of target detections (>100%)')
-title(['Cumulative number of detections for ' num2str(kk) ' targets'])
-
-kk=24;gg=5;
-figure, hold on
-plot(squeeze(ND_gr(gg,kk,:,:))'),
-xlim([1 T]),ylim([1 kk+1])
-legend({'D=0.1' 'D=0.2' 'D=0.3' 'D=0.4' 'D=0.5' 'D=0.6' 'D=0.7' 'D=0.8' 'D=0.9' 'D=1'},'Location','southeast')
-xlabel('time slot'),ylabel('number of target detections (>100%)')
-title(['Cumulative number of detections for ' num2str(kk) ' targets and ' num2str(gg) ' groups'])
-legend boxoff
-
-kk=24;gg=5;
-figure, hold on
-plot(squeeze(ND_rnd(gg,kk,:,:))'),
-xlim([1 T]),ylim([1 kk+1])
-legend({'D=0.1' 'D=0.2' 'D=0.3' 'D=0.4' 'D=0.5' 'D=0.6' 'D=0.7' 'D=0.8' 'D=0.9' 'D=1'},'Location','northwest')
-xlabel('time slot'),ylabel('number of target detections (>100%)')
-title(['Cumulative number of detections for ' num2str(kk) ' targets and the rnd method'])
-legend boxoff
-
-figure,hold on
-dd=10;
-h=[]
-for kk=1:24
-    
-    ttd=squeeze(TTD_gr(:,kk,dd));
-    cacc=squeeze(ACC_gr(:,kk,dd));
-    h(kk)=plot(ttd,cacc);
-    ttd=squeeze(TTD_rnd(:,kk,dd));
-    cacc=squeeze(ACC_rnd(:,kk,dd));
-    hh(kk)=plot(ttd,cacc,'o');
-    
-end
-
-xlabel('time to detect all'),ylabel('Cumulative CRLB (meters)')
-xlim([1 60]),ylim([-5 100])
-legend([h(1) h(end) hh(1) hh(15)],{'k=1' 'k=24' 'rnd1' 'rnd15'})

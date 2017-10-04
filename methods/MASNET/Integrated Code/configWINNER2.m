@@ -13,7 +13,7 @@ cfg.filename='_icassp_';
 cfg.Num_sensors=100;
 
 % Expected power transmitted by the target {in dBW}. Currently this is not taken as input
-cfg.Pt=-33;
+cfg.Pt=-23;
 
 % Number of samples along the time of observation of the channel
 cfg.Time_samples=1;

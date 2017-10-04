@@ -43,14 +43,14 @@ res.cum_dis_gr=cum_dis_gr;
 res.cum_dis_rnd=cum_dis_rnd;
 
 
-tmp=find(nd_seq>=K);
+tmp=find(round(nd_seq)>=K);
 if isempty(tmp);tmp=Inf;end;
 res.ttd_seq=tmp(1);
 
-tmp=find(nd_gr>=K);
+tmp=find(round(nd_gr)>=K);
 if isempty(tmp);tmp=Inf;end;
 res.ttd_gr=tmp(1);
 
-tmp=find(nd_rnd>=K);
+tmp=find(round(nd_rnd)>=K);
 if isempty(tmp);tmp=Inf;end;
 res.ttd_rnd=tmp(1);
