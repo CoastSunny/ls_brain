@@ -8,15 +8,14 @@ fpr_idx=1;
 idx=0;
 thr=0.1;
 ND_seq=[];ND_gr=[];ND_rnd=[];
-ACC_seq=[];ACC_gr=[];ACC_rnd=[];;
-TTD_seq=[];TTD_gr=[];TTD_rnd=[];
-CD_seq=[];CD_gr=[];CD_rnd=[];
+ACC_seq=[];ACC_gr=[];ACC_rnd;
+TTD_seq=[];TTD_gr=[];TTD_gCD_seq=[];CD_gr=[];
 
 g=[1 5 10 20 25];
 k=1:K;
 d=0.1:0.1:1;
 loc_thr=0.5:0.5:2.5;
-for g_idx=1:numel(g)
+for g_idx=2
     for k_idx=1:numel(k)
         for d_idx=1:numel(d)
              [res]=get_results(pbsens_av,acc_av, N , k(k_idx) , g(g_idx) , T , S, d(d_idx) ,fpr_idx);
@@ -25,10 +24,8 @@ for g_idx=1:numel(g)
                 STD_seq(g_idx,k_idx,d_idx,:)=res.std_seq;
                 ND_gr(g_idx,k_idx,d_idx,:)=res.nd_gr;
                 ND_gr(g_idx,k_idx,d_idx,ND_gr(g_idx,k_idx,d_idx,:)>=k(k_idx))=k(k_idx);
-                STD_gr(g_idx,k_idx,d_idx,:)=res.std_gr;
                 ND_rnd(g_idx,k_idx,d_idx,:)=res.nd_rnd;
                 ND_rnd(g_idx,k_idx,d_idx,ND_rnd(g_idx,k_idx,d_idx,:)>=k(k_idx))=k(k_idx);
-                STD_rnd(g_idx,k_idx,d_idx,:)=res.std_rnd;
                 CD_seq(g_idx,k_idx,d_idx,:)=res.cum_dis_seq;
                 CD_gr(g_idx,k_idx,d_idx,:)=res.cum_dis_gr;
 %                 ACC_seq(g_idx,k_idx,d_idx,:)=k(k_idx)*mean(res.acc_seq(:));

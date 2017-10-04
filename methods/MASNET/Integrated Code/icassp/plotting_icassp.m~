@@ -117,7 +117,7 @@ end
 %% fig5
 kk=15;dd=10;
 figure, hold on
-errorbar(repmat((1:25)',1,5),squeeze(ND_gr(:,kk,dd,:))',squeeze(STD_gr(:,kk,dd,:).^(0.5))')
+errorbar(repmat((1:25)',1,5),squeeze(ND_gr(:,kk,dd,:))',squeeze(STD_seq(:,kk,dd,:).^(0.5))')
 
 
 
