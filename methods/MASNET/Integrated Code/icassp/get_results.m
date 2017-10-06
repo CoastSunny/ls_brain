@@ -38,11 +38,11 @@ end
 t=1:T;
 %% seq
 res.nd_seq=nd_seq;
-res.std_seq=t.^2.*pr_hit_seq*pd_seq^2.*(1-pr_hit_seq);
+res.std_seq=sqrt(t.^2*pr_hit_seq*pd_seq^2.*(1-pr_hit_seq));
 res.nd_gr=nd_gr;
-res.std_gr=t.^2.*pr_hit_gr*pd_gr^2.*(1-pr_hit_gr);
+res.std_gr=sqrt(t.^2.*pr_hit_seq*G^2*pd_gr^2.*(1-pr_hit_seq));
 res.nd_rnd=nd_rnd;
-res.std_rnd=t.^2.*pr_hit_rnd*pd_rnd^2.*(1-pr_hit_rnd);
+res.std_rnd=sqrt(t.^2.*pr_hit_rnd*pd_rnd^2.*(1-pr_hit_seq));
 res.cum_dis_seq=cum_dis_seq;
 res.cum_dis_gr=cum_dis_gr;
 res.cum_dis_rnd=cum_dis_rnd;
@@ -59,3 +59,4 @@ res.ttd_gr=tmp(1);
 tmp=find(round(nd_rnd)>=K);
 if isempty(tmp);tmp=Inf;end;
 res.ttd_rnd=tmp(1);
+
