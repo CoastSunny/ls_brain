@@ -16,7 +16,7 @@ xlabel('number of sensors')
 kk=15;dd=10;
 figure, hold on
 plot(squeeze(ND_gr(:,kk,dd,:))','Linewidth',2),
-plot(squeeze(ND_rnd(1,kk,dd,:))','.-','Linewidth',2),
+plot(squeeze(ND_rnd_good(1,kk,dd,:))','.-','Linewidth',2),
 xlim([1 T]),ylim([1 kk+1])
 legend({'G=1' 'G=5' 'G=10' 'G=20' 'G=25' 'rnd'},'Location','southeast')
 legend boxoff

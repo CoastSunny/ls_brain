@@ -19,7 +19,7 @@ loc_thr=0.5:0.5:2.5;
 for g_idx=1:numel(g)
     for k_idx=1:numel(k)
         for d_idx=1:numel(d)
-             [res]=get_results(pbsens_av,acc_av, N , k(k_idx) , g(g_idx) , T , S, d(d_idx) ,fpr_idx);
+             [res]=get_results(pbsens_av,acc_av, N , k(k_idx) , g(g_idx) , T , S, d(d_idx) ,fpr_idx, prd, msh);
                 ND_seq(g_idx,k_idx,d_idx,:)=res.nd_seq;
                 ND_seq(g_idx,k_idx,d_idx,ND_seq(g_idx,k_idx,d_idx,:)>=k(k_idx))=k(k_idx);
                 STD_seq(g_idx,k_idx,d_idx,:)=res.std_seq;
@@ -28,6 +28,8 @@ for g_idx=1:numel(g)
                 STD_gr(g_idx,k_idx,d_idx,:)=res.std_gr;
                 ND_rnd(g_idx,k_idx,d_idx,:)=res.nd_rnd;
                 ND_rnd(g_idx,k_idx,d_idx,ND_rnd(g_idx,k_idx,d_idx,:)>=k(k_idx))=k(k_idx);
+                ND_rnd_good(g_idx,k_idx,d_idx,:)=res.nd_rnd_good;
+                ND_rnd_good(g_idx,k_idx,d_idx,ND_rnd_good(g_idx,k_idx,d_idx,:)>=k(k_idx))=k(k_idx);
                 STD_rnd(g_idx,k_idx,d_idx,:)=res.std_rnd;
                 CD_seq(g_idx,k_idx,d_idx,:)=res.cum_dis_seq;
                 CD_gr(g_idx,k_idx,d_idx,:)=res.cum_dis_gr;

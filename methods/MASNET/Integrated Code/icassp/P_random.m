@@ -8,9 +8,11 @@ p=1/N;
 %     C(idx)=C(idx)+1;
 %
 % end
-M=1000;
+M=10000;
 h=[];
+x=[0:20];
 for m=1:M
+    
     C=zeros(1,N);
     for s=1:S
         
@@ -37,6 +39,10 @@ for m=1:M
     end
     
     
-    h(m,:)=hist(C);
+    h(m,:)=hist(C,x);
+    sh(m)=sum(C>0);
     
 end
+
+prd=mean(h,1)/sum(mean(h,1));
+msh=mean(sh);
