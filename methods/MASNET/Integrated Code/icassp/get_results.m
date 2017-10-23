@@ -2,7 +2,7 @@ function [ res ] = get_results( pbsens_av , acc_av , N , K , G , T , S, D, fpr_i
 
 pr_hit_seq = D*K/N;
 pr_hit_gr  = D*G*K/N;
-pr_hit_rnd = D*1;
+pr_hit_rnd = D*K;
 
 res.acc_seq=squeeze(acc_av(S,fpr_idx,:));
 res.acc_gr=squeeze(acc_av(S/G,fpr_idx,:));
@@ -35,6 +35,7 @@ for t=1:T
     snd_gr(t) = t * pr_hit_gr * (1 - pr_hit_gr) * pd_gr^2;
     snd_rnd(t) = t * pr_hit_rnd * (1 - pr_hit_rnd) * pd_rnd^2;
 end     
+
 t=1:T;
 %% seq
 res.nd_seq=nd_seq;
