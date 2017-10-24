@@ -42,10 +42,12 @@ for g_idx=1:numel(g)
                 TTD_seq(g_idx,k_idx,d_idx,:)=res.ttd_seq;
                 TTD_gr(g_idx,k_idx,d_idx,:)=res.ttd_gr;
                 TTD_rnd(g_idx,k_idx,d_idx,:)=res.ttd_rnd;
+                TTD_rnd_good(g_idx,k_idx,d_idx,:)=res.ttd_rnd_good;
             for l_idx=1:numel(loc_thr)               
                 Ploc_seq(g_idx,k_idx,d_idx,l_idx)=sum(res.acc_seq<loc_thr(l_idx))/numel(res.acc_seq);
                 Ploc_gr(g_idx,k_idx,d_idx,l_idx)=sum(res.acc_gr<loc_thr(l_idx))/numel(res.acc_gr);
                 Ploc_rnd(g_idx,k_idx,d_idx,l_idx)=sum(res.acc_rnd<loc_thr(l_idx))/numel(res.acc_rnd);
+                Ploc_rnd_good(g_idx,k_idx,d_idx,l_idx)=sum(res.acc_rnd_good<loc_thr(l_idx))/numel(res.acc_rnd_good);
             end
         end
         

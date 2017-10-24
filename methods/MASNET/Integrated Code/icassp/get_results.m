@@ -8,8 +8,9 @@ res.acc_seq=squeeze(acc_av(S,fpr_idx,:));
 res.acc_gr=squeeze(acc_av(S/G,fpr_idx,:));
 res.acc_rnd=squeeze(acc_av(S/N,fpr_idx,:));
 for i=1:16
-    res.acc_rnd_good(:,i)=squeeze(acc_av(i+3,fpr_idx));
+    tmp_acc_rnd_good(i,:)=prd(i+4)*squeeze(acc_av(i+3,fpr_idx,:));
 end
+res.acc_rnd_good=sum(tmp_acc_rnd_good,1)';
 res.acc_seq(isnan(res.acc_seq))=[];
 res.acc_gr(isnan(res.acc_gr))=[];
 res.acc_rnd(isnan(res.acc_rnd))=[];
@@ -70,4 +71,8 @@ res.ttd_gr=tmp(1);
 tmp=find(round(nd_rnd)>=K);
 if isempty(tmp);tmp=Inf;end;
 res.ttd_rnd=tmp(1);
+
+tmp=find(round(nd_rnd_good)>=K);
+if isempty(tmp);tmp=Inf;end;
+res.ttd_rnd_good=tmp(1);
 

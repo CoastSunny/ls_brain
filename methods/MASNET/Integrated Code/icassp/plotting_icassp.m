@@ -1,3 +1,6 @@
+%%fig5
+figure,bar(x,prd),xlim([-1 25]),xlabel('number of sensors in a channel'),ylabel('probability')
+
 %%fig0
 ff=1;
 figure,
@@ -42,7 +45,7 @@ title('max groups')
 kk=15;gg=1;
 
 subplot(1,3,3)
-plot(squeeze(ND_rnd(gg,kk,:,:))','Linewidth',2),
+plot(squeeze(ND_rnd_good(gg,kk,:,:))','Linewidth',2),
 xlim([1 T]),ylim([1 kk+1])
 xlabel('time slot'),ylabel('number of target detections')
 title('random scanning')
@@ -52,7 +55,7 @@ kk=10;dd=10;
 figure
 plot(loc_thr,squeeze(Ploc_gr(:,kk,dd,:))','o-','Linewidth',2)
 hold on
-plot(loc_thr,squeeze(Ploc_rnd(gg,kk,dd,:)),'*-','Linewidth',2)
+plot(loc_thr,squeeze(Ploc_rnd_good(gg,kk,dd,:)),'*-','Linewidth',2)
 xlabel('accuracy threshold (m)');ylabel('Probability of localisation');
 legend({'G=1' 'G=5' 'G=10' 'G=20' 'G=25' 'rnd'})
 legend boxoff
@@ -88,55 +91,55 @@ load ~/Documents/projects/ls_brain/results/masnet/icassp/probs/Pr_icassp__Time_1
 initial_results
 
 tmp=squeeze(TTD_gr(:,kk,dd));
-tmp2=squeeze(TTD_rnd(1,kk,dd));
+tmp2=squeeze(TTD_rnd_good(1,kk,dd));
 figure, hold on
-plot(tmp,squeeze(Ploc_gr(:,kk,dd,ll)),'ro-','Linewidth',2)
-% plot(tmp2,squeeze(Ploc_rnd(1,kk,dd,ll)),'*')
+plot(tmp,squeeze(Ploc_gr(:,kk,dd,ll)),'o-','Linewidth',2)
+plot(tmp2,squeeze(Ploc_rnd_good(1,kk,dd,ll)),'b*','Linewidth',2)
 xlabel('Time slot');ylabel('Probability of localisation');
 xlim([0 25]),ylim([0 1])
 title('')
 for gi=1:5   
     text(tmp(gi)-0.5,Ploc_gr(gi,kk,dd,ll)+0.05,['G= ' num2str(g(gi))])         
 end
-
-%
-load ~/Documents/projects/ls_brain/results/masnet/icassp/probs/Pr_icassp__Time_1_TS_1_TE_0_Num_Sensors_100_Pt_-43dBW_sigma_9dB
-initial_results
-
-tmp=squeeze(TTD_gr(:,kk,dd));
-
-hold on
-plot(tmp,squeeze(Ploc_gr(:,kk,dd,ll)),'go-','Linewidth',2)
+% 
+% %
+% load ~/Documents/projects/ls_brain/results/masnet/icassp/probs/Pr_icassp__Time_1_TS_1_TE_0_Num_Sensors_100_Pt_-43dBW_sigma_9dB
+% initial_results
+% 
+% tmp=squeeze(TTD_gr(:,kk,dd));
+% 
 % hold on
-% plot(squeeze(TTD_rnd(:,kk,dd));,squeeze(Ploc_rnd(:,kk,dd,ll)),'*-','Linewidth',2)
-xlabel('Time slot');ylabel('Probability of localisation');
-xlim([0 25])
-title('')
-for gi=1:5   
-    text(tmp(gi)-0.5,Ploc_gr(gi,kk,dd,ll)+0.05,['G= ' num2str(g(gi))])         
-end
-
-
-%
-load ~/Documents/projects/ls_brain/results/masnet/icassp/probs/Pr_icassp__Time_1_TS_1_TE_0_Num_Sensors_100_Pt_-53dBW_sigma_9dB
-initial_results
-
-tmp=squeeze(TTD_gr(:,kk,dd));
-
-tmp2=squeeze(Ploc_gr(:,kk,dd,ll));
-tmp2(3)=0.61;
-hold on
-plot(tmp,tmp2,'bo-','Linewidth',2)
+% plot(tmp,squeeze(Ploc_gr(:,kk,dd,ll)),'go-','Linewidth',2)
+% plot(tmp2,squeeze(Ploc_rnd_good(1,kk,dd,ll)),'g*')
+% % hold on
+% xlabel('Time slot');ylabel('Probability of localisation');
+% xlim([0 25])
+% title('')
+% for gi=1:5   
+%     text(tmp(gi)-0.5,Ploc_gr(gi,kk,dd,ll)+0.05,['G= ' num2str(g(gi))])         
+% end
+% 
+% 
+% %
+% load ~/Documents/projects/ls_brain/results/masnet/icassp/probs/Pr_icassp__Time_1_TS_1_TE_0_Num_Sensors_100_Pt_-53dBW_sigma_9dB
+% initial_results
+% 
+% tmp=squeeze(TTD_gr(:,kk,dd));
+% 
+% tmp2=squeeze(Ploc_gr(:,kk,dd,ll));
+% tmp2(3)=0.61;
 % hold on
-% plot(squeeze(TTD_rnd(:,kk,dd));,squeeze(Ploc_rnd(:,kk,dd,ll)),'*-','Linewidth',2)
-xlabel('Time slot');ylabel('Probability of localisation');
-xlim([0 25])
-title('')
-for gi=1:5   
-    text(tmp(gi)-0.5,tmp2(gi)+0.05,['G= ' num2str(g(gi))])         
-end
-% xtlbl=get(gca,'XtickLabel');
-% xtlbl(end)={'Inf'};
+% plot(tmp,tmp2,'bo-','Linewidth',2)
+% % hold on
+% plot(squeeze(TTD_rnd_good(:,kk,dd));
+% xlabel('Time slot');ylabel('Probability of localisation');
+% xlim([0 25])
+% title('')
+% for gi=1:5   
+%     text(tmp(gi)-0.5,tmp2(gi)+0.05,['G= ' num2str(g(gi))])         
+% end
+% % xtlbl=get(gca,'XtickLabel');
+% % xtlbl(end)={'Inf'};
 % set(gca,'XtickLabel',xtlbl)
 % 
 %% fig 4b
