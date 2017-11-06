@@ -7,19 +7,19 @@ clear all
 cfg.snrfolder='~/Documents/projects/ls_brain/results/masnet/snr/';
 cfg.probsfolder='~/Documents/projects/ls_brain/results/masnet/probs/';
 %
-cfg.filename='_icassp_';
+cfg.filename='_final_';
 
 % Number of sensors
 cfg.Num_sensors=100;
 
 % Expected power transmitted by the target {in dBW}. Currently this is not taken as input
-cfg.Pt=-23;
+cfg.Pt=-43;
 
 % Number of samples along the time of observation of the channel
 cfg.Time_samples=1;
 
 % Number of runs in the Montecarlo simulation
-cfg.N_monte=50;
+cfg.N_monte=100;
 
 % The rate of false alarm where a sensor says it detected by it did not
 cfg.Pfa=0.1;

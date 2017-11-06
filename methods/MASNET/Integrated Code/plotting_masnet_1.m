@@ -9,18 +9,23 @@
 % xlabel('Probability false alarm')
 % ylabel('Probability of detection')
 % title('Separated - Urban - Pt:-43dBW - SxF:5')
-cd ~/Documents/ls_brain/results/masnet/probs
+cd ~/Documents/projects/ls_brain/results/masnet/probs
 
-load Probs_CORRSHD_TS_0_TE_0_Num_Sensors_96_SepTar_50_50_Pt_-53dBW_sigma_9dB.mat
+load Pr_ofdm_icassp__Time_1_TS_1_TE_0_Num_Sensors_100_Pt_-33dBW_sigma_9dB
 idx=1;
 ff=1;
-sens=(1:96);
+sens=(1:100);
 figure
 hold on
 % errorbar(sens,pall_av(:,idx),pall_std(:,idx),'b')
-errorbar(sens,pbsens_av(:,idx),pbsens_std(:,idx),'r')
-errorbar(sens,pmean_av(:,idx),pmean_std(:,idx),'m')
-errorbar(sens,psum_av(:,idx),psum_std(:,idx),'g')
+% errorbar(sens,pbsens_av(:,idx),pbsens_std(:,idx),'r')
+% errorbar(sens,pmean_av(:,idx),pmean_std(:,idx),'m')
+% errorbar(sens,psum_av(:,idx),psum_std(:,idx),'g')
+
+plot(sens,pbsens_av(:,idx),'r','Linewidth',2)
+plot(sens,pbsens_av_old(:,idx),'g','Linewidth',2)
+
+
 figure,
 load Probs_CORRSHD_TS_1_TE_0_Num_Sensors_96_SepTar_500_500_Pt_-23dBW_sigma_9dB.mat
 errorbar(sens,pall_av(:,idx),pall_std(:,idx),'b')

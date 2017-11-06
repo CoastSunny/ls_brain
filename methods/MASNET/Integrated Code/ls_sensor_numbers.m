@@ -42,7 +42,7 @@ for pfa_idx=1:numel(pfa)
             s_mean_s(j,:)  = std(p_mean(:));  % get average performance over sensors @@
             p_sum_s(j,:)   = mean(p_sum(:));  % get average performance over sensors @@
             s_sum_s(j,:)   = std(p_sum(:));   % get average performance over sensors @@
-   
+            p_bsens_s_old(j,:) = sum(bsens(:)==1)/numel(bsens(:));
 %             if i>=4            
 %                 snr_3best=getNbest(ALL_snr(:,:,:,idx),3);
 %                 p_3best = calculating_Prob_detection_v2(AC_sample,Td,Tc,sum(snr_3best,4),pfa(pfa_idx));
@@ -58,6 +58,7 @@ for pfa_idx=1:numel(pfa)
         pall_av(i,pfa_idx)=mean(p_all_s);
         pall_std(i,pfa_idx)=mean(s_all_s);
         pbsens_av(i,pfa_idx)=mean(p_bsens_s);
+        pbsens_av_old(i,pfa_idx)=mean(p_bsens_s_old);
         pbsens_std(i,pfa_idx)=mean(s_bsens_s);
         pmean_av(i,pfa_idx)=mean(p_mean_s);
         pmean_std(i,pfa_idx)=mean(s_mean_s);
@@ -75,7 +76,7 @@ filetosave = [ '~/Documents/projects/ls_brain/results/masnet/probs/' 'Pr_ofdm' f
         '_Pt_' num2str(Pt)...
         'dBW_sigma_' num2str(sigm) 'dB.mat'];
  %filename3 = ['~/Documents/projects/ls_brain/results/masnet/probs/test.mat'];
- save(filetosave,'pall_av','pall_std','pmean_av','pmean_std','psum_av','psum_std','pbsens_av','pbsens_std'); 
+ save(filetosave,'pall_av','pall_std','pmean_av','pmean_std','psum_av','psum_std','pbsens_av','pbsens_std','pbsens_av_old'); 
 
 
 end
