@@ -9,9 +9,9 @@
 % xlabel('Probability false alarm')
 % ylabel('Probability of detection')
 % title('Separated - Urban - Pt:-43dBW - SxF:5')
-cd ~/Documents/projects/ls_brain/results/masnet/probs
+cd C:\Users\Loukianos\Documents\MATLAB\ls_brain\results\masnet\probs\
 
-load Pr_ofdm_icassp__Time_1_TS_1_TE_0_Num_Sensors_100_Pt_-33dBW_sigma_9dB
+load Pr_ofdm_final_Time_1_TS_0_TE_0_Num_Sensors_100_Pt_-43dBW_sigma_9dB
 idx=1;
 ff=1;
 sens=(1:100);

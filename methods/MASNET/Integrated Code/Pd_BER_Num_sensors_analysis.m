@@ -422,7 +422,8 @@ for p=P_:dP:P
            s_BN_Pd(m) = min(min(BN_Pd(:,:,m))); 
         end
 
-        conf_Best(i_s,i_p) = sum(s_BN_Pd==1)/length(s_BN_Pd);    % Store how many times we had Pd=1 for the best sensor. This gives us the confidence of always detecting or how many times we always detected. If for all the montecarlo runs we always had the best sensor with Pd=1, then our confidence is 100% we always detect.
+        conf_Best(i_s,i_p) = sum(s_BN_Pd==1)/length(s_BN_Pd);   
+        % Store how many times we had Pd=1 for the best sensor. This gives us the confidence of always detecting or how many times we always detected. If for all the montecarlo runs we always had the best sensor with Pd=1, then our confidence is 100% we always detect.
 
 
 

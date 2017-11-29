@@ -1,7 +1,7 @@
 function [Pd] = calculating_Prob_detection_v2(AC_sample,Td,Tc,snr,Pfa)
 
-%             Tc = 72;       % # of samples in the cyclic prefix (CP)
-%             Td = 1210;      % Number of samples of data in the LTE trace
+%              Tc = 72;       % # of samples in the cyclic prefix (CP)
+%              Td = 1210;      % Number of samples of data in the LTE trace
 %             
 %             AC_sample = 6;
 

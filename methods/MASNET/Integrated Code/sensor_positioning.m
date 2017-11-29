@@ -5,33 +5,27 @@ function [Sensors,Num_sensors] = sensor_positioning(Type_Scenario,Size_Scenario,
         % Select type of the scenario: 0 for separate zones for enemies and
         % friends and 1 for all mixed.
         
-        Area_FZ = Size_Scenario*Size_Scenario;
-        side=Size_Scenario;
-        ceilpower=ceil(sqrt(Num_sensors));
-        Sep_sensors_x = side/(ceilpower);
-        Sep_sensors_y = side/(ceilpower);
+          % Select type of the scenario: 0 for separate zones for enemies and
+        % friends and 1 for all mixed.
+        % Type_Scenario = 0;
 
-        Sensors = zeros(Num_sensors,3);
+        % Type of environment in the scenario 0=urban, 1=rural
+        % Type_Environment = 0;
 
-        indx = 0;
-        for p_x=Sep_sensors_x:Sep_sensors_x:Size_Scenario
-            for p_y=Sep_sensors_y:Sep_sensors_x:Size_Scenario
-        %         ind_pos_x = p_x/Sep_sensors + 1;
-        %         ind_pos_y = p_y/Sep_sensors + 1;
-                indx = indx + 1;
-        %         Pos_sensors_x(ind_pos_y,ind_pos_x) = p_x; 
-        %         Pos_sensors_y(ind_pos_y,ind_pos_x) = p_y; 
-                Sensors(indx,:)=[round(p_x);round(p_y);hs];
-            end
-        end
-        rand_perm=randperm(ceilpower^2);
-        Sensors(rand_perm(1:(ceilpower^2-Num_sensors)),:,:)=[];
+
+        % Size of the scenario= Size_Scenario x Size_scenario (metres)
+        % Size_Scenario = 2000;
+
+        % Size of the enemy zone = Size_EZ_x x Size_EZ_y (metres)
+        % Size_EZ_x = 200;
+        % Size_EZ_y = 200;
 
         % Size of the friend zone 1 = Size_FZ1_x x Size_FZ1_y (metres). This is the
         % first of the zones. Also, the starting coordinates of the FZ1 are
         % defined.
         % Size_FZ1_x = 200;
         % Size_FZ1_y = 2000;
+        Sep_sensors=78;
         Start_FZ1_x = Size_Scenario - Size_FZ1_x;
         Start_FZ1_y = 0;
         Area_FZ1 = Size_FZ1_x*Size_FZ1_y;
