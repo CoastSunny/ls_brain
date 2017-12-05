@@ -1,13 +1,8 @@
-function ls_sensor_numbers_nocp_new(fl)
+function ls_sensor_numbers(fl)
 
-if isunix==0
-    pth='C:\Users\Loukianos\Documents\MATLAB\ls_brain\results\masnet\'
-else
-    pth='~/Documents/ls_brain/results/masnet/';
-end
 
 if nargin<1
-    cd([pth 'snr/'])
+    cd 'C:\Users\Loukianos\Documents\MATLAB\ls_brain\results\masnet\snr'
     uiopen;
 else
    load(fl) 
@@ -76,7 +71,7 @@ for pfa_idx=1:numel(pfa)
     end
 end
 
-filetosave = [ pth 'probs/' 'Pr_nocp_' filename '_Time_' num2str(Time_samples)...
+filetosave = [ 'C:\Users\Loukianos\Documents\MATLAB\ls_brain\results\masnet\probs\' 'Pr_nocp_' filename '_Time_' num2str(Time_samples)...
         '_TS_' num2str(Type_Scenario)...
         '_TE_' num2str(Type_Environment)...
         '_Num_Sensors_' num2str(Num_sensors)...
