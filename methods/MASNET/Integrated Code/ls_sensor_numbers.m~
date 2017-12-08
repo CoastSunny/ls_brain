@@ -42,7 +42,9 @@ for pfa_idx=1:numel(pfa)
             % get average performance over all target locations but for the
             % best sensor in each case
             bsens          = max( p_all,[], 4 ); % get best sensor performance, (max over sensors)          
-            p_bsens_s(j,:) = mean(bsens(:));           
+            p_bsens_s(j,:) = mean(bsens(:));    
+            md_bsens_s(j,:) = median(bsens(:));
+            q_bsens_s(j,:) = quantile(bsens(:),[0.25 0.75]);
             s_bsens_s(j,:) = std(bsens(:));
             s_bsens_noloc(j,:) = std(mean(mean(bsens,1),2));
             p_mean_s(j,:)  = mean(p_mean(:)); % get average performance over sensors @@
@@ -63,13 +65,17 @@ for pfa_idx=1:numel(pfa)
             b_qpsk=min(Pe_QPSK,[],4);
             b_4am=min(Pe_4AM,[],4);
             b_8am=min(Pe_8AM,[],4);
-            eb_bpsk_s(j,:) = mean(b_bpsk(:));   
+            eb_bpsk_s(j,:) = median(b_bpsk(:));  
+            q_bpsk_s(j,:) = quantile(b_bpsk(:),[0.25 0.75]);
             seb_bpsk_s(j,:) = std(b_bpsk(:));
-            eb_qpsk_s(j,:) = mean(b_qpsk(:));   
+            eb_qpsk_s(j,:) = median(b_qpsk(:));   
+            q_qpsk_s(j,:) = quantile(b_qpsk(:),[0.25 0.75]);
             seb_qpsk_s(j,:) = std(b_qpsk(:));
-            eb_4am_s(j,:) = mean(b_4am(:));  
+            eb_4am_s(j,:) = median(b_4am(:));  
+            q_4am_s(j,:) = quantile(b_4am(:),[0.25 0.75]);
             seb_4am_s(j,:) = std(b_4am(:));
-            eb_8am_s(j,:) = mean(b_8am(:));  
+            eb_8am_s(j,:) = median(b_8am(:));  
+            q_4am_s(j,:) = quantile(b_8am(:),[0.25 0.75]);
             seb_8am_s(j,:) = std(b_8am(:));
             
         end
@@ -77,6 +83,8 @@ for pfa_idx=1:numel(pfa)
         pall_av(i,pfa_idx)=mean(p_all_s);
         pall_std(i,pfa_idx)=mean(s_all_s);
         pbsens_av(i,pfa_idx)=mean(p_bsens_s);
+        pbsens_md(i,pfa_idx)=mean(md_bsens_s);
+        pbsens_q(i,pfa_idx,:)=mean(q_bsens_s);
         pbsens_av_old(i,pfa_idx)=mean(p_bsens_s_old);
         pbsens_std(i,pfa_idx)=mean(s_bsens_s);
         pbsens_noloc_std(i,pfa_idx)=mean(s_bsens_noloc);
@@ -86,12 +94,16 @@ for pfa_idx=1:numel(pfa)
         psum_std(i,pfa_idx)=mean(s_sum_s);
         
         eb_bpsk_av(i,pfa_idx)=mean(eb_bpsk_s);
+        eb_bpsk_q(i,pfa_idx,:)=mean(q_bpsk_s);
         eb_bpsk_std(i,pfa_idx)=mean(seb_bpsk_s);
         eb_qpsk_av(i,pfa_idx)=mean(eb_qpsk_s);
-        eb_bpsk_std(i,pfa_idx)=mean(seb_bpsk_s);
+        eb_qpsk_q(i,pfa_idx,:)=mean(q_qpsk_s);
+        eb_qpsk_std(i,pfa_idx)=mean(seb_bpsk_s);
         eb_4am_av(i,pfa_idx)=mean(eb_4am_s);
+        eb_4am_q(i,pfa_idx,:)=mean(q_4am_s);
         eb_4am_std(i,pfa_idx)=mean(seb_4am_s);
         eb_8am_av(i,pfa_idx)=mean(eb_8am_s);
+        eb_8am_q(i,pfa_idx,:)=mean(q_8am_s);
         eb_8am_std(i,pfa_idx)=mean(seb_8am_s);
                                 
 %         if i>=4;p3best_d(i,pfa_idx)=mean(mean(p_3best_d));end;
@@ -105,10 +117,12 @@ filetosave = [ pth 'probs/' 'Pr_ofdm_' filename '_Time_' num2str(Time_samples)..
         '_Pt_' num2str(Pt)...
         'dBW_sigma_' num2str(sigm) 'dB.mat'];
  %filename3 = ['~/Documents/projects/ls_brain/results/masnet/probs/test.mat'];
- save(filetosave,'pall_av','pall_std','pmean_av','pmean_std','psum_av','psum_std',...
-     'pbsens_av','pbsens_std','pbsens_noloc_std','pbsens_av_old'...
-     ,'eb_bpsk_av','eb_qpsk_av','eb_4am_av','eb_8am_av',...
-     ); 
+ save(filetosave,'pall_av','pall_std','pmean_av','pmean_std','psum_av','psum_std'...
+     ,'pbsens_av','pbsens_std','pbsens_noloc_std','pbsens_av_old'...
+     ,'pbsens_md','pbsens_q'...
+     ,'eb_bpsk_av','eb_qpsk_av','eb_4am_av','eb_8am_av'...
+     ,'eb_bpsk_std','eb_qpsk_std','eb_4am_std','eb_8am_std'...
+     ,'eb_bpsk_q', 'eb_bpsk_q',); 
 
 
 end

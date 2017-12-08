@@ -4,6 +4,44 @@ else
     cd ~/Documents/ls_brain/results/masnet/probs/
 end
 
+%% QUANTILES
+idx=10;
+ff=1;
+sens=(1:50);
+figure
+hold on
+% 
+% load Pr_ofdm_final_Time_1_TS_0_TE_0_Num_Sensors_100_Pt_-33dBW_sigma_9dB
+% errorbar(sens,pbsens_md(sens,idx),...
+%     pbsens_md(sens,idx)-pbsens_q(sens,idx,1),pbsens_q(sens,idx,2)-pbsens_md(sens,idx)...
+%     ,'-o','Linewidth',2)
+load Pr_ofdm_final_Time_1_TS_0_TE_0_Num_Sensors_100_Pt_-33dBW_sigma_9dB
+errorbar(sens,pbsens_md_noloc(sens,idx),...
+    pbsens_md_noloc(sens,idx)-pbsens_q_noloc(sens,idx,1),pbsens_q_noloc(sens,idx,2)-pbsens_md_noloc(sens,idx)...
+    ,'-o','Linewidth',2)
+legend({'location uncertainty' 'channel variance' })
+legend boxoff
+title('Error bounds - Pt:-33dbW - Separated/Urban')
+ylabel('Probability of detection')
+xlabel('Number of sensors')
+
+figure
+hold on
+% 
+% load Pr_ofdm_final_Time_1_TS_1_TE_0_Num_Sensors_100_Pt_-33dBW_sigma_9dB
+% errorbar(sens,pbsens_md(sens,idx),...
+%     pbsens_md(sens,idx)-pbsens_q(sens,idx,1),pbsens_q(sens,idx,2)-pbsens_md(sens,idx)...
+%     ,'-o','Linewidth',2)
+load Pr_ofdm_final_Time_1_TS_1_TE_0_Num_Sensors_100_Pt_-33dBW_sigma_9dB
+errorbar(sens,pbsens_md_noloc(sens,idx),...
+    pbsens_md_noloc(sens,idx)-pbsens_q_noloc(sens,idx,1),pbsens_q_noloc(sens,idx,2)-pbsens_md_noloc(sens,idx)...
+    ,'-o','Linewidth',2)
+legend({'location uncertainty' 'channel variance' })
+legend boxoff
+title('Error bounds - Pt:-33dbW - Mixed/Urban')
+ylabel('Probability of detection')
+xlabel('Number of sensors')
+
 %% ERROR BOUNDS
 idx=10;
 ff=1;
@@ -42,23 +80,23 @@ figure
 hold on
 load Pr_ofdm_final_Time_1_TS_1_TE_0_Num_Sensors_100_Pt_-33dBW_sigma_9dB
 errorbar(esens,pbsens_av(esens,idx),pbsens_std(esens,idx),'o','Linewidth',2,'Color','b')
-plot(sens,pbsens_av(sens,idx),'Linewidth',2)
+plot(sens,pbsens_av(sens,idx),'Linewidth',2,'Color','b')
 load Pr_nocp_final_Time_1_TS_1_TE_0_Num_Sensors_100_Pt_-33dBW_sigma_9dB
 errorbar(esens,pbsens_av(esens,idx),pbsens_std(esens,idx),'o','Linewidth',2,'Color','r')
-plot(sens,pbsens_av(sens,idx),'Linewidth',2)
+plot(sens,pbsens_av(sens,idx),'Linewidth',2,'Color','r')
 load Pr_lte_final_Time_1_TS_1_TE_0_Num_Sensors_100_Pt_-33dBW_sigma_9dB
 errorbar(esens,pbsens_av(esens,idx),pbsens_std(esens,idx),'o','Linewidth',2,'Color','g')
-plot(sens,pbsens_av(sens,idx),'Linewidth',2)
+plot(sens,pbsens_av(sens,idx),'Linewidth',2,'Color','g')
 ylabel('Probability of detection')
 xlabel('Number of sensors')
 title('Protocols - Pt:-33dbW - Mixed/Urban')
-legend({'OFDM' 'no protocol' 'LTE'  })
+legend({'' 'OFDM' '' 'no protocol' '' 'LTE'  },'Location','Southeast')
 legend boxoff
 
 
 %% ROC curves
 load Pr_ofdm_final_Time_1_TS_1_TE_0_Num_Sensors_100_Pt_-33dBW_sigma_9dB
-pfa=0.01:0.01:0.1
+pfa=0.01:0.01:0.1;
 figure
 hold on
 for i=1:20
@@ -100,3 +138,93 @@ plot(sens,pbsens_av(sens,idx),'b')
 xlabel('Number of Sensors'), ylabel('Probability of detection')
 title('t:1-10 - Pt:-33dbW - Mixed/Urban')
 legend boxoff 
+
+%% Power
+sens=(1:50);
+figure
+hold on
+load Pr_ofdm_final_Time_1_TS_0_TE_0_Num_Sensors_100_Pt_-23dBW_sigma_9dB
+plot(sens,pbsens_av(sens,idx),'b','Linewidth',2)
+load Pr_ofdm_final_Time_1_TS_0_TE_0_Num_Sensors_100_Pt_-33dBW_sigma_9dB
+plot(sens,pbsens_av(sens,idx),'g','Linewidth',2)
+load Pr_ofdm_final_Time_1_TS_0_TE_0_Num_Sensors_100_Pt_-43dBW_sigma_9dB
+plot(sens,pbsens_av(sens,idx),'r','Linewidth',2)
+legend({'-23dbW' '-33dbW' '-43dbW'}),legend boxoff
+title('Transmit Power effect - Separated/Urban')
+ylabel('Probability of detection')
+xlabel('Number of sensors')
+ylim([0 1])
+xlim([1 sens(end)])
+
+sens=(1:50);
+figure
+hold on
+load Pr_ofdm_final_Time_1_TS_1_TE_0_Num_Sensors_100_Pt_-23dBW_sigma_9dB
+plot(sens,pbsens_av(sens,idx),'b','Linewidth',2)
+load Pr_ofdm_final_Time_1_TS_1_TE_0_Num_Sensors_100_Pt_-33dBW_sigma_9dB
+plot(sens,pbsens_av(sens,idx),'g','Linewidth',2)
+load Pr_ofdm_final_Time_1_TS_1_TE_0_Num_Sensors_100_Pt_-43dBW_sigma_9dB
+plot(sens,pbsens_av(sens,idx),'r','Linewidth',2)
+legend({'-23dbW' '-33dbW' '-43dbW'}),legend boxoff
+title('Transmit Power effect - Mixed/Urban')
+ylabel('Probability of detection')
+xlabel('Number of sensors')
+ylim([0 1])
+xlim([1 sens(end)])
+
+%% BER
+
+sens=(1:50);
+idx=10;
+figure
+
+load Pr_ofdm_final_Time_1_TS_1_TE_0_Num_Sensors_100_Pt_-33dBW_sigma_9dB
+semilogy(sens,eb_bpsk_av(sens,idx),'Linewidth',2)
+hold on
+semilogy(sens,eb_qpsk_av(sens,idx),'Linewidth',2)
+semilogy(sens,eb_4am_av(sens,idx),'Linewidth',2)
+semilogy(sens,eb_8am_av(sens,idx),'Linewidth',2)
+xlabel('Number of sensors')
+ylabel('BER')
+title('BER for different modulation schemes - Mixed/Urban')
+legend({'BPSK' 'QPSK' '4AM' '8AM'}), legend boxoff
+
+
+sens=(1:50);
+idx=10;
+figure
+
+load Pr_ofdm_final_Time_1_TS_1_TE_0_Num_Sensors_100_Pt_-33dBW_sigma_9dB
+plot(sens,log10(eb_bpsk_av(sens,idx)),'Linewidth',2)
+hold on
+plot(sens,log10(eb_qpsk_av(sens,idx)),'Linewidth',2)
+plot(sens,log10(eb_4am_av(sens,idx)),'Linewidth',2)
+plot(sens,log10(eb_8am_av(sens,idx)),'Linewidth',2)
+xlabel('Number of sensors')
+ylabel('BER')
+title('BER for different modulation schemes - Mixed/Urban')
+legend({'BPSK' 'QPSK' '4AM' '8AM'}), legend boxoff
+set(gca,'YtickLabels',{'1' '10^{-1}' '10^{-2}' '10^{-3}' '10^{-4}' '10^{-5}' '10^{-6}'})
+
+
+sens=(1:50);
+idx=10;
+figure
+
+load Pr_ofdm_final_Time_1_TS_1_TE_0_Num_Sensors_100_Pt_-33dBW_sigma_9dB
+plot(sens,log10(eb_bpsk_av(sens,idx)),'Linewidth',2)
+hold on
+plot(sens,log10(eb_qpsk_av(sens,idx)),'Linewidth',2)
+plot(sens,log10(eb_4am_av(sens,idx)),'Linewidth',2)
+plot(sens,log10(eb_8am_av(sens,idx)),'Linewidth',2)
+xlabel('Number of sensors')
+ylabel('BER')
+title('BER for different modulation schemes - Mixed/Urban')
+legend({'BPSK' 'QPSK' '4AM' '8AM'}), legend boxoff
+set(gca,'YtickLabels',{'1' '10^{-1}' '10^{-2}' '10^{-3}' '10^{-4}' '10^{-5}' '10^{-6}'})
+
+
+
+
+
+

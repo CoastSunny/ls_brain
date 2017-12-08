@@ -4,6 +4,44 @@ else
     cd ~/Documents/ls_brain/results/masnet/probs/
 end
 
+%% QUANTILES
+idx=10;
+ff=1;
+sens=(1:20);
+figure
+hold on
+
+load Pr_ofdm_final_Time_1_TS_0_TE_0_Num_Sensors_100_Pt_-33dBW_sigma_9dB
+errorbar(sens,pbsens_av(sens,idx),...
+    pbsens_av(sens,idx)-pbsens_q(sens,idx,1),pbsens_q(sens,idx,2)-pbsens_av(sens,idx)...
+    ,'-o','Linewidth',2)
+load Pr_ofdm_final_Time_1_TS_0_TE_0_Num_Sensors_100_Pt_-33dBW_sigma_9dB
+errorbar(sens,pbsens_av(sens,idx),...
+    pbsens_av(sens,idx)-pbsens_q_noloc(sens,idx,1),pbsens_q_noloc(sens,idx,2)-pbsens_av(sens,idx)...
+    ,'-o','Linewidth',2)
+legend({'location uncertainty' 'channel variance' })
+legend boxoff
+title('Quantiles - Pt:-33dbW - Separated/Urban')
+ylabel('Probability of detection')
+xlabel('Number of sensors')
+
+figure
+hold on
+
+load Pr_ofdm_final_Time_1_TS_1_TE_0_Num_Sensors_100_Pt_-33dBW_sigma_9dB
+errorbar(sens,pbsens_av(sens,idx),...
+    pbsens_av(sens,idx)-pbsens_q(sens,idx,1),pbsens_q(sens,idx,2)-pbsens_av(sens,idx)...
+    ,'-o','Linewidth',2)
+load Pr_ofdm_final_Time_1_TS_1_TE_0_Num_Sensors_100_Pt_-33dBW_sigma_9dB
+errorbar(sens,pbsens_av(sens,idx),...
+    pbsens_av(sens,idx)-pbsens_q_noloc(sens,idx,1),pbsens_q_noloc(sens,idx,2)-pbsens_av(sens,idx)...
+    ,'-o','Linewidth',2)
+legend({'location uncertainty' 'channel variance' })
+legend boxoff
+title('Quantiles - Pt:-33dbW - Mixed/Urban')
+ylabel('Probability of detection')
+xlabel('Number of sensors')
+
 %% ERROR BOUNDS
 idx=10;
 ff=1;
@@ -150,6 +188,58 @@ xlabel('Number of sensors')
 ylabel('BER')
 title('BER for different modulation schemes - Mixed/Urban')
 legend({'BPSK' 'QPSK' '4AM' '8AM'}), legend boxoff
+
+
+sens=(1:50);
+idx=10;
+figure
+
+load Pr_ofdm_final_Time_1_TS_1_TE_0_Num_Sensors_100_Pt_-33dBW_sigma_9dB
+plot(sens,log10(eb_bpsk_av(sens,idx)),'Linewidth',2)
+hold on
+plot(sens,log10(eb_qpsk_av(sens,idx)),'Linewidth',2)
+plot(sens,log10(eb_4am_av(sens,idx)),'Linewidth',2)
+plot(sens,log10(eb_8am_av(sens,idx)),'Linewidth',2)
+xlabel('Number of sensors')
+ylabel('BER')
+title('BER for different modulation schemes - Mixed/Urban')
+legend({'BPSK' 'QPSK' '4AM' '8AM'}), legend boxoff
+set(gca,'YtickLabels',{'1' '10^{-1}' '10^{-2}' '10^{-3}' '10^{-4}' '10^{-5}' '10^{-6}'})
+
+
+sens=(1:50);
+idx=10;
+figure
+subplot(2,2,1)
+load Pr_ofdm_final_Time_1_TS_1_TE_0_Num_Sensors_100_Pt_-33dBW_sigma_9dB
+errorbar(sens,log10(eb_bpsk_av(sens,idx)),...
+    log10(eb_bpsk_av(sens,idx))-log10(eb_bpsk_q(sens,idx,1)),...
+    log10(eb_bpsk_q(sens,idx,2))-log10(eb_bpsk_av(sens,idx))...
+    ,'-o','Linewidth',2)
+xlabel('Number of sensors')
+ylabel('BPSK')
+set(gca,'YtickLabels',{'1' '10^{-1}' '10^{-2}' '10^{-3}' '10^{-4}' '10^{-5}' '10^{-6}'})
+
+subplot(2,2,2)
+errorbar(sens,eb_qpsk_av(sens,idx),...
+    eb_qpsk_av(sens,idx)-eb_qpsk_q(sens,idx,1),eb_qpsk_q(sens,idx,2)-eb_qpsk_av(sens,idx)...
+    ,'-o','Linewidth',2)
+xlabel('Number of sensors')
+ylabel('QPSK')
+subplot(2,2,3)
+errorbar(sens,eb_4am_av(sens,idx),...
+    eb_4am_av(sens,idx)-eb_4am_q(sens,idx,1),eb_4am_q(sens,idx,2)-eb_4am_av(sens,idx)...
+    ,'-o','Linewidth',2)
+xlabel('Number of sensors')
+ylabel('4AM')
+subplot(2,2,4)
+errorbar(sens,eb_8am_av(sens,idx),...
+    eb_8am_av(sens,idx)-eb_8am_q(sens,idx,1),eb_8am_q(sens,idx,2)-eb_8am_av(sens,idx)...
+    ,'-o','Linewidth',2)
+xlabel('Number of sensors')
+ylabel('8AM')
+title('BER for different modulation schemes - Mixed/Urban')
+
 
 
 
