@@ -190,6 +190,18 @@ title('BER for different modulation schemes - Mixed/Urban')
 legend({'BPSK' 'QPSK' '4AM' '8AM'}), legend boxoff
 
 
+load Pr_ofdm_final_Time_1_TS_0_TE_0_Num_Sensors_100_Pt_-33dBW_sigma_9dB
+semilogy(sens,eb_bpsk_av(sens,idx),'Linewidth',2)
+hold on
+semilogy(sens,eb_qpsk_av(sens,idx),'Linewidth',2)
+semilogy(sens,eb_4am_av(sens,idx),'Linewidth',2)
+semilogy(sens,eb_8am_av(sens,idx),'Linewidth',2)
+xlabel('Number of sensors')
+ylabel('BER')
+title('BER for different modulation schemes - Separated/Urban')
+legend({'BPSK' 'QPSK' '4AM' '8AM'}), legend boxoff
+
+
 sens=(1:50);
 idx=10;
 figure

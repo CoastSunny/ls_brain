@@ -19,7 +19,7 @@ cfg.Pt=-33;
 cfg.Time_samples=1;
 
 % Number of runs in the Montecarlo simulation
-cfg.N_monte=250;
+cfg.N_monte=2;
 
 % The rate of false alarm where a sensor says it detected by it did not
 cfg.Pfa=0.1;
@@ -32,12 +32,6 @@ cfg.Type_Scenario=0;
 
 % Sets the type of environment: 0=urban, 1=rural
 cfg.Type_Environment=0;
-
-% Sets how much the target is moved in the horizontal space within the ENEMY zone {in metres}. The smaller this value the smaller the area where a specific value of probability and BER is calculated
-cfg.Int_target_x=50; % for separated scenario select 50, for mixed select 500
-
-% Sets how much the target is moved in the vertical space within the ENEMY zone {in metres}. The smaller this value the smaller the area where a specific value of probability and BER is calculated
-cfg.Int_target_y=50; % for separated scenario select 50, for mixed select 500
 
 % Total size of the scenarion to simulate {in metres}. The value will define the side of the squared scenario 
 cfg.Size_Scenario=2000;
@@ -90,6 +84,12 @@ cfg.Sample_Density=64;
 % Desired sampling frequency {in Hz}. Depends on the bandwidth of the expected WIFI or LTE signal
 cfg.Fs=30.72e6;
 
+% Sets how much the target is moved in the horizontal space within the ENEMY zone {in metres}. The smaller this value the smaller the area where a specific value of probability and BER is calculated
+cfg.Int_target_x=50;
+
+% Sets how much the target is moved in the vertical space within the ENEMY zone {in metres}. The smaller this value the smaller the area where a specific value of probability and BER is calculated
+cfg.Int_target_y=50;
+
 % SIGMA value for the shadowing model {in dB}. Set 0 for no random shadowing
 cfg.sigm=9;
 
@@ -104,6 +104,15 @@ cfg.BW=20e6;
 
 % Noise figure of the RF receiver {in dB}
 cfg.NF=3.5;
+
+% Number of samples that forms the cyclic prefix. It depends on the bandwidth of the LTE or WIFI signal
+cfg.Tc=144;
+
+% Number of samples that forms the data. It depends on the bandwidth of the LTE or WIFI signal
+cfg.Td=2048;
+
+% Autocorrelation sample coefficient. It indicates how many LTE traces have been taken. The bigger it is the more samples are taken for the autocorrelation.
+cfg.AC_sample=6;
 
 
 

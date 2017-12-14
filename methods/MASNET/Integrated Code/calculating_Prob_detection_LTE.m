@@ -1,4 +1,4 @@
-function [Pd] = calculating_Prob_detection_v2_LTE(AC_sample,Td,Tc,snr,Pfa)
+function [Pd] = calculating_Prob_detection_LTE(AC_sample,Td,Tc,snr,Pfa)
 
             Tc = 72;       % # of samples in the cyclic prefix (CP)
             Td = 1200;      % Number of samples of data in the LTE trace
