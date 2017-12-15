@@ -19,7 +19,7 @@ cfg.Pt=-33;
 cfg.Time_samples=1;
 
 % Number of runs in the Montecarlo simulation
-cfg.N_monte=2;
+cfg.N_monte=250;
 
 % The rate of false alarm where a sensor says it detected by it did not
 cfg.Pfa=0.1;
