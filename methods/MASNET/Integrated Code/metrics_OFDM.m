@@ -2,7 +2,7 @@ function metrics_OFDM(fl)
 
 
 if isunix==0
-    pth='C:\Users\Loukianos\Documents\MATLAB\ls_brain\results\masnet\'
+    pth='C:\masnet\'
 else
     pth='~/Documents/ls_brain/results/masnet/';
 end
