@@ -28,16 +28,16 @@ cfg.Pfa=0.1;
 cfg.Fc=2.4e9;
 
 % Sets the type of scenario: 0=Separated Enemy and Friend zones, 1=Mixed zones
-cfg.Type_Scenario=0;
+cfg.Type_Scenario=1;
 
 % Sets the type of environment: 0=urban, 1=rural
 cfg.Type_Environment=0;
 
 % Sets how much the target is moved in the horizontal space within the ENEMY zone {in metres}. The smaller this value the smaller the area where a specific value of probability and BER is calculated
-cfg.Int_target_x=50; % for separated scenario select 50, for mixed select 500
+cfg.Int_target_x=500; % for separated scenario select 50, for mixed select 500
 
 % Sets how much the target is moved in the vertical space within the ENEMY zone {in metres}. The smaller this value the smaller the area where a specific value of probability and BER is calculated
-cfg.Int_target_y=50; % for separated scenario select 50, for mixed select 500
+cfg.Int_target_y=500; % for separated scenario select 50, for mixed select 500
 
 % Total size of the scenarion to simulate {in metres}. The value will define the side of the squared scenario 
 cfg.Size_Scenario=2000;

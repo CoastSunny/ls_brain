@@ -4,13 +4,13 @@
 clear all
 
 %
-cfg.snrfolder='C:\Users\Loukianos\Documents\MATLAB\ls_brain\results\masnet\snr\';
-cfg.probsfolder='C:\Users\Loukianos\Documents\MATLAB\ls_brain\results\masnet\probs\';
+cfg.snrfolder='~/Documents/ls_brain/results/masnet/SRL/snr/';
+cfg.probsfolder='~/Documents/ls_brain/results/masnet/SRL/probs/';
 %
-cfg.filename='final';
+cfg.filename='srl';
 
 % Number of sensors
-cfg.Num_sensors=100;
+cfg.Num_sensors=16;
 
 % Expected power transmitted by the target {in dBW}. Currently this is not taken as input
 cfg.Pt=-33;
@@ -19,7 +19,7 @@ cfg.Pt=-33;
 cfg.Time_samples=1;
 
 % Number of runs in the Montecarlo simulation
-cfg.N_monte=250;
+cfg.N_monte=1;
 
 % The rate of false alarm where a sensor says it detected by it did not
 cfg.Pfa=0.1;
@@ -28,7 +28,7 @@ cfg.Pfa=0.1;
 cfg.Fc=2.4e9;
 
 % Sets the type of scenario: 0=Separated Enemy and Friend zones, 1=Mixed zones
-cfg.Type_Scenario=0;
+cfg.Type_Scenario=1;
 
 % Sets the type of environment: 0=urban, 1=rural
 cfg.Type_Environment=0;
@@ -85,10 +85,10 @@ cfg.Sample_Density=64;
 cfg.Fs=30.72e6;
 
 % Sets how much the target is moved in the horizontal space within the ENEMY zone {in metres}. The smaller this value the smaller the area where a specific value of probability and BER is calculated
-cfg.Int_target_x=50;
+cfg.Int_target_x=500;
 
 % Sets how much the target is moved in the vertical space within the ENEMY zone {in metres}. The smaller this value the smaller the area where a specific value of probability and BER is calculated
-cfg.Int_target_y=50;
+cfg.Int_target_y=500;
 
 % SIGMA value for the shadowing model {in dB}. Set 0 for no random shadowing
 cfg.sigm=9;

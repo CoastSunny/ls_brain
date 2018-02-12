@@ -26,7 +26,7 @@ for i=band
     count=count+1;
     
 end
-pli=mean(pli,1);
+% pli=squeeze(mean(pli,1));
 if vis==1
     figure,imagesc(squeeze(pli)),title('pli')
     set(gca,'Xtick',[16 48 80 112])

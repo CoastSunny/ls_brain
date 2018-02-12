@@ -1,4 +1,4 @@
-function [data, Arsig, x, lambdamax] = gen_ar_biv(N, P)
+function [data, Arsig, x, lambdamax] = gen_ar_biv(N, P, pow)
 % generates data according to bivariate AR model with unidirectional flow
 % from first to second time series
 %
@@ -44,12 +44,13 @@ while lambdamax > 1 || lambdamax < 0.9
   end
   E=eye(M*P);AA=[Arsig;E(1:end-M,:)];lambda=eig(AA);lambdamax=max(abs(lambda));
 end
-
+Arsig(2:2:end)=Arsig(2:2:end)*pow;
 x=randn(M,N+N0);
 y=x;
 for i=P+1:N+N0;
     yloc=reshape(fliplr(y(:,i-P:i-1)),[],1);
-    y(:,i)=Arsig*yloc+x(:,i);
+    
+    y(:,i)=pow*Arsig*yloc+x(:,i);
 end
 data=y(:,N0+1:end);
 

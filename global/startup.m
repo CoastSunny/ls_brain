@@ -2,8 +2,8 @@ if isunix==0
     home='C:\Users\Loukianos';
     home_bci='D:\';
 else
-    home='~/Documents/projects';
-    home_bci='/media/louk/Storage';
+    home='~/Documents/';
+    home_bci='/media/Storage';
 end
 
 
@@ -16,5 +16,5 @@ addpath([home_bci '/BCI_code/toolboxes/eeg_analysis'])
 addpath(genpath([home_bci '/BCI_code/toolboxes/numerical_tools']))
 addpath([home_bci '/BCI_code/toolboxes/signal_processing'])
 addpath(genpath([home_bci '/BCI_code/toolboxes/utilities']))
-addpath([home_bci '/BCI_code/toolboxes/brainstream/core'])
-addpathBS
+%addpath([home_bci '/BCI_code/toolboxes/brainstream/core'])
+%addpathBS

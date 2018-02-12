@@ -12,7 +12,7 @@ load([home '/Documents/bb/data/sa'])
 load([home '/Documents/bb/data/miscdata'])
 mkdir([home '/Documents/bb/data/' dataset_string])
 rng('default');
-rng('shuffle');
+%rng('shuffle');
 sd = rng;
 save([home '/Documents/bb/data/' dataset_string '/sd'], 'sd');
 truth.sigma_range = [10 40];
@@ -89,7 +89,7 @@ for idata = 1:ndatasets
     
     %% time series generation
     for i=1:(options.sourcepairs)
-        [sources_int, sources_nonint, P_ar] = generate_sources_ar(fs, truth.len, options.bandpass{i});
+        [sources_int, sources_nonint, P_ar] = generate_sources_ar(fs, truth.len, options.bandpass{i}, options.pow);
         truth.sources_int(2*i-1:2*i,:)=sources_int;
         truth.sources_nonint(2*i-1:2*i,:)=sources_nonint;
     end

@@ -12,7 +12,7 @@ if ~exist('inds_roi_outer_2K')
     load([home '/Documents/bb/data/miscdata'])
 end
 
-N=1000;
+N=250;
 OUT=[];OUT_b=[];PC=[];A=[];B=[];PCc=[];PCn=[];L=[];EV=[];INT=[];SNR=[];error=[];O=[];
 er_ev=zeros(1,N);
 locs=sa.cortex75K.EEG_V_fem_normal(:, sa.cortex2K.in_from_cortex75K);
@@ -23,8 +23,8 @@ for i=1:N
 %     d1='/Documents/bb/data/Pair1SNRrandNoise01Norm/EEG/dataset_';
 %     d1='/Documents/bb/data/Pair1SNR05Noise01Norm/EEG/dataset_';
 %     d2='/Documents/bb/data/Pair1SNR05Noise01Norm/truth/dataset_';
-    d1='/Documents/bb/data/snr05pow1/EEG/dataset_';
-    d2='/Documents/bb/data/snr05pow1/truth/dataset_';
+    d1='/Documents/bb/data/snr09norm/EEG/dataset_';
+    d2='/Documents/bb/data/snr09norm/truth/dataset_';
     load([home d1 num2str(i) '/data']),
     load([home d2 num2str(i) '/truth']),
     truth
@@ -32,7 +32,7 @@ for i=1:N
     SNR(i)=truth.snr;
     sig(i)=mean(truth.sigmas);
     data=[];
-    
+    warning off
     fs=100;
     len=180;
     bandpass=[8 13];
@@ -84,22 +84,51 @@ for i=1:N
     ncomps=8;
     xch=[truth.EEG_field_pat truth.EEG_noise_pat];
     Xch{i}=xch;
-% %     
-%     CS=ls_pli2(permute(Y,[3 1 2]),[8:13],0);
-%     CS=triu(CS);
-%     [mcs ics]=max(CS(:));
-%     [tmpr tmpc]=ind2sub(size(CS),ics);
-%     CS_b=ls_pli2(permute(Y_b,[3 1 2]),[8:13],0);
-%     CS_b=triu(CS_b);
-%     diff_pli=(CS(tmpr,tmpc)-CS_b(tmpr,tmpc))>0.1;
+    cfg=[];cfg.order=5;
+    mvardata=ft_mvaranalysis(cfg,data);
+    cfg=[];
+    cfg.foi=1:1:40;    
+    fmvar=ft_freqanalysis_mvar(cfg,mvardata);
+    cfg=[];cfg.method='coh';cfg.complex='imag';
+    stat = ft_connectivityanalysis(cfg, fmvar);
+    
+    mvardata_b=ft_mvaranalysis([],data_b);
+    cfg=[];
+    cfg.foi=1:1:40;    
+    fmvar_b=ft_freqanalysis_mvar(cfg,mvardata_b);
+    cfg=[];cfg.method='coh';cfg.complex='imag';
+    stat_b = ft_connectivityanalysis(cfg, fmvar_b);
 
+    %%
+%     [Am,Su,Yp,Up]=idMVAR(EEG_data,5,0);
+%     [DC,DTF,PDC,GPDC,COH,PCOH,PCOH2,H,S,P,f] = fdMVAR(Am,Su,40,100);
+%     coh=abs(imag(COH));
+%     [mdtf_p idtf_p]=max(coh(:));
+%     [fdtf_p rdtf_p cdtf_p]=ind2sub(size(coh),idtf);
+%     coh813=(coh(:,:,8:13));
+%     [mdtf idtf]=max(coh813(:));
+%     [fdtf rdtf cdtf]=ind2sub(size(coh),idtf);
     
-    CS_p=ls_pli(permute(Y,[3 1 2]),[],0);
+    %%
+    warning on
+%     CS_p=ls_pli(permute(Y,[3 1 2]),[],0);
+    CS_p=permute(stat.cohspctrm,[3 1 2]);
     [mcs ics]=max(CS_p(:));
-    [tmpf tmpr_p tmpc_p]=ind2sub(size(CS_p),ics);
-    CS_b_p=ls_pli(permute(Y_b,[3 1 2]),[],0);
-    diff_pli_proper=(CS_p(tmpf,tmpr_p,tmpc_p)-CS_b_p(tmpf,tmpr_p,tmpc_p))>0.1;
-    
+    [tmpf mtmpr_p mtmpc_p]=ind2sub(size(CS_p),ics);
+%     CS_b_p=ls_pli(permute(Y_b,[3 1 2]),[],0);
+    CS_b_p=permute(stat_b.cohspctrm,[3 1 2]);
+%     diff_pli_proper=(CS_p(tmpf,tmpr_p,tmpc_p)-CS_b_p(tmpf,tmpr_p,tmpc_p))>0.1;
+    mvar_proper=CS_p(tmpf,tmpr_p,tmpc_p);
+    %%
+%     CS=ls_pli2(permute(Y,[3 1 2]),[8:13],0);
+    CS=permute(stat.cohspctrm(:,:,8:13),[3 1 2]);
+    [mcs ics]=max(CS(:));
+    [tmpf mtmpr mtmpc]=ind2sub(size(CS),ics);
+%     CS_b=ls_pli2(permute(Y_b,[3 1 2]),[8:13],0);
+    CS_b=permute(stat_b.cohspctrm(:,:,8:13),[3 1 2]);
+%     diff_pli=(CS(tmpf,tmpr,tmpc)-CS_b(tmpf,tmpr,tmpc))>0.1;
+    mvar=CS(tmpf,tmpr_p,tmpc_p);
+    %%
     rng('default')
     Options=[];
     Options(1)=10^-1;
@@ -108,14 +137,14 @@ for i=1:N
     out_t=tensor_connectivity_t(Fp{i}{3},Fp{i}{2});
     OUT_t{i}=out_t;
     
-    
+    %%
     Options=[];
     Options(1)=10^-1;
     Options(3)=0;
     Options(5)=1;
     maxsub=5;
     
-    for subit=1:5
+    for subit=1:1
     ev=0;subcount=0;
     fprintf(num2str(subit))
     while ev<=0 && subcount<maxsub
@@ -134,8 +163,8 @@ for i=1:N
     end
     
     if subcount>=maxsub
-           A(:,:,i)=[0 0;0 0;0 0;0 0;0 0];
-           B(:,i)=[-ones(10,1)];
+           A(:,:,i)=zeros(6,2);
+           B(:,i)=[-ones(11,1)];
         continue
     end
     subidx=find(O==max(O));
@@ -148,7 +177,7 @@ for i=1:N
     OUT{i}=out;
     OUT_b{i}=out_b;
     Tt{i}{1}=T;Tt{i}{2}=T_b;
-    
+    %%
 %      T{1}=abs(T{1});
      T1Fp=(Fp{i}{1});
 %      locs=(locs);
@@ -244,14 +273,19 @@ for i=1:N
     % figure,subplot(1,3,1),plot(xch(:,1)),subplot(1,3,2),plot(T{1}(:,m(1))),subplot(1,3,3),plot(-T{1}(:,m(1)))
     % figure,subplot(1,3,1),plot(xch(:,2)),subplot(1,3,2),plot(T{1}(:,m(2))),subplot(1,3,3),plot(-T{1}(:,m(2)))
     
-    A(:,:,i)=[find(Rr==0) find(Rc==0);find(Rr_t==0) find(Rc_t==0);truth.in_roi;...
-        find(RrT==0) find(RcT==0);elecrois(tmpr_p) elecrois(tmpc_p)];
+    A(:,:,i)=[find(Rr==0) find(Rc==0);find(Rr_t==0) find(Rc_t==0);...
+        truth.in_roi;find(RrT==0) find(RcT==0);...
+        elecrois(mtmpr_p) elecrois(mtmpc_p);elecrois(mtmpr) elecrois(mtmpc)];%...
+%         elecrois(rdtf_p) elecrois(cdtf_p);elecrois(rdtf) elecrois(cdtf)];
     B(:,i)=[INT(i) SNR(i)...
         max(max(mean(OUT{i}(:,:,:),3))) max(max(mean(OUT_b{i}(:,:,:),3)))...
         666 max(max(mean(OUT_t{i}(:,:,:),3)))...
-        max(max(mean(OUT{i},3))) max(max(mean(OUT_b{i},3))) 666 diff_pli_proper];
+        max(max(mean(OUT{i},3))) max(max(mean(OUT_b{i},3))) ...
+        666 mvar_proper mvar];%...
+%         666 max(coh(:)) max(coh813(:))];
     % A,B
     dummy=1;
     calcLOC_fin
     calcCONN
+    Result=[Lpara2 Cpara2;Lpara Cpara;Lmvar_p Cmvar_p;Lmvar Cmvar]%;Lmvar_p Cmvar_p;Lmvar Cmvar]
 end

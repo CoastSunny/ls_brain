@@ -1,4 +1,4 @@
-function [data, Arsig, x, lambdamax] = gen_ar_uni(N, P)
+function [data, Arsig, x, lambdamax] = gen_ar_uni(N, P , pow)
 % generates data according to bivariate AR model with unidirectional flow
 % from first to second time series
 %

@@ -1,4 +1,4 @@
-function [sources_int, sources_nonint, P_ar] = generate_sources_ar(fs, len, bandpass)
+function [sources_int, sources_nonint, P_ar] = generate_sources_ar(fs, len, bandpass, pow)
 % Stefan Haufe, 2014, 2015
 % stefan.haufe@tu-berlin.de
 %
@@ -26,8 +26,8 @@ P_ar = 5;
 rep = 1;
 while rep
   sources_nonint = zeros(N+100, 2);
-  sources_nonint(:, 1) = gen_ar_uni(N+100, P_ar);
-  sources_nonint(:, 2) = gen_ar_uni(N+100, P_ar);
+  sources_nonint(:, 1) = gen_ar_uni(N+100, P_ar, pow);
+  sources_nonint(:, 2) = gen_ar_uni(N+100, P_ar, pow);
   if ~isempty(bandpass)   
     [P1, f1] = pwelch(sources_nonint(:, 1), hanning(fs), [], fs, fs);
     [P2, f2] = pwelch(sources_nonint(:, 2), hanning(fs), [], fs, fs);
@@ -46,7 +46,7 @@ end
 
 rep = 1;
 while rep
-  sources_int = gen_ar_biv(N+100, P_ar)';
+  sources_int = gen_ar_biv(N+100, P_ar, pow)';
 
   if ~isempty(bandpass)   
     [P1, f1] = pwelch(sources_int(:, 1), hanning(fs), [], fs, fs);

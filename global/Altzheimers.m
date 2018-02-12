@@ -24,6 +24,9 @@ addpath([home '/ls_brain/methods/Misc/'])
 addpath([home '/ls_brain/methods/Misc/code'])
 addpath([home '/ls_brain/methods/Misc/matlab-bgl-master'])
 addpath([home '/ls_brain/methods/Misc/2016_01_16_BCT'])
-a=which('trace');
-rmpath(a(1:end-7));
+addpath([home '/fieldtrip-master'])
+addpath([home '/ls_brain/methods/Misc/bb'])
+run([home '/ls_brain/methods/Misc/bb/set_path.m'])
+%a=which('trace');
+%rmpath(a(1:end-7));
 cd([home '/ls_brain/methods/Alzheimers'])

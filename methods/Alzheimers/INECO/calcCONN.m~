@@ -55,8 +55,8 @@ res=[];
 
 for th=1:numel(thr)
     
-    c=(b1(10,:)>=thr(th));
-    d=(b0(10,:)<thr(th));
+    c=(b1(13,:)>=thr(th));
+    d=(b0(13,:)<thr(th));
     e=[c d];
     res(th)=(sum(e==0)*(-2) + sum(e==1)*1)/numel(e);
 
@@ -71,8 +71,8 @@ res=[];
 
 for th=1:numel(thr)
     
-    c=(b1(11,:)>=thr(th));
-    d=(b0(11,:)<thr(th));
+    c=(b1(14,:)>=thr(th));
+    d=(b0(14,:)<thr(th));
     e=[c d];
     res(th)=(sum(e==0)*(-2) + sum(e==1)*1)/numel(e);
 
