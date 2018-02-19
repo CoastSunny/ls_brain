@@ -12,7 +12,7 @@ if ~exist('inds_roi_outer_2K')
     load([home '/Documents/bb/data/miscdata'])
 end
 
-N=250;
+N=115;
 OUT=[];OUT_b=[];PC=[];A=[];B=[];PCc=[];PCn=[];L=[];EV=[];INT=[];SNR=[];error=[];O=[];
 er_ev=zeros(1,N);
 locs=sa.cortex75K.EEG_V_fem_normal(:, sa.cortex2K.in_from_cortex75K);
@@ -23,8 +23,8 @@ for i=1:N
 %     d1='/Documents/bb/data/Pair1SNRrandNoise01Norm/EEG/dataset_';
 %     d1='/Documents/bb/data/Pair1SNR05Noise01Norm/EEG/dataset_';
 %     d2='/Documents/bb/data/Pair1SNR05Noise01Norm/truth/dataset_';
-    d1='/Documents/bb/data/snr09norm/EEG/dataset_';
-    d2='/Documents/bb/data/snr09norm/truth/dataset_';
+%     d1='/Documents/bb/data/snr09norm/EEG/dataset_';
+%     d2='/Documents/bb/data/snr09norm/truth/dataset_';
     load([home d1 num2str(i) '/data']),
     load([home d2 num2str(i) '/truth']),
     truth
@@ -58,7 +58,7 @@ for i=1:N
     end
     cfg             = [];
     
-    cfg.reref       = 'yes';
+    cfg.reref       = 'no';
     cfg.refchannel  = 'all'; % average reference
     cfg.lpfilter    = 'no';
     cfg.lpfreq      = 40;
@@ -81,24 +81,26 @@ for i=1:N
     Y=permute(freqc.fourierspctrm,[2 1 3]);
     Y_b=permute(freqc_b.fourierspctrm,[2 1 3]);
     nsource=2;
-    ncomps=8;
+%     ncomps=8;
     xch=[truth.EEG_field_pat truth.EEG_noise_pat];
     Xch{i}=xch;
-    cfg=[];cfg.order=5;
+%     cfg=[];cfg.method='fastica';cfg.numcomponent=8;
+%     data=ft_componentanalysis(cfg,data);
+    cfg=[];cfg.order=10;
     mvardata=ft_mvaranalysis(cfg,data);
     cfg=[];
     cfg.foi=1:1:40;    
-    fmvar=ft_freqanalysis_mvar(cfg,mvardata);
-    cfg=[];cfg.method='coh';cfg.complex='imag';
+    fmvar=ft_freqanalysis_mvar(cfg,mvardata);  
+    cfg=[];cfg.method='coh';cfg.bandwidth=100;cfg.complex='imag';
     stat = ft_connectivityanalysis(cfg, fmvar);
     
     mvardata_b=ft_mvaranalysis([],data_b);
     cfg=[];
     cfg.foi=1:1:40;    
     fmvar_b=ft_freqanalysis_mvar(cfg,mvardata_b);
-    cfg=[];cfg.method='coh';cfg.complex='imag';
+    cfg=[];cfg.method='coh';cfg.bandwidth=100;cfg.complex='imag';
     stat_b = ft_connectivityanalysis(cfg, fmvar_b);
-
+    param='cohspctrm';
     %%
 %     [Am,Su,Yp,Up]=idMVAR(EEG_data,5,0);
 %     [DC,DTF,PDC,GPDC,COH,PCOH,PCOH2,H,S,P,f] = fdMVAR(Am,Su,40,100);
@@ -112,22 +114,32 @@ for i=1:N
     %%
     warning on
 %     CS_p=ls_pli(permute(Y,[3 1 2]),[],0);
-    CS_p=permute(stat.cohspctrm,[3 1 2]);
+    CS_p=permute(abs(stat.(param)),[3 1 2]);
     [mcs ics]=max(CS_p(:));
     [tmpf mtmpr_p mtmpc_p]=ind2sub(size(CS_p),ics);
+    mvar_proper=CS_p(tmpf,mtmpr_p,mtmpc_p);
+    cross_mvar=real(fmvar.crsspctrm(:,:,tmpf));
+    [p_mvar w_mvar]=ls_lcmv(cross_mvar,locs);
+    [mp ip]=sort(p_mvar);
+    ROI1_mvar=sa.cortex75K.roi_mask(sa.cortex2K.in_from_cortex75K(ip(end)));
+    ROI2_mvar=sa.cortex75K.roi_mask(sa.cortex2K.in_from_cortex75K(ip(end-1)));
 %     CS_b_p=ls_pli(permute(Y_b,[3 1 2]),[],0);
-    CS_b_p=permute(stat_b.cohspctrm,[3 1 2]);
+    CS_b_p=permute(abs(stat_b.(param)),[3 1 2]);
+    [mcs ics]=max(CS_b_p(:));
+    [tmpf_b mtmpr_b_p mtmpc_b_p]=ind2sub(size(CS_b_p),ics);
+    mvar_proper_b=CS_b_p(tmpf,mtmpr_b_p,mtmpc_b_p);
+
 %     diff_pli_proper=(CS_p(tmpf,tmpr_p,tmpc_p)-CS_b_p(tmpf,tmpr_p,tmpc_p))>0.1;
-    mvar_proper=CS_p(tmpf,tmpr_p,tmpc_p);
+    
     %%
 %     CS=ls_pli2(permute(Y,[3 1 2]),[8:13],0);
-    CS=permute(stat.cohspctrm(:,:,8:13),[3 1 2]);
+    CS=permute(stat.(param)(:,:,8:13),[3 1 2]);
     [mcs ics]=max(CS(:));
     [tmpf mtmpr mtmpc]=ind2sub(size(CS),ics);
 %     CS_b=ls_pli2(permute(Y_b,[3 1 2]),[8:13],0);
-    CS_b=permute(stat_b.cohspctrm(:,:,8:13),[3 1 2]);
+    CS_b=permute(stat_b.(param)(:,:,8:13),[3 1 2]);
 %     diff_pli=(CS(tmpf,tmpr,tmpc)-CS_b(tmpf,tmpr,tmpc))>0.1;
-    mvar=CS(tmpf,tmpr_p,tmpc_p);
+    mvar=CS(tmpf,mtmpr,mtmpc);
     %%
     rng('default')
     Options=[];
@@ -143,8 +155,8 @@ for i=1:N
     Options(3)=0;
     Options(5)=1;
     maxsub=5;
-    
-    for subit=1:1
+    rng('default')
+    for subit=1:5
     ev=0;subcount=0;
     fprintf(num2str(subit))
     while ev<=0 && subcount<maxsub
@@ -164,7 +176,7 @@ for i=1:N
     
     if subcount>=maxsub
            A(:,:,i)=zeros(6,2);
-           B(:,i)=[-ones(11,1)];
+           B(:,i)=[-ones(12,1)];
         continue
     end
     subidx=find(O==max(O));
@@ -201,10 +213,11 @@ for i=1:N
     [ln mn]=max(abs(PCn(:,:,i)));
     L(i,:)=lc;
     Cx=0;
-    out=triu(mean(out(:,:,[8:13]),3));
+    
+   % out=triu(mean(out(:,:,[8:13]),3));
     [tmp itmp]=sort(out(:));
     tmp=flipud(itmp);
-    [tmpr tmpc]=ind2sub(size(out),tmp(1));
+    [tmpr tmpc tmpf]=ind2sub(size(out),tmp(1));
     r=tmpr;
     c=tmpc;
     %%
@@ -226,10 +239,10 @@ for i=1:N
     end
         
     %%
-    out_t=triu(mean(out_t(:,:,:),3));
+    %out_t=triu(mean(out_t(:,:,:),3));
     [tmp itmp]=sort(out_t(:));
     tmp=flipud(itmp);
-    [tmpr tmpc]=ind2sub(size(out_t),tmp(1));
+    [tmpr tmpc tmpf]=ind2sub(size(out_t),tmp(1));
     r=tmpr;
     c=tmpc;
     
@@ -272,16 +285,21 @@ for i=1:N
     %
     % figure,subplot(1,3,1),plot(xch(:,1)),subplot(1,3,2),plot(T{1}(:,m(1))),subplot(1,3,3),plot(-T{1}(:,m(1)))
     % figure,subplot(1,3,1),plot(xch(:,2)),subplot(1,3,2),plot(T{1}(:,m(2))),subplot(1,3,3),plot(-T{1}(:,m(2)))
-    
-    A(:,:,i)=[find(Rr==0) find(Rc==0);find(Rr_t==0) find(Rc_t==0);...
+%     [p1_para2 w1_para2]=ls_lcmv(T{1}(:,r)*T{1}(:,r)',locs);
+%     [m i1]=max(p1_para2);
+%     [p2_para2 w2_para2]=ls_lcmv(T{1}(:,c)*T{1}(:,c)',locs);
+%     [m i2]=max(p2_para2);
+%     ROI1_para2=sa.cortex75K.roi_mask(sa.cortex2K.in_from_cortex75K(i1));
+%     ROI2_para2=sa.cortex75K.roi_mask(sa.cortex2K.in_from_cortex75K(i2));
+    A(:,:,i)=[find(Rr==0) find(Rc==0);find(Rr_t==0) find(Rc_t==0);...%ROI1_para2 ROI2_para2;...
         truth.in_roi;find(RrT==0) find(RcT==0);...
-        elecrois(mtmpr_p) elecrois(mtmpc_p);elecrois(mtmpr) elecrois(mtmpc)];%...
+        ROI1_mvar ROI2_mvar;elecrois(mtmpr) elecrois(mtmpc)];%...
 %         elecrois(rdtf_p) elecrois(cdtf_p);elecrois(rdtf) elecrois(cdtf)];
     B(:,i)=[INT(i) SNR(i)...
-        max(max(mean(OUT{i}(:,:,:),3))) max(max(mean(OUT_b{i}(:,:,:),3)))...
-        666 max(max(mean(OUT_t{i}(:,:,:),3)))...
-        max(max(mean(OUT{i},3))) max(max(mean(OUT_b{i},3))) ...
-        666 mvar_proper mvar];%...
+        max(OUT{i}(:)) max(OUT_b{i}(:))...
+        666 max(OUT_t{i}(:))...
+        max(OUT{i}(:)) max(OUT_b{i}(:)) ...
+        666 mvar_proper mvar mvar_proper_b];%...
 %         666 max(coh(:)) max(coh813(:))];
     % A,B
     dummy=1;
