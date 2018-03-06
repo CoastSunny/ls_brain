@@ -67,7 +67,7 @@ plot(loc_thr,squeeze(Ploc_gr(:,kk,dd,:))','o-','Linewidth',2)
 hold on
 plot(loc_thr,squeeze(Ploc_rnd(gg,kk,dd,:)),'*-','Linewidth',2)
 xlabel('accuracy threshold (m)');ylabel('Probability of localisation');
-legend({'G=1' 'G=5' 'G=10' 'G=20' 'G=25' 'rnd'})
+legend({'G=1' 'G=5' 'G=10' 'G=20' 'G=25' 'random'})
 legend boxoff
 title('')
 % 

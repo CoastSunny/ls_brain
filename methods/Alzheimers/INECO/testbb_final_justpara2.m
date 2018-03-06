@@ -12,7 +12,7 @@ if ~exist('inds_roi_outer_2K')
     load([home '/Documents/bb/data/miscdata'])
 end
 
-N=115;
+N=250;
 OUT=[];OUT_b=[];PC=[];A=[];B=[];PCc=[];PCn=[];L=[];EV=[];INT=[];SNR=[];error=[];O=[];
 er_ev=zeros(1,N);
 locs=sa.cortex75K.EEG_V_fem_normal(:, sa.cortex2K.in_from_cortex75K);
@@ -23,8 +23,8 @@ for i=1:N
 %     d1='/Documents/bb/data/Pair1SNRrandNoise01Norm/EEG/dataset_';
 %     d1='/Documents/bb/data/Pair1SNR05Noise01Norm/EEG/dataset_';
 %     d2='/Documents/bb/data/Pair1SNR05Noise01Norm/truth/dataset_';
-     d1='/Documents/bb/data/snr04norm/EEG/dataset_';
-     d2='/Documents/bb/data/snr04norm/truth/dataset_';
+%      d1='/Documents/bb/data/snr05norm/EEG/dataset_';
+%      d2='/Documents/bb/data/snr05norm/truth/dataset_';
     load([home d1 num2str(i) '/data']),
     load([home d2 num2str(i) '/truth']),
     truth
@@ -84,71 +84,7 @@ for i=1:N
 %     ncomps=8;
     xch=[truth.EEG_field_pat truth.EEG_noise_pat];
     Xch{i}=xch;
-%     cfg=[];cfg.method='fastica';cfg.numcomponent=8;
-%     data=ft_componentanalysis(cfg,data);
-    cfg=[];cfg.order=10;cfg.output='residual';
-    mvardata=ft_mvaranalysis(cfg,data);
-    cfg=[];cfg.method='runica';cfg.numcomponent=ncomps;
-    mvarica=ft_componentanalysis(cfg,mvardata);
-    cfg=[];cfg.order=10;
-    mvardata=ft_mvaranalysis(cfg,data);
-    cfg=[];cfg.foi=1:1:40;fmvar=ft_freqanalysis_mvar(cfg,mvardata);  
-    cfg=[];cfg.method='coh';cfg.bandwidth=100;cfg.complex='imag';
-    stat = ft_connectivityanalysis(cfg, fmvar);
-   
-    cfg=[];cfg.order=10;cfg.output='residual';
-    mvardata_b=ft_mvaranalysis([],data_b);
-    cfg=[];cfg.method='runica';cfg.numcomponent=ncomps;
-    mvarica_b=ft_componentanalysis(cfg,mvardata_b);
-    cfg=[];cfg.foi=1:1:40;    
-    fmvar_b=ft_freqanalysis_mvar(cfg,mvardata_b);
-    cfg=[];cfg.method='coh';cfg.bandwidth=100;cfg.complex='imag';
-    stat_b = ft_connectivityanalysis(cfg, fmvar_b);
-    param='cohspctrm';
-    %%
-%     [Am,Su,Yp,Up]=idMVAR(EEG_data,5,0);
-%     [DC,DTF,PDC,GPDC,COH,PCOH,PCOH2,H,S,P,f] = fdMVAR(Am,Su,40,100);
-%     coh=abs(imag(COH));
-%     [mdtf_p idtf_p]=max(coh(:));
-%     [fdtf_p rdtf_p cdtf_p]=ind2sub(size(coh),idtf);
-%     coh813=(coh(:,:,8:13));
-%     [mdtf idtf]=max(coh813(:));
-%     [fdtf rdtf cdtf]=ind2sub(size(coh),idtf);
-    
-    %%
-    
-  
-   
-    
-    warning on
-%     CS_p=ls_pli(permute(Y,[3 1 2]),[],0);
-    CS_p=permute(abs(stat.(param)),[3 1 2]);
-    [mcs ics]=max(CS_p(:));
-    [tmpf mtmpr_p mtmpc_p]=ind2sub(size(CS_p),ics);
-    mvar_proper=CS_p(tmpf,mtmpr_p,mtmpc_p);
-    cross_mvar=real(fmvar.crsspctrm(:,:,tmpf));
-    [p_mvar w_mvar]=ls_lcmv(cross_mvar,locs);
-    [mp ip]=sort(p_mvar);
-    ROI1_mvar=sa.cortex75K.roi_mask(sa.cortex2K.in_from_cortex75K(ip(end)));
-    ROI2_mvar=sa.cortex75K.roi_mask(sa.cortex2K.in_from_cortex75K(ip(end-1)));
-%     CS_b_p=ls_pli(permute(Y_b,[3 1 2]),[],0);
-    CS_b_p=permute(abs(stat_b.(param)),[3 1 2]);
-    [mcs ics]=max(CS_b_p(:));
-    [tmpf_b mtmpr_b_p mtmpc_b_p]=ind2sub(size(CS_b_p),ics);
-    mvar_proper_b=CS_b_p(tmpf,mtmpr_b_p,mtmpc_b_p);
 
-    
-%     diff_pli_proper=(CS_p(tmpf,tmpr_p,tmpc_p)-CS_b_p(tmpf,tmpr_p,tmpc_p))>0.1;
-    
-    %%
-%     CS=ls_pli2(permute(Y,[3 1 2]),[8:13],0);
-    CS=permute(stat.(param)(:,:,8:13),[3 1 2]);
-    [mcs ics]=max(CS(:));
-    [tmpf mtmpr mtmpc]=ind2sub(size(CS),ics);
-%     CS_b=ls_pli2(permute(Y_b,[3 1 2]),[8:13],0);
-    CS_b=permute(stat_b.(param)(:,:,8:13),[3 1 2]);
-%     diff_pli=(CS(tmpf,tmpr,tmpc)-CS_b(tmpf,tmpr,tmpc))>0.1;
-    mvar=CS(tmpf,mtmpr,mtmpc);
     %%
     rng('default')
     Options=[];
@@ -301,18 +237,20 @@ for i=1:N
 %     ROI1_para2=sa.cortex75K.roi_mask(sa.cortex2K.in_from_cortex75K(i1));
 %     ROI2_para2=sa.cortex75K.roi_mask(sa.cortex2K.in_from_cortex75K(i2));
     A(:,:,i)=[find(Rr==0) find(Rc==0);find(Rr_t==0) find(Rc_t==0);...%ROI1_para2 ROI2_para2;...
-        truth.in_roi;find(RrT==0) find(RcT==0);...
-        ROI1_mvar ROI2_mvar;elecrois(mtmpr) elecrois(mtmpc)];%...
+        truth.in_roi;find(RrT==0) find(RcT==0)];
+       .
 %         elecrois(rdtf_p) elecrois(cdtf_p);elecrois(rdtf) elecrois(cdtf)];
     B(:,i)=[INT(i) SNR(i)...
         max(OUT{i}(:)) max(OUT_b{i}(:))...
         666 max(OUT_t{i}(:))...
-        max(OUT{i}(:)) max(OUT_b{i}(:)) ...
-        666 mvar_proper mvar mvar_proper_b];%...
-%         666 max(coh(:)) max(coh813(:))];
+        max(OUT{i}(:)) max(OUT_b{i}(:))];
     % A,B
     dummy=1;
     calcLOC_fin
     calcCONN
     Result=[Lpara2 Cpara2;Lpara Cpara;Lmvar_p Cmvar_p;Lmvar Cmvar]%;Lmvar_p Cmvar_p;Lmvar Cmvar]
+%     cdir=pwd;
+%     cd ~/Desktop
+%     save('tRes','Result')
+%     cd(cdir)
 end
