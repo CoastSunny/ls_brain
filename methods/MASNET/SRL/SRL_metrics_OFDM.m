@@ -22,7 +22,7 @@ S_=cfg.Num_sensors;
 ALL_snr = 10.^(ALL_SNR./10);
 ALL_Pr = 10.^(ALL_Pr./10);
 ALL_noise = 10.^(ALL_Noise./10);
-
+sensors_loc=[cfg.layoutpar.Stations(2:end).Pos];
 pfa=0.01:0.01:0.1;
 for pfa_idx=1:numel(pfa)
     
@@ -49,6 +49,6 @@ filetosave = [ pth 'probs/' 'Pr_ofdm_' filename '_Time_' num2str(Time_samples)..
     '_Pt_' num2str(Pt)...
     'dBW_sigma_' num2str(sigm) 'dB.mat'];
 %filename3 = ['~/Documents/projects/ls_brain/results/masnet/probs/test.mat'];
-save(filetosave,'p_all','p_mean','ALL_snr');
+save(filetosave,'p_all','p_mean','ALL_SNR','ALL_snr','sensors_loc','targets_loc');
 
 end

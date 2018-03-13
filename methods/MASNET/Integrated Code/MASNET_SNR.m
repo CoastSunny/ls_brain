@@ -249,7 +249,7 @@ function MASNET_SNR(cfg)
                     % positions within the enemy area and repeat the calculations
                     Pos_target = [t_x;t_y;ht];
                     Vel_target = [0;0;0];
-
+                    targets_loc(indx_x,indx_y,:)=Pos_target;
                     %% This is commented now for the number of sensors analysis
                     % Changing the position coordinates randomly set in layoutpar
                     % and the velocity of the target to the desired values.
@@ -345,6 +345,6 @@ function MASNET_SNR(cfg)
         '_Pt_' num2str(Pt)...
         'dBW_sigma_' num2str(sigm) 'dB.mat'];
    % filename3 = ['~/Documents/projects/ls_brain/results/masnet/snr/test.mat'];
-    save(filetosave,'ALL_SNR','ALL_Pr','ALL_Noise','cfg');            
+    save(filetosave,'ALL_SNR','ALL_Pr','ALL_Noise','targets_loc','cfg');            
     
 end

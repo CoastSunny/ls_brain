@@ -10,7 +10,7 @@ cfg.probsfolder='~/Documents/ls_brain/results/masnet/SRL/probs/';
 cfg.filename='srl';
 
 % Number of sensors
-cfg.Num_sensors=16;
+cfg.Num_sensors=36;
 
 % Expected power transmitted by the target {in dBW}. Currently this is not taken as input
 cfg.Pt=-33;
